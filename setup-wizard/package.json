@@ -39,11 +39,19 @@
         "filter": ["icon.ico", "icon.png"]
       }
     ],
+    "forceCodeSigning": false,
     "win": {
       "target": ["portable"],
       "icon": "../electron-assets/icon.ico",
       "signAndEditExecutable": false,
+      "verifyUpdateCodeSignature": false,
       "artifactName": "trassa-setup-${version}.exe"
-    }
+    },
+    "portable": {
+      "artifactName": "trassa-setup-${version}.exe"
+    },
+    "compression": "store",
+    "npmRebuild": false,
+    "nodeGypRebuild": false
   }
 }

@@ -47,8 +47,21 @@ if (!fs.existsSync(unpacked)) {
 }
 
 fs.rmSync(payloadDest, { recursive: true, force: true });
-fs.cpSync(unpacked, payloadDest, { recursive: true });
+if (process.platform === "win32") {
+  fs.mkdirSync(payloadDest, { recursive: true });
+  const robocopy = `robocopy "${unpacked}" "${payloadDest}" /MIR /NFL /NDL /NJH /NJS /nc /ns /np`;
+  const rc = require("child_process").spawnSync(robocopy, { shell: true, stdio: "inherit" });
+  const code = rc.status ?? 1;
+  if (code >= 8) {
+    console.error("[build-neo-setup] robocopy failed, code:", code);
+    process.exit(1);
+  }
+} else {
+  fs.cpSync(unpacked, payloadDest, { recursive: true });
+}
 console.log("[build-neo-setup] payload-app ← win-unpacked");
+
+require("./prune-setup-payload.cjs");
 
 if (!fs.existsSync(path.join(setupDir, "node_modules"))) {
   console.log("[build-neo-setup] npm install в setup-wizard…");
@@ -56,7 +69,25 @@ if (!fs.existsSync(path.join(setupDir, "node_modules"))) {
 }
 
 console.log("[build-neo-setup] запуск: npm run build (vite + electron-builder portable)…");
-runChecked("npm run build", { cwd: setupDir });
+const buildEnv = {
+  ...process.env,
+  CSC_IDENTITY_AUTO_DISCOVERY: "false",
+  WIN_CSC_LINK: "",
+  WIN_CSC_KEY_PASSWORD: "",
+};
+try {
+  runChecked("npm run build", { cwd: setupDir, env: buildEnv });
+} catch (neoErr) {
+  if (process.env.CI === "true") {
+    console.warn(
+      "[build-neo-setup] neo portable не собрался на CI, запасной portable:",
+      neoErr.message || neoErr
+    );
+    require("./build-ci-portable-fallback.cjs");
+    process.exit(0);
+  }
+  throw neoErr;
+}
 
 const setupDist = path.join(root, "release", "setup-dist");
 const releaseRoot = path.join(root, "release");
@@ -77,7 +108,8 @@ let copiedInstaller = false;
 /** Имя скопированного файла в release (совпадает с artifactName electron-builder). */
 let installerExeName = null;
 if (exes.length === 0) {
-  console.warn("[build-neo-setup] не найден .exe в release/setup-dist");
+  console.error("[build-neo-setup] не найден .exe в release/setup-dist");
+  process.exit(1);
 } else {
   installerExeName = exes.includes(expectedExe) ? expectedExe : exes[0];
   fs.mkdirSync(releaseRoot, { recursive: true });
@@ -119,4 +151,8 @@ if (copiedInstaller && installerExeName && fs.existsSync(releaseRoot)) {
       );
     }
   }
+}
+
+if (!copiedInstaller) {
+  process.exit(1);
 }

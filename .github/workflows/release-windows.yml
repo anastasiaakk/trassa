@@ -30,7 +30,9 @@ jobs:
     timeout-minutes: 150
     env:
       TRASSA_MANIFEST_URL: https://github.com/${{ github.repository }}/releases/latest/download/app-update.json
-      CSC_IDENTITY_AUTO_DISCOVERY: false
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      WIN_CSC_LINK: ""
+      WIN_CSC_KEY_PASSWORD: ""
 
     steps:
       - name: Checkout
@@ -106,7 +108,11 @@ jobs:
       - name: "Build: neo setup installer"
         if: steps.gate.outputs.run == 'true'
         env:
+          CI: true
           NODE_OPTIONS: --max-old-space-size=8192
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          WIN_CSC_LINK: ""
+          WIN_CSC_KEY_PASSWORD: ""
         run: node scripts/embed-win-icon.cjs && node scripts/build-neo-setup.cjs
 
       - name: "Build: restore server deps"
