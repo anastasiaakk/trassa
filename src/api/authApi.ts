@@ -1,17 +1,18 @@
 import type { ProfileSettingsData } from "../profileSettingsStorage";
 
 const TOKEN_KEY = "trassa_api_access_token";
+const DESKTOP_FALLBACK_API_BASE = "https://trassa-api.duckdns.org";
 
 function envApiBase(): string {
   return (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ?? "";
 }
 
-/** База URL API: в браузере с Vite — пусто (прокси /api). В Electron (file://) — localhost:4000. */
+/** База URL API: в браузере с Vite — пусто (прокси /api). В desktop (file://) — общий сервер. */
 export function getApiBase(): string {
   const env = envApiBase();
   if (env) return env;
   if (typeof window !== "undefined" && window.location.protocol === "file:") {
-    return "http://127.0.0.1:4000";
+    return DESKTOP_FALLBACK_API_BASE;
   }
   return "";
 }
