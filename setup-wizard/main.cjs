@@ -172,18 +172,28 @@ function findInstalledExe(dir) {
 function stopTrassaInInstallDir(installDir) {
   if (process.platform !== "win32") return { ok: true };
   const dirLit = installDir.replace(/'/g, "''");
+  const mainExe = findInstalledExe(installDir);
+  const exeNameLit = mainExe ? path.basename(mainExe).replace(/'/g, "''") : "";
   const ps1 = path.join(app.getPath("temp"), `trassa-stop-${Date.now()}.ps1`);
   const script = `
 $dir = '${dirLit}'
 $procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
-  $_.ExecutablePath -and ($_.ExecutablePath -like ($dir + '*'))
+  ($_.ExecutablePath -and ($_.ExecutablePath -like ($dir + '*')))${
+    exeNameLit
+      ? ` -or ($_.Name -eq '${exeNameLit}' -or $_.Name -eq '${exeNameLit.replace(/\.exe$/i, "")}')`
+      : ""
+  }
 }
 foreach ($p in $procs) {
   Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
 }
 Start-Sleep -Seconds 2
 $left = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
-  $_.ExecutablePath -and ($_.ExecutablePath -like ($dir + '*'))
+  ($_.ExecutablePath -and ($_.ExecutablePath -like ($dir + '*')))${
+    exeNameLit
+      ? ` -or ($_.Name -eq '${exeNameLit}' -or $_.Name -eq '${exeNameLit.replace(/\.exe$/i, "")}')`
+      : ""
+  }
 }).Count
 if ($left -gt 0) { exit 2 } else { exit 0 }
 `;
@@ -213,31 +223,154 @@ if ($left -gt 0) { exit 2 } else { exit 0 }
   }
 }
 
-function copyPayloadToInstallDir(payload, destPath) {
-  fs.mkdirSync(destPath, { recursive: true });
-  if (process.platform === "win32") {
-    const robocopy = `robocopy "${payload}" "${destPath}" /MIR /XJ /R:2 /W:2 /NFL /NDL /NJH /NJS /nc /ns /np`;
-    const rc = spawnSync(robocopy, { shell: true, stdio: "pipe" });
-    const code = rc.status ?? 1;
-    if (code >= 8) {
-      const err = (rc.stderr && rc.stderr.toString()) || (rc.stdout && rc.stdout.toString()) || "";
-      return {
-        ok: false,
-        error:
-          err.trim() ||
-          "Не удалось скопировать файлы (код robocopy " +
-            code +
-            "). Закройте «Трасса» и повторите.",
-      };
+function robocopyExePath() {
+  const winRoot = process.env.SystemRoot || process.env.WINDIR || "C:\\Windows";
+  return path.join(winRoot, "System32", "robocopy.exe");
+}
+
+/** Коды > 16 или 0xC0000005 — сбой процесса, не штатный exit robocopy (0–7 успех, 8+ ошибка копирования). */
+function isRobocopyProcessCrash(code) {
+  if (code == null) return true;
+  const n = Number(code);
+  if (!Number.isFinite(n)) return true;
+  if (n === 3221225477 || n === -1073741819) return true;
+  return n > 16;
+}
+
+function runRobocopyMirror(src, dest) {
+  const args = [
+    src,
+    dest,
+    "/MIR",
+    "/XJ",
+    "/R:2",
+    "/W:2",
+    "/NFL",
+    "/NDL",
+    "/NJH",
+    "/NJS",
+    "/nc",
+    "/ns",
+    "/np",
+  ];
+  const exe = robocopyExePath();
+  if (!fs.existsSync(exe)) {
+    return { code: 127, stdout: "", stderr: "robocopy.exe не найден" };
+  }
+  const rc = spawnSync(exe, args, { windowsHide: true, encoding: "utf8" });
+  return {
+    code: rc.status ?? 1,
+    stdout: rc.stdout || "",
+    stderr: rc.stderr || "",
+  };
+}
+
+/** Запасной путь: PowerShell + robocopy (корректная кириллица в путях). */
+function runRobocopyViaPowerShell(src, dest) {
+  const ps1 = path.join(app.getPath("temp"), `trassa-copy-${Date.now()}.ps1`);
+  const srcLit = src.replace(/'/g, "''");
+  const destLit = dest.replace(/'/g, "''");
+  const script = `
+$src = '${srcLit}'
+$dest = '${destLit}'
+New-Item -ItemType Directory -Force -LiteralPath $dest | Out-Null
+& robocopy.exe $src $dest /MIR /XJ /R:2 /W:2 /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
+$code = $LASTEXITCODE
+if ($code -ge 8) { exit $code } else { exit 0 }
+`;
+  try {
+    fs.writeFileSync(ps1, "\uFEFF" + script, "utf8");
+    const r = spawnSync(
+      "powershell.exe",
+      ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ps1],
+      { windowsHide: true, encoding: "utf8" }
+    );
+    return { code: r.status ?? 1, stdout: r.stdout || "", stderr: r.stderr || "" };
+  } catch (e) {
+    return { code: 1, stdout: "", stderr: e instanceof Error ? e.message : String(e) };
+  } finally {
+    try {
+      fs.unlinkSync(ps1);
+    } catch {
+      /* ignore */
     }
+  }
+}
+
+function copyPayloadViaNode(src, dest) {
+  fs.mkdirSync(dest, { recursive: true });
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+  for (const ent of entries) {
+    const from = path.join(src, ent.name);
+    const to = path.join(dest, ent.name);
+    if (ent.isDirectory()) {
+      copyPayloadViaNode(from, to);
+    } else {
+      fs.copyFileSync(from, to);
+    }
+  }
+}
+
+function formatCopyError(code, detail) {
+  if (isRobocopyProcessCrash(code)) {
+    return (
+      "Не удалось скопировать файлы (сбой копирования Windows). " +
+      "Закройте «Трасса» в диспетчере задач, при необходимости перезагрузите ПК и повторите установку." +
+      (detail ? ` (${detail})` : "")
+    );
+  }
+  if (code >= 8) {
+    return (
+      "Не удалось скопировать файлы (код robocopy " +
+      code +
+      "). Закройте «Трасса» и повторите." +
+      (detail ? ` ${detail}` : "")
+    );
+  }
+  return detail || "Не удалось скопировать файлы.";
+}
+
+function copyPayloadToInstallDir(payload, destPath) {
+  const src = path.resolve(payload);
+  const dest = path.resolve(destPath);
+  fs.mkdirSync(dest, { recursive: true });
+
+  if (process.platform !== "win32") {
+    try {
+      fs.cpSync(src, dest, { recursive: true, force: true });
+      return { ok: true };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return { ok: false, error: msg };
+    }
+  }
+
+  let last = runRobocopyMirror(src, dest);
+  if (isRobocopyProcessCrash(last.code)) {
+    last = runRobocopyViaPowerShell(src, dest);
+  }
+  if (last.code != null && last.code < 8) {
     return { ok: true };
   }
+
+  const detail = (last.stderr || last.stdout || "").trim().slice(0, 240);
+  if (last.code != null && last.code >= 8 && !isRobocopyProcessCrash(last.code)) {
+    return { ok: false, error: formatCopyError(last.code, detail) };
+  }
+
   try {
-    fs.cpSync(payload, destPath, { recursive: true, force: true });
+    copyPayloadViaNode(src, dest);
     return { ok: true };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    return { ok: false, error: msg };
+    if (/EPERM|EBUSY|operation not permitted/i.test(msg)) {
+      return {
+        ok: false,
+        error:
+          "Файлы заняты запущенной «Трасса». Закройте приложение (диспетчер задач) и повторите установку.",
+      };
+    }
+    return { ok: false, error: formatCopyError(last.code, msg || detail) };
   }
 }
 
