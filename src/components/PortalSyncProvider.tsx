@@ -8,7 +8,7 @@ import {
 
 /** Периодически подтягивает общие данные портала с API (быстрый опрос версии). */
 export default function PortalSyncProvider({ children }: { children: React.ReactNode }) {
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!isPortalSyncEnabled()) return;
