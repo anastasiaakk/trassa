@@ -45,16 +45,25 @@ function writeKv(key: string, value: unknown, updatedBy: string | null): void {
 
 export const portalRouter = Router();
 
-/** Все общие данные портала (чтение без входа — карта, техработы). */
-portalRouter.get("/state", (_req: Request, res: Response) => {
-  const data = readAllKv();
+function readPortalVersion(): string | null {
   const updatedAt = db
     .prepare("SELECT MAX(updated_at) AS t FROM portal_kv")
     .get() as { t: string | null };
+  return updatedAt?.t ?? null;
+}
+
+/** Лёгкий опрос для синхронизации между ПК (без тела всех ключей). */
+portalRouter.get("/version", (_req: Request, res: Response) => {
+  res.json({ ok: true, version: readPortalVersion() });
+});
+
+/** Все общие данные портала (чтение без входа — карта, техработы). */
+portalRouter.get("/state", (_req: Request, res: Response) => {
+  const data = readAllKv();
   res.json({
     ok: true,
     data,
-    version: updatedAt?.t ?? null,
+    version: readPortalVersion(),
   });
 });
 
@@ -94,7 +103,7 @@ function putKvHandler(req: Request, res: Response, updatedBy: string | null): vo
     return;
   }
   writeKv(key, parsed.data.value, updatedBy);
-  res.json({ ok: true });
+  res.json({ ok: true, version: readPortalVersion() });
 }
 
 /** Глобальные настройки — только администратор /services. */

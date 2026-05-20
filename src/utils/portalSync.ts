@@ -1,4 +1,10 @@
-import { bootstrapPortalFromClient, fetchPortalState, putPortalKvAdmin, putPortalKvUser } from "../api/portalApi";
+import {
+  bootstrapPortalFromClient,
+  fetchPortalState,
+  fetchPortalVersion,
+  putPortalKvAdmin,
+  putPortalKvUser,
+} from "../api/portalApi";
 import {
   PORTAL_KV,
   PORTAL_KV_EVENTS,
@@ -9,6 +15,11 @@ import {
 import { isAuthApiEnabled } from "./authMode";
 
 const VERSION_KEY = "trassa-portal-state-version";
+
+/** Интервал опроса, когда вкладка активна (~2–5 с до появления изменений на другом ПК). */
+export const PORTAL_SYNC_POLL_VISIBLE_MS = 3_000;
+/** Реже, когда окно свёрнуто или вкладка в фоне. */
+export const PORTAL_SYNC_POLL_HIDDEN_MS = 12_000;
 
 const ADMIN_KEYS = new Set<PortalKvKey>([
   PORTAL_KV.MAINTENANCE,
@@ -35,6 +46,22 @@ function applyKvToLocal(key: PortalKvKey, value: unknown): void {
   }
 }
 
+function storePortalVersion(version: string | null): void {
+  if (version) {
+    localStorage.setItem(VERSION_KEY, version);
+  }
+}
+
+function applyFullPortalState(data: Record<string, unknown>, version: string | null): void {
+  for (const key of Object.values(PORTAL_KV)) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      applyKvToLocal(key, data[key]);
+    }
+  }
+  storePortalVersion(version);
+  window.dispatchEvent(new CustomEvent(PORTAL_STATE_SYNCED_EVENT));
+}
+
 let portalRefreshInFlight: Promise<boolean> | null = null;
 
 /** Скачать состояние с сервера в localStorage (все клиенты видят одно и то же). */
@@ -43,23 +70,21 @@ export async function refreshPortalStateFromServer(): Promise<boolean> {
   if (portalRefreshInFlight) return portalRefreshInFlight;
 
   portalRefreshInFlight = (async () => {
-    const res = await fetchPortalState();
-    if (!res.ok) return false;
-
     const prevVersion = localStorage.getItem(VERSION_KEY);
-    if (prevVersion === (res.version ?? "")) {
+    const ver = await fetchPortalVersion();
+    if (ver.ok && prevVersion && prevVersion === (ver.version ?? "")) {
       return true;
     }
 
-    for (const key of Object.values(PORTAL_KV)) {
-      if (Object.prototype.hasOwnProperty.call(res.data, key)) {
-        applyKvToLocal(key, res.data[key]);
-      }
+    const res = await fetchPortalState();
+    if (!res.ok) return false;
+
+    if (prevVersion === (res.version ?? "")) {
+      storePortalVersion(res.version);
+      return true;
     }
-    if (res.version) {
-      localStorage.setItem(VERSION_KEY, res.version);
-    }
-    window.dispatchEvent(new CustomEvent(PORTAL_STATE_SYNCED_EVENT));
+
+    applyFullPortalState(res.data, res.version);
     return true;
   })();
 
@@ -67,6 +92,12 @@ export async function refreshPortalStateFromServer(): Promise<boolean> {
     return await portalRefreshInFlight;
   } finally {
     portalRefreshInFlight = null;
+  }
+}
+
+function notePortalVersionFromPut(version: string | null): void {
+  if (version) {
+    storePortalVersion(version);
   }
 }
 
@@ -80,7 +111,7 @@ export function pushPortalKv(key: PortalKvKey, value: unknown): void {
       ? await putPortalKvAdmin(key, value)
       : await putPortalKvUser(key, value);
     if (result.ok) {
-      await refreshPortalStateFromServer();
+      notePortalVersionFromPut(result.version);
     } else {
       console.warn("[portal-sync] не сохранено на сервере:", key, result.error);
     }
@@ -99,7 +130,7 @@ export async function pushPortalKvWithAck(
     ? await putPortalKvAdmin(key, value)
     : await putPortalKvUser(key, value);
   if (result.ok) {
-    await refreshPortalStateFromServer();
+    notePortalVersionFromPut(result.version);
     return { ok: true };
   }
   console.warn("[portal-sync] не сохранено на сервере:", key, result.error);

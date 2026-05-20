@@ -25,15 +25,42 @@ export function adminHeaders(): Record<string, string> {
   return headers;
 }
 
+const VERSION_FETCH_TIMEOUT_MS = 8_000;
+const STATE_FETCH_TIMEOUT_MS = 20_000;
+
+export async function fetchPortalVersion(): Promise<
+  { ok: true; version: string | null } | { ok: false; error: string }
+> {
+  const base = getApiBase();
+  try {
+    const res = await fetchWithTimeout(
+      `${base}/api/portal/version`,
+      { credentials: "include", cache: "no-store" },
+      VERSION_FETCH_TIMEOUT_MS
+    );
+    const body = (await res.json()) as { ok?: boolean; version?: string | null; error?: string };
+    if (!res.ok || !body.ok) {
+      return { ok: false, error: body.error ?? res.statusText };
+    }
+    return { ok: true, version: body.version ?? null };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "Сеть недоступна." };
+  }
+}
+
 export async function fetchPortalState(): Promise<
   { ok: true; data: Record<string, unknown>; version: string | null } | { ok: false; error: string }
 > {
   const base = getApiBase();
   try {
-    const res = await fetchWithTimeout(`${base}/api/portal/state`, {
-      credentials: "include",
-      cache: "no-store",
-    });
+    const res = await fetchWithTimeout(
+      `${base}/api/portal/state`,
+      {
+        credentials: "include",
+        cache: "no-store",
+      },
+      STATE_FETCH_TIMEOUT_MS
+    );
     const body = (await res.json()) as PortalStateResponse & { error?: string };
     if (!res.ok || !body.ok) {
       return { ok: false, error: body.error ?? res.statusText };
@@ -47,7 +74,7 @@ export async function fetchPortalState(): Promise<
 export async function putPortalKvAdmin(
   key: PortalKvKey,
   value: unknown
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<{ ok: true; version: string | null } | { ok: false; error: string }> {
   const base = getApiBase();
   try {
     const res = await fetchWithTimeout(`${base}/api/portal/kv/${key}`, {
@@ -56,11 +83,11 @@ export async function putPortalKvAdmin(
       headers: adminHeaders(),
       body: JSON.stringify({ value }),
     });
-    const body = (await res.json()) as { ok?: boolean; error?: string };
+    const body = (await res.json()) as { ok?: boolean; version?: string | null; error?: string };
     if (!res.ok || !body.ok) {
       return { ok: false, error: body.error ?? res.statusText };
     }
-    return { ok: true };
+    return { ok: true, version: body.version ?? null };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "Сеть недоступна." };
   }
@@ -69,7 +96,7 @@ export async function putPortalKvAdmin(
 export async function putPortalKvUser(
   key: PortalKvKey,
   value: unknown
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<{ ok: true; version: string | null } | { ok: false; error: string }> {
   const base = getApiBase();
   try {
     const res = await fetchWithTimeout(`${base}/api/portal/user-kv/${key}`, {
@@ -78,11 +105,11 @@ export async function putPortalKvUser(
       headers: adminHeaders(),
       body: JSON.stringify({ value }),
     });
-    const body = (await res.json()) as { ok?: boolean; error?: string };
+    const body = (await res.json()) as { ok?: boolean; version?: string | null; error?: string };
     if (!res.ok || !body.ok) {
       return { ok: false, error: body.error ?? res.statusText };
     }
-    return { ok: true };
+    return { ok: true, version: body.version ?? null };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "Сеть недоступна." };
   }
