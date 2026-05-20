@@ -109,6 +109,5 @@
     "server:install": "npm install --prefix server",
     "dev:all": "concurrently -k \"npm run server:dev\" \"npm run dev\""
   },
-  "version": "0.2.2"
+  "version": "0.2.3"
 }
-

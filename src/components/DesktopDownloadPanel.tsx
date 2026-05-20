@@ -29,6 +29,8 @@ async function fetchManifest(url: string): Promise<UpdateManifest | null> {
 
 function DesktopDownloadPanel({ embedded }: Props) {
   const [version, setVersion] = useState<string | null>(null);
+  const [checkBusy, setCheckBusy] = useState(false);
+  const [checkMsg, setCheckMsg] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,6 +75,30 @@ function DesktopDownloadPanel({ embedded }: Props) {
           {version ? `Актуальная версия: ${version}. ` : ""}
           Файл: <strong>trassa-setup.exe</strong> (установщик с автообновлением)
         </p>
+        <button
+          type="button"
+          className={styles.checkBtn}
+          disabled={checkBusy}
+          onClick={() => {
+            if (!window.trassaDesktop?.checkForUpdatesNow) {
+              setCheckMsg("Кнопка доступна только в установленном desktop-приложении.");
+              return;
+            }
+            setCheckBusy(true);
+            setCheckMsg(null);
+            void window.trassaDesktop.checkForUpdatesNow().then((r) => {
+              setCheckBusy(false);
+              if (r.ok) {
+                setCheckMsg("Проверка обновлений запущена.");
+              } else {
+                setCheckMsg(r.error || "Не удалось запустить проверку обновлений.");
+              }
+            });
+          }}
+        >
+          {checkBusy ? "Проверка..." : "Проверить обновления сейчас"}
+        </button>
+        {checkMsg ? <p className={styles.checkHint}>{checkMsg}</p> : null}
         <p className={styles.downloadMirror}>
           Если ссылка не открывается,{" "}
           <a className={styles.mirrorLink} href={TRASSA_SETUP_LOCAL_URL} download="trassa-setup.exe">

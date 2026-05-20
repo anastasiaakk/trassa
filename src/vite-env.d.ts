@@ -13,3 +13,9 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  trassaDesktop?: {
+    checkForUpdatesNow: () => Promise<{ ok: boolean; error?: string }>;
+  };
+}

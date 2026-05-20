@@ -77,6 +77,36 @@
   opacity: 0.85;
 }
 
+.checkBtn {
+  min-height: 38px;
+  padding: 0 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: rgba(30, 41, 59, 0.08);
+  color: inherit;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s ease, opacity 0.12s ease;
+}
+
+.checkBtn:hover:enabled {
+  background: rgba(30, 41, 59, 0.14);
+}
+
+.checkBtn:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.checkHint {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  opacity: 0.8;
+}
+
 .downloadMirror {
   margin: 0;
   font-size: 0.8rem;

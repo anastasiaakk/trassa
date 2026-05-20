@@ -1,6 +1,6 @@
 {
   "name": "trassa-setup-wizard",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "main": "main.cjs",
   "scripts": {
@@ -27,7 +27,11 @@
       "output": "../release/setup-dist"
     },
     "asar": true,
-    "files": ["dist/**/*", "main.cjs", "preload.cjs"],
+    "files": [
+      "dist/**/*",
+      "main.cjs",
+      "preload.cjs"
+    ],
     "extraResources": [
       {
         "from": "payload-app",
@@ -36,12 +40,17 @@
       {
         "from": "../electron-assets",
         "to": "electron-assets",
-        "filter": ["icon.ico", "icon.png"]
+        "filter": [
+          "icon.ico",
+          "icon.png"
+        ]
       }
     ],
     "forceCodeSigning": false,
     "win": {
-      "target": ["portable"],
+      "target": [
+        "portable"
+      ],
       "icon": "../electron-assets/icon.ico",
       "signAndEditExecutable": false,
       "verifyUpdateCodeSignature": false,
@@ -55,4 +64,3 @@
     "nodeGypRebuild": false
   }
 }
-

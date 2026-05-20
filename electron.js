@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, nativeImage } = require("electron");
+const { app, BrowserWindow, Menu, nativeImage, ipcMain } = require("electron");
 const { spawn, spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
@@ -381,6 +381,16 @@ app.whenReady().then(async () => {
       console.warn("[trassa] update check:", e.message);
     }
   }
+  ipcMain.handle("trassa:check-updates-now", async (event) => {
+    try {
+      const { checkForUpdatesNow } = require("./electron-update-check.cjs");
+      const senderWindow = BrowserWindow.fromWebContents(event.sender);
+      await checkForUpdatesNow(senderWindow || mainWindow);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: String(e?.message || e) };
+    }
+  });
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
