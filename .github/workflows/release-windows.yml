@@ -97,7 +97,7 @@ jobs:
 
       - name: "Build: server (bundle + prod deps)"
         if: steps.gate.outputs.run == 'true'
-        run: npm run server:restoredeps && npm run build --prefix server && npm run server:proddeps
+        run: npm run server:restoredeps && npm run build --prefix server && npm run server:proddeps && node scripts/sanitize-server-node-modules.cjs
 
       - name: "Build: Electron app (dir) + embed icon"
         if: steps.gate.outputs.run == 'true'

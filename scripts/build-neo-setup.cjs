@@ -46,10 +46,13 @@ if (!fs.existsSync(unpacked)) {
   process.exit(1);
 }
 
+require("./sanitize-unpacked-for-payload.cjs");
+
 fs.rmSync(payloadDest, { recursive: true, force: true });
 if (process.platform === "win32") {
   fs.mkdirSync(payloadDest, { recursive: true });
-  const robocopy = `robocopy "${unpacked}" "${payloadDest}" /MIR /NFL /NDL /NJH /NJS /nc /ns /np`;
+  /** /XJ — не следовать junction/symlink (иначе node_modules/trassa-app → весь репо, ERROR 1921). */
+  const robocopy = `robocopy "${unpacked}" "${payloadDest}" /MIR /XJ /NFL /NDL /NJH /NJS /nc /ns /np`;
   const rc = require("child_process").spawnSync(robocopy, { shell: true, stdio: "inherit" });
   const code = rc.status ?? 1;
   if (code >= 8) {
