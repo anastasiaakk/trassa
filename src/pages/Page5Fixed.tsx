@@ -1,32 +1,38 @@
 import { memo, useEffect, useMemo, useState } from "react";
+import {
+  ROLE_ICON_CONTRACTOR,
+  ROLE_ICON_INSTITUTION,
+  ROLE_ICON_SCHOOL,
+  ROLE_ICON_STUDENT,
+} from "../assets/appIcons";
 
 const cards = [
   {
     title: "Заявки РАДОР",
     description: "Просмотр и обработка заявок, контроль сроков и статусов.",
     accent: "#4f80f3",
-    icon: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/b3pnceya_expires_30_days.png",
+    icon: ROLE_ICON_SCHOOL,
     tag: "Заявки",
   },
   {
     title: "Документы",
     description: "Управление договорами, актами и инструкциями для членов ассоциации.",
     accent: "#44c5b6",
-    icon: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/66h5rmum_expires_30_days.png",
+    icon: ROLE_ICON_STUDENT,
     tag: "Документы",
   },
   {
     title: "Мероприятия",
     description: "Планирование и отчётность по событиям, совещаниям и обучению.",
     accent: "#fbbf24",
-    icon: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/0tenwd9b_expires_30_days.png",
+    icon: ROLE_ICON_CONTRACTOR,
     tag: "Мероприятия",
   },
   {
     title: "Контроль качества",
     description: "Аналитика по проектам и удобный доступ к KPI и результатам инспекций.",
     accent: "#ef4444",
-    icon: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/boty0uwi_expires_30_days.png",
+    icon: ROLE_ICON_INSTITUTION,
     tag: "Аналитика",
   },
 ];

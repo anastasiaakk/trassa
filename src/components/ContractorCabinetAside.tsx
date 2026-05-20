@@ -8,41 +8,60 @@ type LayoutStyles = Record<string, CSSProperties>;
 type Props = {
   styles: CabinetChromeStyles;
   layoutStyles: LayoutStyles;
+  isDark: boolean;
   /** Текущий раздел кабинета подрядчика */
   active: "home" | "proforientation" | "documents" | "teams";
 };
 
 /** Левая колонка: «Главная» и плашка профориентации (отдельная страница). */
-export function ContractorCabinetAside({ styles, layoutStyles, active }: Props) {
+export function ContractorCabinetAside({ styles, layoutStyles, isDark, active }: Props) {
   const navigate = useNavigate();
 
-  /** Рамка всегда 2px, чтобы при смене active не менялась геометрия плашки. */
-  const navBorder = (on: boolean) => (on ? `2px solid ${styles.buttonBg}` : "2px solid transparent");
+  const navPlaque = (selected: boolean) => ({
+    background: selected
+      ? `${styles.plaqueNavActiveBg} padding-box, ${styles.plaqueNavActiveBorder} border-box`
+      : `${styles.plaqueAccentStripe}, ${styles.plaqueButtonBg}`,
+    color: selected ? styles.plaqueNavActiveText : styles.plaqueButtonText,
+    boxShadow: selected ? styles.plaqueButtonShadow : `${styles.plaqueButtonShadow}, ${styles.plaqueAccentGlow}`,
+  });
+
+  // Одинаковая толщина рамки в обоих состояниях, чтобы плашки не "прыгали".
+  const navOuterBorder = "2px solid transparent";
+
+  // В активной плашке всегда используем контрастный текст.
+  const navMuted = (selected: boolean) =>
+    selected
+      ? isDark
+        ? "rgba(248, 250, 252, 0.9)"
+        : "rgba(248, 250, 252, 0.92)"
+      : styles.plaqueButtonMuted;
 
   return (
     <aside style={layoutStyles.aside}>
       <button
         type="button"
+        className="softtouch-plaque"
         onClick={() => navigate("/page4")}
         style={{
           display: "flex",
           alignItems: "center",
           gap: 12,
-          padding: "16px 18px",
-          borderRadius: 28,
+          padding: "18px 20px",
+          borderRadius: 30,
           width: "100%",
           boxSizing: "border-box",
-          border: navBorder(active === "home"),
           cursor: "pointer",
           fontFamily: "inherit",
           textAlign: "left",
-          background: active === "home" ? styles.cardBg : styles.sectionBg,
-          color: styles.text,
           fontWeight: 700,
-          boxShadow: active === "home" ? styles.insetShadow : styles.cardShadow,
+          ...navPlaque(active === "home"),
+          border: navOuterBorder,
         }}
       >
-        <CabinetHomeIcon size={22} color={styles.text} />
+        <CabinetHomeIcon
+          size={22}
+          color={active === "home" ? styles.plaqueNavActiveText : styles.plaqueButtonText}
+        />
         <span style={{ flex: 1, minWidth: 0 }}>Главная</span>
         <span
           style={{
@@ -57,8 +76,8 @@ export function ContractorCabinetAside({ styles, layoutStyles, active }: Props) 
         >
           <span
             style={{
-              background: styles.sectionBg,
-              color: styles.text,
+              background: styles.plaqueBadgeBg,
+              color: styles.plaqueBadgeText,
               fontWeight: 700,
               borderRadius: 9999,
               padding: "6px 14px",
@@ -73,128 +92,196 @@ export function ContractorCabinetAside({ styles, layoutStyles, active }: Props) 
 
       <button
         type="button"
+        className="softtouch-plaque"
         onClick={() => navigate("/page4/teams")}
         style={{
           display: "flex",
           alignItems: "center",
           gap: 12,
-          padding: "16px 18px",
-          borderRadius: 28,
+          padding: "18px 20px",
+          borderRadius: 30,
           width: "100%",
           boxSizing: "border-box",
-          border: navBorder(active === "teams"),
           cursor: "pointer",
           fontFamily: "inherit",
           textAlign: "left",
-          background: active === "teams" ? styles.cardBg : styles.sectionBg,
-          color: styles.text,
-          boxShadow: active === "teams" ? styles.insetShadow : styles.cardShadow,
+          ...navPlaque(active === "teams"),
+          border: navOuterBorder,
         }}
       >
         <div style={{ minWidth: 0, flex: 1 }}>
-          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", color: styles.muted, marginBottom: 4 }}>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              color: navMuted(active === "teams"),
+              marginBottom: 7,
+            }}
+          >
             КОМАНДЫ
           </div>
-          <div style={{ fontSize: 15, fontWeight: 800, lineHeight: 1.25 }}>Студенческие дорожные команды</div>
-          <div style={{ fontSize: 12, color: styles.muted, marginTop: 4, lineHeight: 1.35 }}>
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 800,
+              lineHeight: 1.25,
+              color: active === "teams" ? styles.plaqueNavActiveText : styles.plaqueButtonText,
+            }}
+          >
+            Студенческие дорожные команды
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              color: navMuted(active === "teams"),
+              marginTop: 7,
+              lineHeight: 1.35,
+            }}
+          >
             Материалы ассоциаций РАДОР и АДО
           </div>
         </div>
-        <span style={{ fontSize: 18, color: styles.buttonBg, flexShrink: 0 }} aria-hidden>
+        <span
+          style={{
+            fontSize: 18,
+            color: active === "teams" ? styles.plaqueNavActiveText : styles.plaqueButtonText,
+            flexShrink: 0,
+          }}
+          aria-hidden
+        >
           →
         </span>
       </button>
 
       <button
         type="button"
+        className="softtouch-plaque"
         onClick={() => navigate("/page4/documents")}
         style={{
           display: "flex",
           alignItems: "center",
           gap: 12,
-          padding: "16px 18px",
-          borderRadius: 28,
+          padding: "18px 20px",
+          borderRadius: 30,
           width: "100%",
           boxSizing: "border-box",
-          border: navBorder(active === "documents"),
           cursor: "pointer",
           fontFamily: "inherit",
           textAlign: "left",
-          background: active === "documents" ? styles.cardBg : styles.sectionBg,
-          color: styles.text,
-          boxShadow: active === "documents" ? styles.insetShadow : styles.cardShadow,
+          ...navPlaque(active === "documents"),
+          border: navOuterBorder,
         }}
       >
         <div style={{ minWidth: 0, flex: 1 }}>
-          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", color: styles.muted, marginBottom: 4 }}>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              color: navMuted(active === "documents"),
+              marginBottom: 7,
+            }}
+          >
             ДОКУМЕНТЫ
           </div>
-          <div style={{ fontSize: 15, fontWeight: 800, lineHeight: 1.25 }}>Шаблоны ассоциаций</div>
-          <div style={{ fontSize: 12, color: styles.muted, marginTop: 4, lineHeight: 1.35 }}>
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 800,
+              lineHeight: 1.25,
+              color: active === "documents" ? styles.plaqueNavActiveText : styles.plaqueButtonText,
+            }}
+          >
+            Шаблоны ассоциаций
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              color: navMuted(active === "documents"),
+              marginTop: 7,
+              lineHeight: 1.35,
+            }}
+          >
             Заполнить и отправить ответ
           </div>
         </div>
-        <span style={{ fontSize: 18, color: styles.buttonBg, flexShrink: 0 }} aria-hidden>
+        <span
+          style={{
+            fontSize: 18,
+            color: active === "documents" ? styles.plaqueNavActiveText : styles.plaqueButtonText,
+            flexShrink: 0,
+          }}
+          aria-hidden
+        >
           →
         </span>
       </button>
 
       <button
         type="button"
+        className="softtouch-plaque"
         onClick={() => navigate("/page4/proforientation")}
         style={{
           display: "flex",
           alignItems: "center",
           gap: 12,
-          padding: "16px 18px",
-          borderRadius: 28,
+          padding: "18px 20px",
+          borderRadius: 30,
           width: "100%",
           boxSizing: "border-box",
-          border: navBorder(active === "proforientation"),
           cursor: "pointer",
           fontFamily: "inherit",
           textAlign: "left",
-          background: active === "proforientation" ? styles.cardBg : styles.sectionBg,
-          color: styles.text,
-          boxShadow: active === "proforientation" ? styles.insetShadow : styles.cardShadow,
+          ...navPlaque(active === "proforientation"),
+          border: navOuterBorder,
         }}
       >
         <div style={{ minWidth: 0, flex: 1 }}>
-          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", color: styles.muted, marginBottom: 4 }}>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              color: navMuted(active === "proforientation"),
+              marginBottom: 7,
+            }}
+          >
             ПРОФОРИЕНТАЦИЯ
           </div>
-          <div style={{ fontSize: 15, fontWeight: 800, lineHeight: 1.25 }}>Результаты теста и подбор кадров</div>
-          <div style={{ fontSize: 12, color: styles.muted, marginTop: 4, lineHeight: 1.35 }}>
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 800,
+              lineHeight: 1.25,
+              color: active === "proforientation" ? styles.plaqueNavActiveText : styles.plaqueButtonText,
+            }}
+          >
+            Результаты теста и подбор кадров
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              color: navMuted(active === "proforientation"),
+              marginTop: 7,
+              lineHeight: 1.35,
+            }}
+          >
             Школьники и студенты — открыть отчёт
           </div>
         </div>
-        <span style={{ fontSize: 18, color: styles.buttonBg, flexShrink: 0 }} aria-hidden>
+        <span
+          style={{
+            fontSize: 18,
+            color: active === "proforientation" ? styles.plaqueNavActiveText : styles.plaqueButtonText,
+            flexShrink: 0,
+          }}
+          aria-hidden
+        >
           →
         </span>
       </button>
 
-      <div style={layoutStyles.sideCard}>
-        <div style={{ fontSize: 12, color: styles.muted, marginBottom: 10 }}>Статус проекта</div>
-        <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 10 }}>Отчёт за июнь 2026</div>
-        <div style={{ fontSize: 14, color: styles.muted, lineHeight: 1.7 }}>
-          Оптимизируйте работу команды и планируйте задачи подрядчика в одном месте. Получайте прозрачный контроль и
-          мгновенные обновления.
-        </div>
-      </div>
-      <div style={{ display: "grid", gap: 14 }}>
-        <button type="button" style={layoutStyles.sideBlock}>
-          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Письма и уведомления</div>
-          <div style={{ fontSize: 13, color: styles.muted }}>
-            Открыть список писем и увидеть последние запросы.
-          </div>
-        </button>
-        <button type="button" style={layoutStyles.sideBlock}>
-          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Таблица практики</div>
-          <div style={{ fontSize: 13, color: styles.muted }}>
-            Открыть таблицу, которую администратор может редактировать и наполнять.
-          </div>
-        </button>
-      </div>
     </aside>
   );
 }

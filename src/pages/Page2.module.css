@@ -523,6 +523,73 @@ button.linkAbout {
   overscroll-behavior: contain;
 }
 
+.mapLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.mapLayoutWithAside {
+  grid-template-columns: minmax(0, 1fr) 320px;
+}
+
+.subjectAside {
+  border-radius: 22px;
+  background: linear-gradient(155deg, #ecf1f8 0%, #e2e8f2 100%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    4px 4px 11px rgba(100, 110, 140, 0.14),
+    -3px -3px 9px rgba(255, 255, 255, 0.62);
+  padding: 14px;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.subjectAsideHead {
+  margin-bottom: 10px;
+}
+
+.subjectAsideTitle {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  color: var(--p2-text);
+}
+
+.subjectAsideHint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--p2-muted);
+  line-height: 1.4;
+}
+
+.subjectList {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.subjectListItem {
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(214, 223, 236, 0.85);
+  color: #1f2f4e;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.subjectEmpty {
+  margin-top: 14px;
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px dashed rgba(143, 156, 178, 0.55);
+  color: #607492;
+  font-size: 0.85rem;
+}
+
 @media (max-width: 1200px) {
   .hero {
     --hero-plaque-h: min(52vh, 420px);
@@ -551,6 +618,14 @@ button.linkAbout {
     height: 100%;
     width: 100%;
     object-fit: fill;
+  }
+
+  .mapLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .subjectAside {
+    min-height: 0;
   }
 }
 

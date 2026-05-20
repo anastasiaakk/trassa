@@ -27,6 +27,19 @@ import {
   clearAdminReturnMark,
   shouldShowReturnToAdminDashboard,
 } from "../utils/adminReturnNavigation";
+import { buildCabinetChromeTheme } from "../theme/cabinetPalettes";
+import {
+  APP_LOGO_SRC,
+  CABINET_CHROME_PRELOAD_IMAGES,
+  CABINET_HERO_BG,
+  ICON_AVATAR,
+  ICON_LOGOUT,
+  ICON_PROFILE_CHEVRON,
+  ICON_SEARCH,
+  ICON_THEME,
+} from "../assets/appIcons";
+
+export { CABINET_CHROME_PRELOAD_IMAGES };
 
 export type CabinetSection = "dashboard" | "messenger";
 
@@ -98,22 +111,6 @@ function injectMessengerTestIncoming(): void {
   }
 }
 
-const ROLES_GRID_ICON =
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/ujfy3mdv_expires_30_days.png";
-
-/** Общие изображения кабинета (шапка, герой, иконки) — как в кабинете подрядчика */
-export const CABINET_CHROME_PRELOAD_IMAGES = [
-  ROLES_GRID_ICON,
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/nbc1yabw_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/w5oazpzp_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/k21ztar3_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/uz9yxbza_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/u4te4tx0_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/ac7lp2lp_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/2fiff9mo_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/of5s9282_expires_30_days.png",
-] as const;
-
 export type CabinetChromeStyles = {
   pageBg: string;
   text: string;
@@ -126,6 +123,39 @@ export type CabinetChromeStyles = {
   buttonText: string;
   cardShadow: string;
   insetShadow: string;
+  /** Плашки-кнопки: приглушённые — светлая тема холодный серо-голубой; тёмная — приподнятый сланец */
+  plaqueButtonBg: string;
+  plaqueButtonText: string;
+  plaqueButtonMuted: string;
+  plaqueButtonBorder: string;
+  plaqueButtonShadow: string;
+  /** Акцентная подсветка/штрих для плашек-кнопок (контент, не хедер) */
+  plaqueAccentGlow: string;
+  plaqueAccentStripe: string;
+  /** Выбранный пункт навигации в боковой колонке */
+  plaqueNavActiveBg: string;
+  plaqueNavActiveText: string;
+  plaqueNavActiveBorder: string;
+  /** Метка-счётчик на фоне плашки (напр. «Главная») */
+  plaqueBadgeBg: string;
+  plaqueBadgeText: string;
+  /** Затемнение героя (два стопа linear-gradient) */
+  heroScrimFrom: string;
+  heroScrimTo: string;
+  /** Градиент блока профиля в шапке */
+  headerProfileBg: string;
+  /** Рамка крупных панелей (контент, списки) */
+  panelBorder: string;
+  /** Рамка карточек / плиток в сетке */
+  tileBorder: string;
+  /** Фон дорожки прогресса */
+  progressTrack: string;
+  /** Заливка прогресса (цвет или gradient) */
+  progressFill: string;
+  /** Светлая вставка на тёмном фоне (активный блок и т.п.) */
+  surfaceHighlight: string;
+  /** Рамка кнопок вторичного уровня, полей */
+  controlBorder: string;
 };
 
 export type CabinetChromeContext = {
@@ -159,26 +189,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
 
   const sidebarTooltipPreset = useMemo(() => getHoverTooltipPreset(isDark), [isDark]);
 
-  const styles = useMemo(
-    () => ({
-      pageBg: isDark ? "#0f172a" : "#e8edf5",
-      text: isDark ? "#f8fafc" : "#1c2b45",
-      muted: isDark ? "#a9bfe0" : "#5f728f",
-      surfaceBg: isDark ? "#1c2b45" : "#f8fafc",
-      cardBg: isDark ? "#16202f" : "#edf3fb",
-      sectionBg: isDark ? "#1b2c47" : "#f7faff",
-      inputBg: isDark ? "#172636" : "#eef3f8",
-      buttonBg: "#243b74",
-      buttonText: "#f8fafc",
-      cardShadow: isDark
-        ? "20px 20px 40px rgba(0, 0, 0, 0.35)"
-        : "20px 20px 40px rgba(142, 154, 178, 0.16), -20px -20px 40px rgba(255, 255, 255, 0.9)",
-      insetShadow: isDark
-        ? "inset 8px 8px 18px rgba(0, 0, 0, 0.24)"
-        : "inset 8px 8px 18px rgba(142, 154, 178, 0.16), inset -8px -8px 18px rgba(255, 255, 255, 0.8)",
-    }),
-    [isDark]
-  );
+  const styles = useMemo(() => buildCabinetChromeTheme(cabinetPath, isDark), [cabinetPath, isDark]);
 
   useEffect(() => {
     saveCabinetTheme(theme);
@@ -199,7 +210,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
   }, []);
 
   useEffect(() => {
-    document.body.style.backgroundColor = styles.pageBg;
+    document.body.style.background = styles.pageBg;
   }, [styles.pageBg]);
 
   const recalcMessengerBadge = useCallback(() => {
@@ -302,7 +313,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
         minHeight: "100vh",
         background: styles.pageBg,
         color: styles.text,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "\"Montserrat\", \"Segoe UI\", Roboto, Arial, sans-serif",
         padding: 24,
         transition: "background 0.35s ease, color 0.35s ease",
         display: "flex",
@@ -321,8 +332,8 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
       },
       main: {
         display: "grid",
-        gridTemplateColumns: "320px 1fr",
-        gap: 28,
+        gridTemplateColumns: "340px 1fr",
+        gap: 30,
         alignItems: "start",
       },
       aside: {
@@ -330,27 +341,36 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
         flexDirection: "column",
         gap: 24,
         padding: 28,
-        borderRadius: 32,
+        borderRadius: 34,
         background: styles.sectionBg,
         boxShadow: styles.cardShadow,
+        backdropFilter: "blur(22px) saturate(120%)",
+        WebkitBackdropFilter: "blur(22px) saturate(120%)",
+        border: styles.panelBorder,
       },
       sideCard: {
-        borderRadius: 32,
+        borderRadius: 30,
         background: styles.cardBg,
         padding: 24,
         boxShadow: styles.cardShadow,
         color: styles.text,
+        border: styles.tileBorder,
+        backdropFilter: "blur(20px) saturate(118%)",
+        WebkitBackdropFilter: "blur(20px) saturate(118%)",
       },
       sideBlock: {
         width: "100%",
-        borderRadius: 32,
-        padding: "20px",
-        background: styles.inputBg,
-        border: "1px solid rgba(255,255,255,0.7)",
-        color: styles.text,
+        borderRadius: 30,
+        padding: "22px 20px",
+        minHeight: 112,
+        background: `${styles.plaqueAccentStripe}, ${styles.plaqueButtonBg}`,
+        border: styles.plaqueButtonBorder,
+        color: styles.plaqueButtonText,
         textAlign: "left",
         cursor: "pointer",
-        boxShadow: styles.insetShadow,
+        boxShadow: `${styles.plaqueButtonShadow}, ${styles.plaqueAccentGlow}`,
+        backdropFilter: "blur(24px) saturate(124%)",
+        WebkitBackdropFilter: "blur(24px) saturate(124%)",
       },
       section: { display: "flex", flexDirection: "column", gap: 24, minWidth: 0 },
       heroCard: {
@@ -366,7 +386,9 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
           (isDark ? "15,23,42,0.65" : "46,69,108,0.55") +
           ") 0%, rgba(" +
           (isDark ? "15,23,42,0.65" : "34,56,88,0.55") +
-          ") 100%), url('https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/nbc1yabw_expires_30_days.png')",
+          ") 100%), url('" +
+          CABINET_HERO_BG +
+          "')",
         backgroundSize: "115%",
         backgroundPosition: "center 40%",
         filter: "brightness(1.08)",
@@ -403,51 +425,63 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
         color: "rgba(255,255,255,0.72)",
       },
       infoCard: {
-        borderRadius: 32,
+        borderRadius: 30,
         padding: 26,
         background: styles.cardBg,
         boxShadow: styles.cardShadow,
         color: styles.text,
+        border: styles.tileBorder,
+        backdropFilter: "blur(20px) saturate(115%)",
+        WebkitBackdropFilter: "blur(20px) saturate(115%)",
       },
       infoLabel: {
         fontSize: 12,
         color: styles.muted,
-        marginBottom: 12,
+        marginBottom: 8,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
       },
       infoTitle: {
         fontSize: 28,
         fontWeight: 800,
-        marginBottom: 12,
+        marginBottom: 10,
+        letterSpacing: "-0.01em",
       },
       infoText: {
         fontSize: 14,
         color: styles.muted,
-        lineHeight: 1.7,
+        lineHeight: 1.6,
       },
       actionCard: {
         width: "100%",
-        borderRadius: 32,
-        padding: "22px",
-        background: isDark ? "#172636" : "#eef3fb",
-        border: "1px solid rgba(255,255,255,0.8)",
+        borderRadius: 30,
+        padding: "24px 22px",
+        minHeight: 120,
+        background: `${styles.plaqueAccentStripe}, ${styles.plaqueButtonBg}`,
+        border: styles.plaqueButtonBorder,
         cursor: "pointer",
         textAlign: "left",
-        boxShadow: styles.insetShadow,
-        color: styles.text,
+        boxShadow: `${styles.plaqueButtonShadow}, ${styles.plaqueAccentGlow}`,
+        color: styles.plaqueButtonText,
+        backdropFilter: "blur(24px) saturate(124%)",
+        WebkitBackdropFilter: "blur(24px) saturate(124%)",
       },
       recentPanel: {
-        borderRadius: 32,
+        borderRadius: 34,
         padding: 28,
         background: styles.cardBg,
         boxShadow: styles.cardShadow,
         display: "grid",
         gap: 22,
-        border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #d9e2f1",
+        border: styles.panelBorder,
+        backdropFilter: "blur(20px) saturate(116%)",
+        WebkitBackdropFilter: "blur(20px) saturate(116%)",
       },
       recentTitle: {
         fontSize: 22,
         fontWeight: 800,
         color: styles.text,
+        letterSpacing: "-0.01em",
       },
     }),
     [styles, isDark]
@@ -517,7 +551,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
             >
               <img
                 decoding="async"
-                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/w5oazpzp_expires_30_days.png"
+                src={ICON_SEARCH}
                 alt=""
                 style={{ width: 18, height: 18 }}
               />
@@ -543,7 +577,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
             <img
               decoding="async"
               fetchPriority="high"
-              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/k21ztar3_expires_30_days.png"
+              src={APP_LOGO_SRC}
               alt="Логотип"
               style={{ width: 160, height: 26, objectFit: "contain" }}
             />
@@ -626,14 +660,14 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 12,
-                padding: "10px 14px 10px 12px",
+                gap: 10,
+                padding: "8px 10px",
                 borderRadius: 22,
                 background: isDark
-                  ? "linear-gradient(145deg, #1e3a5f 0%, #14263b 52%, #0f1f38 100%)"
+                  ? "linear-gradient(145deg, #243b74 0%, #1f3363 48%, #1a2a52 100%)"
                   : "linear-gradient(145deg, #3d5a9e 0%, #2d4366 50%, #243b74 100%)",
                 boxShadow: isDark
-                  ? "inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(79, 128, 243, 0.22)"
+                  ? "inset 0 1px 0 rgba(255,255,255,0.14), 0 10px 26px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(146, 170, 224, 0.26)"
                   : "inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 22px rgba(36, 59, 116, 0.28), 0 0 0 1px rgba(255,255,255,0.2)",
               }}
             >
@@ -648,11 +682,13 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
                   aria-label="Переключить тему"
                   style={{
                     border: "none",
-                    background: "rgba(255,255,255,0.1)",
-                    padding: 10,
-                    borderRadius: 14,
+                    background: isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.12)",
+                    padding: 8,
+                    borderRadius: 12,
                     cursor: "pointer",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
+                    boxShadow: isDark
+                      ? "inset 0 1px 0 rgba(255,255,255,0.18)"
+                      : "inset 0 1px 0 rgba(255,255,255,0.2)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -661,31 +697,38 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
                 >
                   <img
                     decoding="async"
-                    src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/uz9yxbza_expires_30_days.png"
+                    src={ICON_THEME}
                     alt=""
                     style={{ width: 22, height: 22, display: "block" }}
                   />
                 </button>
               </HoverTooltip>
-              <img
-                decoding="async"
-                fetchPriority="high"
-                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/u4te4tx0_expires_30_days.png"
-                alt=""
-                width={36}
-                height={36}
-                style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
-              />
-              <div
+              <button
+                type="button"
+                onClick={goToProfile}
+                aria-label="Профиль"
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 2,
+                  flex: 1,
                   minWidth: 0,
-                  maxWidth: 148,
-                  justifyContent: "center",
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "2px 4px",
+                  fontFamily: "inherit",
                 }}
               >
+                <img
+                  decoding="async"
+                  fetchPriority="high"
+                  src={ICON_AVATAR}
+                  alt=""
+                  width={30}
+                  height={30}
+                  style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
+                />
                 <span
                   style={{
                     fontSize: 14,
@@ -698,49 +741,27 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
                 >
                   {plaqueName}
                 </span>
-              </div>
+                <img
+                  decoding="async"
+                  src={ICON_PROFILE_CHEVRON}
+                  alt=""
+                  width={16}
+                  height={16}
+                  style={{ flexShrink: 0, display: "block" }}
+                />
+              </button>
               <HoverTooltip
                 preset={sidebarTooltipPreset}
                 isDark={isDark}
-                content={<span style={{ whiteSpace: "nowrap" }}>Настройки профиля</span>}
-              >
-                <button
-                  type="button"
-                  onClick={goToProfile}
-                  aria-label="Настройки профиля"
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    padding: 4,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    borderRadius: 10,
-                  }}
-                >
-                  <img
-                    decoding="async"
-                    src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/ac7lp2lp_expires_30_days.png"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </button>
-              </HoverTooltip>
-              <HoverTooltip
-                preset={sidebarTooltipPreset}
-                isDark={isDark}
-                content={<span style={{ whiteSpace: "nowrap" }}>К выбору роли входа</span>}
+                content={<span style={{ whiteSpace: "nowrap" }}>Выйти / сменить роль</span>}
               >
                 <button
                   type="button"
                   onClick={goToRoleSelection}
-                  aria-label="К выбору роли"
+                  aria-label="Выйти"
                   style={{
                     border: "none",
-                    background: "rgba(255,255,255,0.1)",
+                    background: isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.12)",
                     padding: 8,
                     cursor: "pointer",
                     display: "flex",
@@ -748,10 +769,12 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
                     justifyContent: "center",
                     flexShrink: 0,
                     borderRadius: 12,
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
+                    boxShadow: isDark
+                      ? "inset 0 1px 0 rgba(255,255,255,0.18)"
+                      : "inset 0 1px 0 rgba(255,255,255,0.12)",
                   }}
                 >
-                  <img decoding="async" src={ROLES_GRID_ICON} alt="" width={22} height={22} />
+                  <img decoding="async" src={ICON_LOGOUT} alt="" width={22} height={22} />
                 </button>
               </HoverTooltip>
             </div>

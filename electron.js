@@ -240,7 +240,7 @@ async function startBundledApiIfNeeded() {
   }
 }
 
-function setApplicationMenuForPlatform() {
+function setApplicationMenuForPlatform(mainWindow) {
   if (process.platform === "darwin") {
     Menu.setApplicationMenu(
       Menu.buildFromTemplate([
@@ -248,6 +248,18 @@ function setApplicationMenuForPlatform() {
           label: "Трасса",
           submenu: [
             { role: "about", label: "О программе" },
+            {
+              label: "Проверить обновления…",
+              enabled: app.isPackaged,
+              click: () => {
+                try {
+                  const { checkForUpdatesNow } = require("./electron-update-check.cjs");
+                  checkForUpdatesNow(mainWindow);
+                } catch (e) {
+                  console.warn("[trassa] update check:", e.message);
+                }
+              },
+            },
             { type: "separator" },
             { role: "quit", label: "Выход" },
           ],
@@ -330,9 +342,9 @@ app.whenReady().then(async () => {
   if (process.platform === "win32") {
     app.setAppUserModelId("com.myapp.id");
   }
-  setApplicationMenuForPlatform();
   await startBundledApiIfNeeded();
   const mainWindow = createWindow();
+  setApplicationMenuForPlatform(mainWindow);
   if (app.isPackaged) {
     try {
       const { scheduleUpdateCheck } = require("./electron-update-check.cjs");

@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import type { CabinetChromeStyles } from "./CabinetChromeLayout";
+import { BRAND } from "../theme/cabinetPalettes";
 import {
   listProforientationResults,
   PROF_ORIENTATION_TAGS,
@@ -139,7 +140,7 @@ export const ContractorTalentMatcherPanel = memo(function ContractorTalentMatche
         профиль совпадает с выбранными запросами.
       </p>
       {!emailNorm ? (
-        <p style={{ fontSize: 13, color: "#b91c1c", fontWeight: 600 }}>
+        <p style={{ fontSize: 13, color: BRAND.burgundy, fontWeight: 600 }}>
           Укажите e-mail в настройках профиля — по нему сохраняется запрос подбора.
         </p>
       ) : null}

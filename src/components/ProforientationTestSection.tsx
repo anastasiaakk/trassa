@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import type { CabinetChromeStyles } from "./CabinetChromeLayout";
+import { BRAND } from "../theme/cabinetPalettes";
 import {
   getProforientationResultForEmail,
   PROF_ORIENTATION_QUESTIONS,
@@ -114,7 +115,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
         padding: panelOpen ? 28 : 0,
         background: styles.cardBg,
         boxShadow: styles.cardShadow,
-        border: `1px solid rgba(100, 116, 140, 0.15)`,
+        border: styles.panelBorder,
       }}
     >
       {!panelOpen ? (
@@ -140,7 +141,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
         >
           <div style={{ minWidth: 0, flex: 1 }}>
             <div
-              style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.1em", color: styles.muted, marginBottom: 6 }}
+              style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", color: styles.muted, marginBottom: 6 }}
             >
               ПРОФОРИЕНТАЦИЯ
             </div>
@@ -157,7 +158,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
               height: 40,
               borderRadius: 14,
               background: styles.buttonBg,
-              color: "#fff",
+              color: styles.buttonText,
               display: "grid",
               placeItems: "center",
               fontSize: 20,
@@ -171,7 +172,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
         <>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 16 }}>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", color: styles.muted, marginBottom: 8 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", color: styles.muted, marginBottom: 8 }}>
                 ПРОФОРИЕНТАЦИЯ
               </div>
               <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: styles.text }}>
@@ -189,7 +190,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
               }}
               style={{
                 flexShrink: 0,
-                border: `1px solid rgba(36,59,116,0.3)`,
+                border: styles.controlBorder,
                 borderRadius: 999,
                 padding: "8px 14px",
                 fontSize: 13,
@@ -209,7 +210,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
           </p>
 
       {!email ? (
-        <p style={{ margin: 0, fontSize: 14, color: "#b91c1c", fontWeight: 600 }}>
+        <p style={{ margin: 0, fontSize: 14, color: BRAND.burgundy, fontWeight: 600 }}>
           Укажите e-mail в настройках профиля, чтобы пройти тест и сохранить результат.
         </p>
       ) : !showWizard && result ? (
@@ -220,6 +221,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
               borderRadius: 24,
               background: styles.sectionBg,
               boxShadow: styles.insetShadow,
+              border: styles.panelBorder,
               marginBottom: 16,
             }}
           >
@@ -244,7 +246,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
               fontSize: 14,
               cursor: "pointer",
               background: styles.buttonBg,
-              color: "#fff",
+              color: styles.buttonText,
               fontFamily: "inherit",
             }}
           >
@@ -272,7 +274,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
                   border:
                     answers[step] === idx
                       ? `2px solid ${styles.buttonBg}`
-                      : `1px solid rgba(36, 59, 116, 0.2)`,
+                      : styles.controlBorder,
                   background: answers[step] === idx ? styles.sectionBg : styles.inputBg,
                   color: styles.text,
                   fontSize: 14,
@@ -287,7 +289,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
             ))}
           </div>
           {error ? (
-            <p style={{ margin: "14px 0 0", fontSize: 13, color: "#b91c1c", fontWeight: 600 }}>{error}</p>
+            <p style={{ margin: "14px 0 0", fontSize: 13, color: BRAND.burgundy, fontWeight: 600 }}>{error}</p>
           ) : null}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20 }}>
             {step > 0 ? (
@@ -295,7 +297,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
                 type="button"
                 onClick={handleBack}
                 style={{
-                  border: `1px solid rgba(36,59,116,0.35)`,
+                  border: styles.controlBorder,
                   borderRadius: 999,
                   padding: "12px 20px",
                   fontWeight: 700,
@@ -316,7 +318,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
                   setError(null);
                 }}
                 style={{
-                  border: `1px solid rgba(36,59,116,0.35)`,
+                  border: styles.controlBorder,
                   borderRadius: 999,
                   padding: "12px 20px",
                   fontWeight: 700,
@@ -339,7 +341,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
                   padding: "12px 22px",
                   fontWeight: 700,
                   background: styles.buttonBg,
-                  color: "#fff",
+                  color: styles.buttonText,
                   cursor: "pointer",
                   fontFamily: "inherit",
                 }}
@@ -357,7 +359,7 @@ function ProforientationTestSection({ styles, learnerKind }: Props) {
                   padding: "12px 22px",
                   fontWeight: 700,
                   background: styles.buttonBg,
-                  color: "#fff",
+                  color: styles.buttonText,
                   cursor: saving ? "wait" : "pointer",
                   fontFamily: "inherit",
                   opacity: saving ? 0.7 : 1,

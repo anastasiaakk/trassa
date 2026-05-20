@@ -1,7 +1,7 @@
 # Сборка установщика Windows и GitHub Release для автообновления.
 #
 # Автоматически при пуше в main: если для версии из package.json ещё НЕТ релиза —
-# собирается установщик и создаётся Release (тег v* создаётся сам через gh).
+# собирается установщик trassa-setup.exe и создаётся Release (тег v* создаётся сам через gh).
 #
 # Вручную: тег v* по-прежнему запускает сборку; workflow_dispatch — только артефакт, без Release.
 #
@@ -27,17 +27,15 @@ concurrency:
 jobs:
   build-and-release:
     runs-on: windows-latest
-    timeout-minutes: 90
+    timeout-minutes: 150
     env:
       TRASSA_MANIFEST_URL: https://github.com/${{ github.repository }}/releases/latest/download/app-update.json
-      # Иначе electron-builder на Windows ищет сертификат для подписи и падает с кодом 1 (в т.ч. на втором шаге — setup-wizard portable).
       CSC_IDENTITY_AUTO_DISCOVERY: false
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # До setup-node в PATH может не быть `node` — версию читаем через PowerShell.
       - name: Нужна ли сборка (релиз для этой версии уже есть?)
         id: gate
         shell: pwsh
@@ -46,14 +44,13 @@ jobs:
         run: |
           if ("${{ github.event_name }}" -eq "workflow_dispatch") {
             echo "run=true" >> $env:GITHUB_OUTPUT
-            echo "Ручной запуск — всегда собираем (артефакт без Release)."
+            Write-Host "Ручной запуск — всегда собираем (артефакт без Release)."
             exit 0
           }
           $pkg = Get-Content package.json -Raw | ConvertFrom-Json
           $v = $pkg.version
           $tag = "v$v"
           echo "version_tag=$tag" >> $env:GITHUB_OUTPUT
-          # gh возвращает 1, если релиза нет — без явного exit 0 шаг падает в pwsh на GHA
           gh release view $tag *> $null
           $hasRelease = $LASTEXITCODE -eq 0
           if ($hasRelease) {
@@ -71,7 +68,10 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+            setup-wizard/package-lock.json
 
       - name: Install dependencies (root)
         if: steps.gate.outputs.run == 'true'
@@ -81,10 +81,13 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: npm ci --prefix server
 
-      # Та же цепочка, что в package.json → scripts.electron:build, но отдельными шагами — в UI видно, где именно exit 1.
+      - name: Install dependencies (setup-wizard)
+        if: steps.gate.outputs.run == 'true'
+        run: npm ci --prefix setup-wizard
+
       - name: "Build: assets + icons + release-config"
         if: steps.gate.outputs.run == 'true'
-        run: node scripts/ensure-public-assets.cjs && node scripts/generate-icon-ico.cjs && node scripts/apply-release-config.cjs
+        run: node scripts/sync-tagjs-assets.cjs && node scripts/ensure-public-assets.cjs && node scripts/generate-icon-ico.cjs && node scripts/apply-release-config.cjs
 
       - name: "Build: web (tsc + vite)"
         if: steps.gate.outputs.run == 'true'
@@ -98,7 +101,13 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         env:
           NODE_OPTIONS: --max-old-space-size=8192
-        run: node scripts/clean-release-win-unpacked.cjs && npx electron-builder --win portable --publish never
+        run: node scripts/clean-release-win-unpacked.cjs && npx electron-builder --win dir --publish never
+
+      - name: "Build: neo setup installer"
+        if: steps.gate.outputs.run == 'true'
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+        run: node scripts/embed-win-icon.cjs && node scripts/build-neo-setup.cjs
 
       - name: "Build: restore server deps"
         if: steps.gate.outputs.run == 'true'
@@ -110,16 +119,16 @@ jobs:
         run: |
           $pkg = Get-Content package.json -Raw | ConvertFrom-Json
           $v = $pkg.version
-          $exe = Get-ChildItem -Path packaged-app -Filter "*.exe" -File -Recurse |
-            Where-Object { $_.Name -notmatch "unins" } |
-            Select-Object -First 1
-          if (-not $exe) { throw "После сборки не найден .exe в packaged-app." }
-          Copy-Item -LiteralPath $exe.FullName -Destination "trassa-setup.exe" -Force
+          $src = Join-Path "release" "trassa-setup-$v.exe"
+          if (-not (Test-Path -LiteralPath $src)) {
+            throw "Не найден установщик: $src (ожидается после build-neo-setup.cjs)."
+          }
+          Copy-Item -LiteralPath $src -Destination "trassa-setup.exe" -Force
           $repo = "${{ github.repository }}"
           $setupUrl = "https://github.com/$repo/releases/latest/download/trassa-setup.exe"
           $obj = [ordered]@{
-            version     = $v
-            setupUrl    = $setupUrl
+            version      = $v
+            setupUrl     = $setupUrl
             releaseNotes = "Версия $v"
           }
           $json = ($obj | ConvertTo-Json -Compress)
@@ -144,7 +153,6 @@ jobs:
         run: |
           $pkg = Get-Content package.json -Raw | ConvertFrom-Json
           $tag = "v$($pkg.version)"
-          # Если релиз уже есть (гонка или повтор), не падать
           gh release view $tag *> $null
           $hasRelease = $LASTEXITCODE -eq 0
           if ($hasRelease) {

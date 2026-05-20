@@ -1,11 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap");
 
 body {
   margin: 0;
   line-height: normal;
   /* фон html/body — в App.css (неоморфная рамка), здесь не переопределяем */
   color: white;
-  font-family: Montserrat, sans-serif;
+  font-family: "Montserrat", "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+html,
+#root,
+button,
+input,
+textarea,
+select {
+  font-family: "Montserrat", "Segoe UI", Roboto, Arial, sans-serif;
 }
 :root {
   /* Common Style Variables */
@@ -162,5 +171,370 @@ svg {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+/* Soft-touch interactions for glass plaques/chips in cabinets */
+.softtouch-plaque,
+.softtouch-chip {
+  transition:
+    box-shadow 240ms ease,
+    filter 220ms ease;
+  will-change: box-shadow, filter;
+  color: inherit;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.softtouch-chip {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.softtouch-chip::after {
+  content: "";
+  position: absolute;
+  top: -140%;
+  left: -45%;
+  width: 34%;
+  height: 280%;
+  transform: translateX(-180%) rotate(18deg);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.34) 48%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  filter: blur(0.2px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.softtouch-plaque:hover,
+.softtouch-chip:hover {
+  filter: saturate(1.02) brightness(1.02);
+  transition-delay: 40ms, 0ms;
+  animation: softtouch-glow-pulse 1400ms ease-in-out infinite;
+}
+
+.softtouch-plaque:hover {
+  box-shadow:
+    0 12px 24px rgba(19, 30, 58, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.24);
+}
+
+.softtouch-chip:hover {
+  box-shadow:
+    0 10px 24px rgba(22, 34, 63, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.26),
+    0 0 18px rgba(179, 151, 220, 0.2);
+}
+
+.softtouch-chip--active:hover::after {
+  opacity: 1;
+  animation: softtouch-chip-sheen 760ms cubic-bezier(0.2, 0.75, 0.2, 1) 1;
+}
+
+.softtouch-plaque:active,
+.softtouch-chip:active {
+  box-shadow:
+    0 8px 16px rgba(19, 30, 58, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+  filter: saturate(1) brightness(1);
+  animation: none;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 1px rgba(10, 16, 34, 0.2);
+}
+
+.softtouch-plaque:focus-visible,
+.softtouch-chip:focus-visible {
+  outline: 2px solid rgba(131, 162, 235, 0.65);
+  outline-offset: 2px;
+}
+
+.softtouch-chip--active {
+  animation: softtouch-chip-breathe 2600ms ease-in-out infinite;
+}
+
+.softtouch-chip--active:active {
+  animation: softtouch-chip-press 280ms ease-out 1;
+}
+
+@keyframes softtouch-chip-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 18px rgba(26, 42, 82, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.22),
+      0 0 10px rgba(173, 140, 214, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 10px 22px rgba(26, 42, 82, 0.24),
+      0 0 0 1px rgba(255, 255, 255, 0.3),
+      0 0 18px rgba(173, 140, 214, 0.28);
+  }
+}
+
+@keyframes softtouch-chip-press {
+  0% {
+    filter: saturate(1.03) brightness(1.02);
+  }
+  100% {
+    filter: saturate(1) brightness(1);
+  }
+}
+
+@keyframes softtouch-chip-sheen {
+  0% {
+    transform: translateX(-190%) rotate(18deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  55% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(340%) rotate(18deg);
+    opacity: 0;
+  }
+}
+
+@keyframes softtouch-glow-pulse {
+  0%,
+  100% {
+    filter: saturate(1.02) brightness(1.02);
+  }
+  50% {
+    filter: saturate(1.035) brightness(1.035);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .softtouch-plaque,
+  .softtouch-chip,
+  .softtouch-chip--active {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .softtouch-plaque:hover,
+  .softtouch-chip:hover,
+  .softtouch-plaque:active,
+  .softtouch-chip:active {
+    filter: none !important;
+  }
+
+  .softtouch-chip::after,
+  .softtouch-chip--active:hover::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+/* Final dashboard alignment to reference composition */
+.dashboard-glass-frame {
+  border-radius: 40px;
+}
+
+.dashboard-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.dashboard-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.dashboard-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.association-main-grid {
+  display: grid;
+  grid-template-columns: 1.7fr 0.95fr;
+  gap: 22px;
+}
+
+/* Reference-like layered glass language (safe, no rigid sizing) */
+.ref-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+.ref-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.04) 36%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.ref-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(560px 300px at 14% 16%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 62%),
+    radial-gradient(460px 260px at 82% 22%, rgba(238, 203, 231, 0.18), rgba(238, 203, 231, 0) 64%),
+    radial-gradient(420px 260px at 26% 86%, rgba(186, 204, 246, 0.16), rgba(186, 204, 246, 0) 66%);
+  opacity: 0.55;
+  z-index: 0;
+}
+
+.ref-stage > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ref-utility-card {
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  box-shadow:
+    0 14px 26px rgba(19, 30, 58, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+
+.ref-metric-tile {
+  backdrop-filter: blur(16px) saturate(112%);
+  -webkit-backdrop-filter: blur(16px) saturate(112%);
+}
+
+.ref-chip-rail {
+  position: relative;
+  border-radius: 999px;
+  box-shadow:
+    0 12px 26px rgba(20, 31, 58, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    inset 0 -1px 0 rgba(16, 24, 44, 0.08);
+}
+
+.ref-chip-rail::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.06) 36%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  opacity: 0.8;
+}
+
+.ref-chip-rail > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ref-surface-soft {
+  box-shadow:
+    0 16px 30px rgba(19, 30, 58, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(22px) saturate(122%);
+  -webkit-backdrop-filter: blur(22px) saturate(122%);
+}
+
+/* Organic corners similar to reference cards */
+.ref-radius-a {
+  border-radius: 36px 26px 34px 22px !important;
+}
+
+.ref-radius-b {
+  border-radius: 24px 36px 22px 34px !important;
+}
+
+.ref-radius-c {
+  border-radius: 30px 24px 36px 26px !important;
+}
+
+/* Floating overlap accents like reference dashboards */
+.ref-overlap-up {
+  transform: none;
+}
+
+.ref-overlap-right {
+  transform: none;
+}
+
+.ref-overlap-left {
+  transform: none;
+}
+
+
+@media (max-width: 1366px) {
+  .dashboard-glass-frame {
+    border-radius: 34px;
+    padding: 18px !important;
+  }
+
+  .dashboard-hero-grid {
+    grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .dashboard-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .ref-overlap-up,
+  .ref-overlap-right,
+  .ref-overlap-left {
+    transform: none;
+  }
+
+  .ref-stage::after {
+    opacity: 0.46;
+    background:
+      radial-gradient(420px 240px at 14% 14%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%),
+      radial-gradient(360px 220px at 84% 22%, rgba(238, 203, 231, 0.14), rgba(238, 203, 231, 0) 64%),
+      radial-gradient(340px 220px at 24% 86%, rgba(186, 204, 246, 0.13), rgba(186, 204, 246, 0) 66%);
+  }
+
+  .association-main-grid {
+    grid-template-columns: 1.35fr 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-metric-grid,
+  .dashboard-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .association-main-grid {
+    grid-template-columns: 1fr;
   }
 }

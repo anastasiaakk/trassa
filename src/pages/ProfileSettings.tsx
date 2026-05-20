@@ -6,9 +6,7 @@ import {
   ADMIN_CABINET_SEARCH,
   shouldShowReturnToAdminDashboard,
 } from "../utils/adminReturnNavigation";
-
-const AVATAR_URL =
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/u4te4tx0_expires_30_days.png";
+import { ICON_AVATAR } from "../assets/appIcons";
 
 function readPortalRole(): string | null {
   try {
@@ -177,7 +175,7 @@ function ProfileSettings() {
           }}
         >
           <img
-            src={AVATAR_URL}
+            src={ICON_AVATAR}
             alt=""
             width={56}
             height={56}

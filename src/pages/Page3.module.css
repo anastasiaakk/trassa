@@ -852,7 +852,12 @@
 .roleIcon {
   width: 24px;
   height: 24px;
-  object-fit: fill;
+  object-fit: contain;
+}
+
+.roleIconStudent {
+  width: 29px;
+  height: 24px;
 }
 
 /* Кнопка «Далее» — только стрелка */

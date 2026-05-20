@@ -158,6 +158,7 @@ export const Page5EventsView = memo(function Page5EventsView({
     return m;
   }, [events]);
 
+
   const openCreate = useCallback((dateKey: string) => {
     setFormDate(dateKey);
     setFormTitle("");
@@ -195,6 +196,13 @@ export const Page5EventsView = memo(function Page5EventsView({
       onEventsChange((prev) =>
         prev.map((ev) => (ev.id === id ? { ...ev, cancelled } : ev))
       );
+    },
+    [onEventsChange]
+  );
+
+  const deleteEventForever = useCallback(
+    (id: string) => {
+      onEventsChange((prev) => prev.filter((ev) => ev.id !== id));
     },
     [onEventsChange]
   );
@@ -253,87 +261,68 @@ export const Page5EventsView = memo(function Page5EventsView({
         boxSizing: "border-box",
       }}
     >
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
-        <div>
-          <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", color: styles.muted, marginBottom: 8 }}>
-            Календарь
+      <>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <button type="button" onClick={goPrev} style={neoBtn(false)}>
+                ←
+              </button>
+              <div style={{ ...neoInset, borderRadius: 14, padding: "10px 14px", fontWeight: 700, color: styles.text }}>
+                {monthLabel}
+              </div>
+              <button type="button" onClick={goNext} style={neoBtn(false)}>
+                →
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const today = new Date();
+                const lastD = new Date(year, monthIndex + 1, 0).getDate();
+                const sameMonth =
+                  today.getFullYear() === year && today.getMonth() === monthIndex;
+                const dayNum = sameMonth ? Math.min(today.getDate(), lastD) : Math.min(15, lastD);
+                openCreate(toDateKey(year, monthIndex, dayNum));
+              }}
+              style={{
+                border: "none",
+                cursor: "pointer",
+                borderRadius: 999,
+                padding: "14px 22px",
+                fontWeight: 700,
+                fontSize: 14,
+                background: styles.buttonBg,
+                color: styles.buttonText,
+                boxShadow: `${styles.cardShadow}, ${styles.insetShadow}`,
+              }}
+            >
+              + Создать мероприятие
+            </button>
           </div>
-          <h2 style={{ margin: 0, fontSize: 26, fontWeight: 700, color: styles.text }}>Мероприятия</h2>
-          <p style={{ margin: "10px 0 0", maxWidth: 560, fontSize: 14, lineHeight: 1.6, color: styles.muted }}>
-            Планируйте встречи и отраслевые события. Новые записи появляются в сетке выбранного месяца.
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-          <button type="button" onClick={goPrev} style={neoBtn(false)}>
-            ←
-          </button>
-          <div
-            style={{
-              minWidth: 200,
-              textAlign: "center",
-              fontWeight: 700,
-              fontSize: 16,
-              color: styles.text,
-              padding: "10px 16px",
-              borderRadius: 16,
-              ...neoInset,
-            }}
-          >
-            {monthLabel}
-          </div>
-          <button type="button" onClick={goNext} style={neoBtn(false)}>
-            →
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const today = new Date();
-              const lastD = new Date(year, monthIndex + 1, 0).getDate();
-              const sameMonth =
-                today.getFullYear() === year && today.getMonth() === monthIndex;
-              const dayNum = sameMonth ? Math.min(today.getDate(), lastD) : Math.min(15, lastD);
-              openCreate(toDateKey(year, monthIndex, dayNum));
-            }}
-            style={{
-              border: "none",
-              cursor: "pointer",
-              borderRadius: 999,
-              padding: "14px 22px",
-              fontWeight: 700,
-              fontSize: 14,
-              background: styles.buttonBg,
-              color: styles.buttonText,
-              boxShadow: `${styles.cardShadow}, ${styles.insetShadow}`,
-            }}
-          >
-            + Создать мероприятие
-          </button>
-        </div>
-      </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
-          gap: 10,
-        }}
-      >
-        {WEEKDAYS.map((wd) => (
           <div
-            key={wd}
             style={{
-              textAlign: "center",
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.06em",
-              color: styles.muted,
-              padding: "8px 4px",
+              display: "grid",
+              gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
+              gap: 10,
             }}
           >
-            {wd}
-          </div>
-        ))}
-        {cells.map((day, idx) => {
+          {WEEKDAYS.map((wd) => (
+            <div
+              key={wd}
+              style={{
+                textAlign: "center",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                color: styles.muted,
+                padding: "8px 4px",
+              }}
+            >
+              {wd}
+            </div>
+          ))}
+            {cells.map((day, idx) => {
           if (day === null) {
             return (
               <div
@@ -478,7 +467,7 @@ export const Page5EventsView = memo(function Page5EventsView({
                             fontWeight: 400,
                             color: styles.muted,
                             background: isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.65)",
-                            fontFamily: "system-ui, Segoe UI, Roboto, sans-serif",
+                            fontFamily: "\"Montserrat\", \"Segoe UI\", Roboto, Arial, sans-serif",
                             display: "inline-flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -487,6 +476,40 @@ export const Page5EventsView = memo(function Page5EventsView({
                           }}
                         >
                           {isOff ? "↺" : "×"}
+                        </button>
+                      </HoverTooltip>
+                      <HoverTooltip
+                        preset={tooltipPreset}
+                        isDark={isDark}
+                        content={<span style={{ whiteSpace: "nowrap" }}>Удалить</span>}
+                      >
+                        <button
+                          type="button"
+                          aria-label="Удалить"
+                          onClick={() => {
+                            const ok = window.confirm("Удалить мероприятие?");
+                            if (ok) deleteEventForever(ev.id);
+                          }}
+                          style={{
+                            flexShrink: 0,
+                            border: "none",
+                            cursor: "pointer",
+                            padding: "2px 5px",
+                            borderRadius: 6,
+                            fontSize: 12,
+                            lineHeight: 1,
+                            fontWeight: 700,
+                            color: isDark ? "rgba(248,113,113,0.9)" : "#b91c1c",
+                            background: isDark ? "rgba(127,29,29,0.25)" : "rgba(254,226,226,0.9)",
+                            fontFamily: "\"Montserrat\", \"Segoe UI\", Roboto, Arial, sans-serif",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            minWidth: 22,
+                            minHeight: 22,
+                          }}
+                        >
+                          🗑
                         </button>
                       </HoverTooltip>
                     </div>
@@ -498,8 +521,9 @@ export const Page5EventsView = memo(function Page5EventsView({
               </div>
             </button>
           );
-        })}
-      </div>
+            })}
+          </div>
+      </>
 
       {modalOpen ? (
         <div
@@ -525,7 +549,7 @@ export const Page5EventsView = memo(function Page5EventsView({
               maxWidth: 440,
               borderRadius: 28,
               padding: 28,
-              background: styles.surfaceBg,
+              background: isDark ? "rgba(24, 34, 54, 0.98)" : "rgba(246, 249, 255, 0.98)",
               boxShadow: isDark
                 ? "24px 28px 60px rgba(0,0,0,0.5), inset 1px 1px 0 rgba(255,255,255,0.06)"
                 : "20px 24px 48px rgba(142, 154, 178, 0.28), -16px -16px 40px rgba(255,255,255,0.95), inset 1px 1px 0 rgba(255,255,255,0.9)",

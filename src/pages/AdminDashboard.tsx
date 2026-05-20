@@ -9,7 +9,7 @@ import {
   resetPasswordForEmail,
   type LocalUserRecord,
 } from "../utils/localAuth";
-import { authListUsers } from "../api/authApi";
+import { authAdminDeleteUser, authAdminUpdateUser, authListUsers } from "../api/authApi";
 import { isAuthApiEnabled } from "../utils/authMode";
 import {
   getAdminCabinetInfo,
@@ -31,12 +31,21 @@ import {
   resetMessengerLocalData,
 } from "../utils/adminDemoData";
 import { PASSWORD_RULES_SHORT, validatePasswordPolicy } from "../utils/passwordPolicy";
+import { formatSubjectDisplayName, SUBJECT_MARKERS_GEO } from "../data/page2MapGeo";
 import {
   addContractorOrganization,
   loadContractorOrganizations,
   removeContractorOrganization,
 } from "../utils/contractorOrganizations";
-import AdminTamagotchiCat from "../components/AdminTamagotchiCat";
+import { loadMapCategoryLabels, saveMapCategoryLabels } from "../utils/mapCategoryLabels";
+import {
+  addMapSubjectOrganization,
+  loadMapSubjectOrganizations,
+  removeMapSubjectOrganization,
+  updateMapSubjectOrganization,
+  type MapOrgKind,
+  type MapSubjectOrganization,
+} from "../utils/mapSubjectOrganizations";
 import { markNavigationFromAdminDashboard } from "../utils/adminReturnNavigation";
 import styles from "./AdminPanel.module.css";
 
@@ -91,8 +100,35 @@ export default function AdminDashboard({
   const [contractorOrgs, setContractorOrgs] = useState<string[]>(() => loadContractorOrganizations());
   const [newOrgName, setNewOrgName] = useState("");
   const [orgListMsg, setOrgListMsg] = useState<string | null>(null);
+  const [mapLabels, setMapLabels] = useState(() => loadMapCategoryLabels());
+  const [mapLabelsMsg, setMapLabelsMsg] = useState<string | null>(null);
+  const [mapOrgRows, setMapOrgRows] = useState<MapSubjectOrganization[]>(() => loadMapSubjectOrganizations());
+  const [mapOrgMsg, setMapOrgMsg] = useState<string | null>(null);
+  const [newMapSubject, setNewMapSubject] = useState("");
+  const [newMapKind, setNewMapKind] = useState<MapOrgKind>("education");
+  const [newMapName, setNewMapName] = useState("");
+  const [editingMapOrgId, setEditingMapOrgId] = useState<string | null>(null);
+  const [editingMapSubject, setEditingMapSubject] = useState("");
+  const [editingMapKind, setEditingMapKind] = useState<MapOrgKind>("education");
+  const [editingMapName, setEditingMapName] = useState("");
+  const [mapEducationOpen, setMapEducationOpen] = useState(true);
+  const [mapContractorsOpen, setMapContractorsOpen] = useState(true);
+  const [mapEditingOpen, setMapEditingOpen] = useState(false);
   const [orgsOpen, setOrgsOpen] = useState(false);
   const [usersOpen, setUsersOpen] = useState(false);
+
+  const subjectOptions = useMemo(
+    () => Array.from(new Set(SUBJECT_MARKERS_GEO.map((x) => x.name))).sort((a, b) => a.localeCompare(b, "ru")),
+    []
+  );
+  const mapEducationRows = useMemo(
+    () => mapOrgRows.filter((x) => x.kind === "education"),
+    [mapOrgRows]
+  );
+  const mapContractorRows = useMemo(
+    () => mapOrgRows.filter((x) => x.kind === "contractors"),
+    [mapOrgRows]
+  );
 
   useEffect(() => {
     if (editing !== null || pwUserEmail !== null) {
@@ -102,6 +138,10 @@ export default function AdminDashboard({
 
   const refreshContractorOrgs = useCallback(() => {
     setContractorOrgs(loadContractorOrganizations());
+  }, []);
+
+  const refreshMapOrgs = useCallback(() => {
+    setMapOrgRows(loadMapSubjectOrganizations());
   }, []);
 
   const refreshUsers = useCallback(() => {
@@ -129,7 +169,7 @@ export default function AdminDashboard({
   }, [refreshUsers]);
 
   const deleteUser = useCallback(
-    (u: LocalUserRecord) => {
+    async (u: LocalUserRecord) => {
       const label = u.profile.email || u.emailNorm;
       if (
         !window.confirm(
@@ -138,7 +178,9 @@ export default function AdminDashboard({
       ) {
         return;
       }
-      const r = deleteRegisteredUser(u.emailNorm);
+      const r = authApiMode
+        ? await authAdminDeleteUser(u.emailNorm)
+        : deleteRegisteredUser(u.emailNorm);
       if (!r.ok) {
         setDataMessage(r.error ?? "Не удалось удалить пользователя.");
         return;
@@ -155,7 +197,7 @@ export default function AdminDashboard({
       }
       refreshUsers();
     },
-    [editing?.emailNorm, pwUserEmail, refreshUsers]
+    [authApiMode, editing?.emailNorm, pwUserEmail, refreshUsers]
   );
 
   const openEdit = useCallback((u: LocalUserRecord) => {
@@ -164,17 +206,24 @@ export default function AdminDashboard({
   }, []);
 
   const saveEdit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
       e.preventDefault();
       if (!editing || !editForm) return;
-      const ok = adminOverrideUserProfile(editing.emailNorm, editForm);
-      if (ok) {
-        refreshUsers();
-        setEditing(null);
-        setEditForm(null);
+      if (authApiMode) {
+        const r = await authAdminUpdateUser(editing.emailNorm, editForm);
+        if (!r.ok) {
+          setDataMessage(r.error ?? "Не удалось сохранить изменения пользователя.");
+          return;
+        }
+      } else if (!adminOverrideUserProfile(editing.emailNorm, editForm)) {
+        setDataMessage("Не удалось сохранить изменения пользователя.");
+        return;
       }
+      refreshUsers();
+      setEditing(null);
+      setEditForm(null);
     },
-    [editForm, editing, refreshUsers]
+    [authApiMode, editForm, editing, refreshUsers]
   );
 
   const setUserPassword = useCallback(
@@ -263,6 +312,81 @@ export default function AdminDashboard({
     [adminNewPw, adminOldPw]
   );
 
+  const handleMapLabelsSave = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      saveMapCategoryLabels(mapLabels);
+      setMapLabels(loadMapCategoryLabels());
+      setMapLabelsMsg("Названия разделов на карте сохранены.");
+    },
+    [mapLabels]
+  );
+
+  const startEditMapOrg = useCallback((row: MapSubjectOrganization) => {
+    setEditingMapOrgId(row.id);
+    setEditingMapSubject(row.subjectName);
+    setEditingMapKind(row.kind);
+    setEditingMapName(row.name);
+    setMapOrgMsg(null);
+  }, []);
+
+  const handleAddMapOrg = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      setMapOrgMsg(null);
+      const r = addMapSubjectOrganization({
+        subjectName: newMapSubject,
+        kind: newMapKind,
+        name: newMapName,
+      });
+      if (!r.ok) {
+        setMapOrgMsg(r.error);
+        return;
+      }
+      setNewMapName("");
+      setMapEducationOpen(newMapKind === "education" ? true : mapEducationOpen);
+      setMapContractorsOpen(newMapKind === "contractors" ? true : mapContractorsOpen);
+      refreshMapOrgs();
+      setMapOrgMsg("Запись добавлена.");
+    },
+    [mapContractorsOpen, mapEducationOpen, newMapKind, newMapName, newMapSubject, refreshMapOrgs]
+  );
+
+  const handleSaveMapOrg = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      if (!editingMapOrgId) return;
+      setMapOrgMsg(null);
+      const r = updateMapSubjectOrganization(editingMapOrgId, {
+        subjectName: editingMapSubject,
+        kind: editingMapKind,
+        name: editingMapName,
+      });
+      if (!r.ok) {
+        setMapOrgMsg(r.error);
+        return;
+      }
+      setEditingMapOrgId(null);
+      setEditingMapName("");
+      refreshMapOrgs();
+      setMapOrgMsg("Запись обновлена.");
+    },
+    [editingMapKind, editingMapName, editingMapOrgId, editingMapSubject, refreshMapOrgs]
+  );
+
+  const handleDeleteMapOrg = useCallback(
+    (row: MapSubjectOrganization) => {
+      if (!window.confirm(`Удалить запись «${row.name}»?`)) return;
+      removeMapSubjectOrganization(row.id);
+      if (editingMapOrgId === row.id) {
+        setEditingMapOrgId(null);
+      }
+      refreshMapOrgs();
+      setMapOrgMsg("Запись удалена.");
+    },
+    [editingMapOrgId, refreshMapOrgs]
+  );
+
   const handleLogout = useCallback(() => {
     logoutAdmin();
     onLogout();
@@ -270,12 +394,9 @@ export default function AdminDashboard({
 
   const legacy = isLegacyLoginAllowed();
 
-  const themeClass =
-    cabinet.cabinetId === "anastasia" ? styles.themeAnastasia : styles.themeKsenia;
-
   return (
     <div
-      className={`${styles.cabinetPage} ${styles.cabinetDashboard} ${styles.cabinetPageWithPaws} ${themeClass} ${useParentPageBackground ? styles.cabinetPageEmbed : ""}`}
+      className={`${styles.cabinetPage} ${styles.cabinetDashboard} ${styles.themeLogin} ${useParentPageBackground ? styles.cabinetPageEmbed : ""}`}
     >
       <div
         className={`${styles.cabinetBg} ${useParentPageBackground ? styles.cabinetBgTransparent : ""}`}
@@ -284,9 +405,6 @@ export default function AdminDashboard({
 
       <div className={styles.shell}>
         <header className={styles.cabinetHero}>
-          <div className={styles.cabinetHeroAvatar} aria-hidden>
-            {cabinet.cabinetId === "anastasia" ? "🌸" : "🌷"}
-          </div>
           <div className={styles.cabinetHeroText}>
             <p className={styles.cabinetKicker}>Личный кабинет администратора</p>
             <h2 className={styles.cabinetTitle}>
@@ -496,6 +614,277 @@ export default function AdminDashboard({
           <button
             type="button"
             className={styles.collapseTrigger}
+            aria-expanded={mapEditingOpen}
+            onClick={() => setMapEditingOpen((v) => !v)}
+          >
+            <span
+              className={`${styles.collapseChevron} ${mapEditingOpen ? styles.collapseChevronOpen : ""}`}
+              aria-hidden
+            >
+              ▶
+            </span>
+            <h3 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>
+              Редактирование карты
+            </h3>
+            <span className={styles.collapseMeta}>
+              {mapEducationRows.length + mapContractorRows.length} записей
+            </span>
+          </button>
+          {mapEditingOpen ? (
+            <div className={styles.collapseBody}>
+              <h4 className={styles.sectionTitle}>Названия разделов на карте</h4>
+              <p className={styles.subtitle}>
+                Эти названия показываются в плашке над субъектом и в правой панели карты подрядчиков.
+              </p>
+              <form className={styles.form} onSubmit={handleMapLabelsSave}>
+                <label className={styles.label}>
+                  Название блока ВУЗ / СПО
+                  <input
+                    className={styles.input}
+                    value={mapLabels.education}
+                    onChange={(e) => setMapLabels({ ...mapLabels, education: e.target.value })}
+                    placeholder="ВУЗ / СПО"
+                    maxLength={80}
+                  />
+                </label>
+                <label className={styles.label}>
+                  Название блока подрядчиков
+                  <input
+                    className={styles.input}
+                    value={mapLabels.contractors}
+                    onChange={(e) => setMapLabels({ ...mapLabels, contractors: e.target.value })}
+                    placeholder="Подрядчики"
+                    maxLength={80}
+                  />
+                </label>
+                <button type="submit" className={styles.btnNeoPrimary}>
+                  Сохранить названия
+                </button>
+                {mapLabelsMsg ? <p className={styles.okMsg}>{mapLabelsMsg}</p> : null}
+              </form>
+
+              <h4 className={styles.sectionTitle} style={{ marginTop: 14 }}>
+                Организации по субъектам для карты
+              </h4>
+              <p className={styles.subtitle}>
+                Формат строки: субъект, тип (ВУЗ/СПО или подрядчики), наименование. Эти данные отображаются справа
+                на карте после выбора субъекта и типа.
+              </p>
+
+              <form className={styles.form} onSubmit={handleAddMapOrg}>
+                <label className={styles.label}>
+                  Субъект
+                  <select
+                    className={styles.input}
+                    value={newMapSubject}
+                    onChange={(e) => setNewMapSubject(e.target.value)}
+                  >
+                    <option value="">Выберите субъект</option>
+                    {subjectOptions.map((s) => (
+                      <option key={s} value={s}>
+                        {formatSubjectDisplayName(s)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className={styles.label}>
+                  Тип
+                  <select
+                    className={styles.input}
+                    value={newMapKind}
+                    onChange={(e) => setNewMapKind(e.target.value as MapOrgKind)}
+                  >
+                    <option value="education">{mapLabels.education}</option>
+                    <option value="contractors">{mapLabels.contractors}</option>
+                  </select>
+                </label>
+                <label className={styles.label}>
+                  Наименование
+                  <input
+                    className={styles.input}
+                    value={newMapName}
+                    onChange={(e) => setNewMapName(e.target.value)}
+                    placeholder="Введите название организации"
+                    maxLength={240}
+                  />
+                </label>
+                <button type="submit" className={styles.btnNeoPrimary}>
+                  Добавить строку
+                </button>
+              </form>
+
+              {mapOrgMsg ? <p className={styles.okMsg}>{mapOrgMsg}</p> : null}
+
+              <div className={styles.section} style={{ marginTop: 14 }}>
+            <button
+              type="button"
+              className={styles.collapseTrigger}
+              aria-expanded={mapEducationOpen}
+              onClick={() => setMapEducationOpen((v) => !v)}
+            >
+              <span
+                className={`${styles.collapseChevron} ${mapEducationOpen ? styles.collapseChevronOpen : ""}`}
+                aria-hidden
+              >
+                ▶
+              </span>
+              <h4 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>{mapLabels.education}</h4>
+              <span className={styles.collapseMeta}>{mapEducationRows.length}</span>
+            </button>
+            {mapEducationOpen ? (
+              <div className={styles.tableWrap} style={{ marginTop: 10 }}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Субъект</th>
+                      <th>Наименование</th>
+                      <th style={{ width: 180 }} />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mapEducationRows.map((row) => (
+                      <tr key={row.id}>
+                        <td>{formatSubjectDisplayName(row.subjectName)}</td>
+                        <td>{row.name}</td>
+                        <td>
+                          <button type="button" className={styles.btnSmall} onClick={() => startEditMapOrg(row)}>
+                            Изменить
+                          </button>{" "}
+                          <button type="button" className={styles.btnSmallDanger} onClick={() => handleDeleteMapOrg(row)}>
+                            Удалить
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {mapEducationRows.length === 0 ? (
+                      <tr>
+                        <td colSpan={3}>
+                          <span className={styles.hint}>Список пуст.</span>
+                        </td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
+              </div>
+            ) : null}
+              </div>
+
+              <div className={styles.section} style={{ marginTop: 12 }}>
+            <button
+              type="button"
+              className={styles.collapseTrigger}
+              aria-expanded={mapContractorsOpen}
+              onClick={() => setMapContractorsOpen((v) => !v)}
+            >
+              <span
+                className={`${styles.collapseChevron} ${mapContractorsOpen ? styles.collapseChevronOpen : ""}`}
+                aria-hidden
+              >
+                ▶
+              </span>
+              <h4 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>{mapLabels.contractors}</h4>
+              <span className={styles.collapseMeta}>{mapContractorRows.length}</span>
+            </button>
+            {mapContractorsOpen ? (
+              <div className={styles.tableWrap} style={{ marginTop: 10 }}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Субъект</th>
+                      <th>Наименование</th>
+                      <th style={{ width: 180 }} />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mapContractorRows.map((row) => (
+                      <tr key={row.id}>
+                        <td>{formatSubjectDisplayName(row.subjectName)}</td>
+                        <td>{row.name}</td>
+                        <td>
+                          <button type="button" className={styles.btnSmall} onClick={() => startEditMapOrg(row)}>
+                            Изменить
+                          </button>{" "}
+                          <button type="button" className={styles.btnSmallDanger} onClick={() => handleDeleteMapOrg(row)}>
+                            Удалить
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {mapContractorRows.length === 0 ? (
+                      <tr>
+                        <td colSpan={3}>
+                          <span className={styles.hint}>Список пуст.</span>
+                        </td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
+              </div>
+            ) : null}
+              </div>
+
+              {editingMapOrgId ? (
+                <form className={styles.editGrid} style={{ marginTop: 14 }} onSubmit={handleSaveMapOrg}>
+              <h4 className={styles.sectionTitle} style={{ gridColumn: "1 / -1" }}>
+                Редактирование строки
+              </h4>
+              <label className={styles.label}>
+                Субъект
+                <select
+                  className={styles.input}
+                  value={editingMapSubject}
+                  onChange={(e) => setEditingMapSubject(e.target.value)}
+                >
+                  <option value="">Выберите субъект</option>
+                  {subjectOptions.map((s) => (
+                    <option key={s} value={s}>
+                      {formatSubjectDisplayName(s)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className={styles.label}>
+                Тип
+                <select
+                  className={styles.input}
+                  value={editingMapKind}
+                  onChange={(e) => setEditingMapKind(e.target.value as MapOrgKind)}
+                >
+                  <option value="education">{mapLabels.education}</option>
+                  <option value="contractors">{mapLabels.contractors}</option>
+                </select>
+              </label>
+              <label className={styles.label} style={{ gridColumn: "1 / -1" }}>
+                Наименование
+                <input
+                  className={styles.input}
+                  value={editingMapName}
+                  onChange={(e) => setEditingMapName(e.target.value)}
+                  maxLength={240}
+                />
+              </label>
+              <div className={styles.rowBtns} style={{ gridColumn: "1 / -1" }}>
+                <button type="submit" className={styles.btnNeoPrimary}>
+                  Сохранить изменения
+                </button>
+                <button
+                  type="button"
+                  className={styles.btnNeoGhost}
+                  onClick={() => setEditingMapOrgId(null)}
+                >
+                  Отмена
+                </button>
+              </div>
+                </form>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+
+        <div className={styles.section}>
+          <button
+            type="button"
+            className={styles.collapseTrigger}
             aria-expanded={usersOpen}
             onClick={() => setUsersOpen((v) => !v)}
           >
@@ -520,8 +909,8 @@ export default function AdminDashboard({
           ) : null}
           {authApiMode ? (
             <p className={styles.hint}>
-              Список пользователей загружается с сервера. Изменение профиля, удаление и сброс пароля выполняются
-              на серверной стороне и в этой версии админ-панели недоступны.
+              Список пользователей загружается с сервера. Редактирование профиля и удаление выполняются
+              на серверной стороне. Сброс пароля пока доступен только в локальном режиме.
             </p>
           ) : null}
           <div className={styles.tableWrap}>
@@ -543,17 +932,15 @@ export default function AdminDashboard({
                     </td>
                     <td>{u.profile.roleLabel}</td>
                     <td>
-                      {authApiMode ? (
-                        <span className={styles.hint}>Только просмотр</span>
-                      ) : (
-                        <>
-                          <button
-                            type="button"
-                            className={styles.btnSmall}
-                            onClick={() => openEdit(u)}
-                          >
-                            Править
-                          </button>{" "}
+                      <>
+                        <button
+                          type="button"
+                          className={styles.btnSmall}
+                          onClick={() => openEdit(u)}
+                        >
+                          Править
+                        </button>{" "}
+                        {!authApiMode ? (
                           <button
                             type="button"
                             className={styles.btnSmall}
@@ -564,16 +951,16 @@ export default function AdminDashboard({
                             }}
                           >
                             Пароль
-                          </button>{" "}
-                          <button
-                            type="button"
-                            className={styles.btnSmallDanger}
-                            onClick={() => deleteUser(u)}
-                          >
-                            Удалить
                           </button>
-                        </>
-                      )}
+                        ) : null}
+                        <button
+                          type="button"
+                          className={styles.btnSmallDanger}
+                          onClick={() => void deleteUser(u)}
+                        >
+                          Удалить
+                        </button>
+                      </>
                     </td>
                   </tr>
                 ))}
@@ -581,7 +968,7 @@ export default function AdminDashboard({
             </table>
           </div>
 
-          {!authApiMode && editing && editForm ? (
+          {editing && editForm ? (
             <form className={styles.editGrid} onSubmit={saveEdit}>
               <h4 className={styles.sectionTitle} style={{ gridColumn: "1 / -1" }}>
                 Профиль: {editing.emailNorm}
@@ -787,8 +1174,6 @@ export default function AdminDashboard({
         </div>
         </div>
       </div>
-
-      <AdminTamagotchiCat />
     </div>
   );
 }

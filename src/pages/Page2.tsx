@@ -5,8 +5,12 @@ import { isAdminLoggedIn } from "../utils/adminAuth";
 import { clearAdminReturnMark } from "../utils/adminReturnNavigation";
 import { injectImagePreloads } from "../utils/imagePreload";
 import { prefetchRoleSelectRoute } from "../utils/routePrefetch";
+import { PAGE2_HEADER_LOGO_SRC } from "../assets/appIcons";
 import { publicUrl } from "../utils/publicUrl";
 import RussiaLeafletMap from "../components/RussiaLeafletMap";
+import { formatSubjectDisplayName, type SubjectMarkerGeo } from "../data/page2MapGeo";
+import { loadMapCategoryLabels } from "../utils/mapCategoryLabels";
+import { loadMapSubjectOrganizations } from "../utils/mapSubjectOrganizations";
 import AdminDashboard from "./AdminDashboard";
 import AdminLoginPanel from "./AdminLoginPanel";
 import styles from "./Page2.module.css";
@@ -14,15 +18,13 @@ import styles from "./Page2.module.css";
 type AdminSurface = "map" | "adminLogin" | "adminDashboard";
 
 type AboutTab = "portal" | "download";
+type SubjectPanelTab = "education" | "contractors" | null;
 
 /** Страница 2 — карта подрядчиков (маршрут /services), интерактивная карта РФ (Leaflet + OSM). */
 
 const PAGE2_HERO_IMAGE = publicUrl("page2-hero-navy.png");
 
-const PAGE2_PRELOAD_IMAGES = [
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/lt3gp5do_expires_30_days.png",
-  PAGE2_HERO_IMAGE,
-] as const;
+const PAGE2_PRELOAD_IMAGES = [PAGE2_HEADER_LOGO_SRC, PAGE2_HERO_IMAGE] as const;
 
 const Page2 = () => {
   const navigate = useNavigate();
@@ -30,6 +32,10 @@ const Page2 = () => {
   const [adminLoggedIn, setAdminLoggedIn] = useState(() => isAdminLoggedIn());
   const [adminSurface, setAdminSurface] = useState<AdminSurface>("map");
   const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
+  const [selectedSubject, setSelectedSubject] = useState<SubjectMarkerGeo | null>(null);
+  const [subjectPanelTab, setSubjectPanelTab] = useState<SubjectPanelTab>(null);
+  const [mapLabels, setMapLabels] = useState(() => loadMapCategoryLabels());
+  const [subjectOrgs, setSubjectOrgs] = useState(() => loadMapSubjectOrganizations());
   const [aboutOpen, setAboutOpen] = useState(false);
   const [aboutTab, setAboutTab] = useState<AboutTab>("portal");
 
@@ -42,6 +48,26 @@ const Page2 = () => {
   useEffect(() => {
     prefetchRoleSelectRoute();
     return injectImagePreloads(PAGE2_PRELOAD_IMAGES);
+  }, []);
+
+  useEffect(() => {
+    const sync = () => setMapLabels(loadMapCategoryLabels());
+    window.addEventListener("trassa-map-category-labels-changed", sync);
+    window.addEventListener("focus", sync);
+    return () => {
+      window.removeEventListener("trassa-map-category-labels-changed", sync);
+      window.removeEventListener("focus", sync);
+    };
+  }, []);
+
+  useEffect(() => {
+    const sync = () => setSubjectOrgs(loadMapSubjectOrganizations());
+    window.addEventListener("trassa-map-subject-organizations-changed", sync);
+    window.addEventListener("focus", sync);
+    return () => {
+      window.removeEventListener("trassa-map-subject-organizations-changed", sync);
+      window.removeEventListener("focus", sync);
+    };
   }, []);
 
   /** /services?about=download | portal — открыть окно «О нас» (редирект с /download) */
@@ -71,11 +97,22 @@ const Page2 = () => {
   }, [location.search, navigate]);
 
   const toggleDistrictFromMap = useCallback((districtId: number) => {
-    setSelectedDistrict((prev) => (prev === districtId ? null : districtId));
+    setSelectedDistrict((prev) => {
+      const next = prev === districtId ? null : districtId;
+      if (next === null) {
+        setSelectedSubject(null);
+        setSubjectPanelTab(null);
+      }
+      return next;
+    });
   }, []);
 
-  const handleSubjectClick = useCallback((subjectName: string) => {
-    alert(`Подрядчики в ${subjectName}`);
+  const handleSubjectClick = useCallback((subject: SubjectMarkerGeo) => {
+    setSelectedSubject(subject);
+  }, []);
+
+  const handlePanelTabChange = useCallback((tab: Exclude<SubjectPanelTab, null>) => {
+    setSubjectPanelTab(tab);
   }, []);
 
   const openAdminEntry = useCallback(() => {
@@ -87,10 +124,22 @@ const Page2 = () => {
   }, [adminLoggedIn]);
 
   const showMap = adminSurface === "map";
+  const subjectName = selectedSubject?.name ?? null;
+  const subjectDisplayName = subjectName ? formatSubjectDisplayName(subjectName) : null;
+  const educationList = subjectName
+    ? subjectOrgs
+        .filter((x) => x.subjectName === subjectName && x.kind === "education")
+        .map((x) => x.name)
+    : [];
+  const contractorList = subjectName
+    ? subjectOrgs
+        .filter((x) => x.subjectName === subjectName && x.kind === "contractors")
+        .map((x) => x.name)
+    : [];
 
   return (
     <div
-      className={`${styles.pageRoot} ${!showMap ? styles.pageRootAdminCute : ""}`}
+      className={styles.pageRoot}
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
       <header className={styles.header}>
@@ -101,7 +150,7 @@ const Page2 = () => {
           <div className={styles.headerCenter}>
             <span className={styles.headerLogoWrap}>
               <img
-                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/lt3gp5do_expires_30_days.png"
+                src={PAGE2_HEADER_LOGO_SRC}
                 alt=""
                 className={styles.headerLogo}
                 decoding="async"
@@ -142,7 +191,7 @@ const Page2 = () => {
         </div>
       </header>
 
-      <main className={`${styles.main} ${!showMap ? styles.mainAdminCute : ""}`}>
+      <main className={styles.main}>
         <div className={styles.mainInner}>
         {adminSurface === "adminLogin" ? (
           <AdminLoginPanel
@@ -214,12 +263,55 @@ const Page2 = () => {
                 </span>
               </div>
 
-              <div className={styles.mapCanvas}>
-                <RussiaLeafletMap
-                  selectedDistrict={selectedDistrict}
-                  onToggleDistrict={toggleDistrictFromMap}
-                  onSubjectClick={handleSubjectClick}
-                />
+              <div className={`${styles.mapLayout} ${subjectPanelTab ? styles.mapLayoutWithAside : ""}`}>
+                <div className={styles.mapCanvas}>
+                  <RussiaLeafletMap
+                    selectedDistrict={selectedDistrict}
+                    onToggleDistrict={toggleDistrictFromMap}
+                    onSubjectClick={handleSubjectClick}
+                    activeSubjectName={selectedSubject?.name ?? null}
+                    activeCategory={subjectPanelTab}
+                    onCategoryChange={handlePanelTabChange}
+                    educationLabel={mapLabels.education}
+                    contractorsLabel={mapLabels.contractors}
+                  />
+                </div>
+                {subjectPanelTab ? (
+                  <aside className={styles.subjectAside}>
+                    <div className={styles.subjectAsideHead}>
+                      <h3 className={styles.subjectAsideTitle}>
+                        {subjectDisplayName ? `Регион: ${subjectDisplayName}` : "Выберите субъект на карте"}
+                      </h3>
+                      <p className={styles.subjectAsideHint}>
+                        {subjectPanelTab === "education" ? mapLabels.education : mapLabels.contractors}
+                      </p>
+                    </div>
+
+                    {subjectName ? (
+                      (() => {
+                        const rows = subjectPanelTab === "education" ? educationList : contractorList;
+                        if (rows.length === 0) {
+                          return (
+                            <div className={styles.subjectEmpty}>
+                              Для выбранного субъекта пока нет записей в этом разделе.
+                            </div>
+                          );
+                        }
+                        return (
+                          <div className={styles.subjectList}>
+                            {rows.map((item) => (
+                              <div key={item} className={styles.subjectListItem}>
+                                {item}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()
+                    ) : (
+                      <div className={styles.subjectEmpty}>Панель заполняется после выбора субъекта.</div>
+                    )}
+                  </aside>
+                ) : null}
               </div>
             </section>
           </>

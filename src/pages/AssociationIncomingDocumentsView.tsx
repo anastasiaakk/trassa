@@ -7,6 +7,7 @@ import {
   listIncomingDocumentsForAssociation,
   markAllNotificationsRead,
   markNotificationReadForSubmissionId,
+  removeSubmissionById,
   SHARED_DOCS_UPDATED_EVENT,
 } from "../utils/sharedAssociationDocumentsStorage";
 
@@ -80,6 +81,16 @@ const AssociationIncomingDocumentsView = memo(function AssociationIncomingDocume
       navigate(`${documentsPath}?open=${encodeURIComponent(documentId)}`);
     },
     [navigate, documentsPath]
+  );
+  const removeIncoming = useCallback(
+    (submissionId: string) => {
+      const ok = window.confirm("Удалить ответ подрядчика?");
+      if (!ok) return;
+      removeSubmissionById(submissionId);
+      setOpenIncomingId((prev) => (prev === submissionId ? null : prev));
+      sync();
+    },
+    [sync]
   );
 
   return (
@@ -226,34 +237,71 @@ const AssociationIncomingDocumentsView = memo(function AssociationIncomingDocume
                       </div>
                     ) : null}
                     {getDocument(d.id) ? (
-                      <button
-                        type="button"
-                        onClick={() => openInPlaced(d.id)}
-                        style={{
-                          marginTop: 14,
-                          border: "none",
-                          borderRadius: 999,
-                          padding: "10px 18px",
-                          fontSize: 13,
-                          fontWeight: 700,
-                          cursor: "pointer",
-                          background: styles.buttonBg,
-                          color: styles.buttonText,
-                          fontFamily: "inherit",
-                        }}
-                      >
-                        Открыть в размещённых документах
-                      </button>
+                      <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                        <button
+                          type="button"
+                          onClick={() => openInPlaced(d.id)}
+                          style={{
+                            border: "none",
+                            borderRadius: 999,
+                            padding: "10px 18px",
+                            fontSize: 13,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            background: styles.buttonBg,
+                            color: styles.buttonText,
+                            fontFamily: "inherit",
+                          }}
+                        >
+                          Открыть в размещённых документах
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeIncoming(s.id)}
+                          style={{
+                            border: "1px solid rgba(220, 38, 38, 0.35)",
+                            borderRadius: 999,
+                            padding: "10px 18px",
+                            fontSize: 13,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            background: "rgba(220, 38, 38, 0.08)",
+                            color: "#b91c1c",
+                            fontFamily: "inherit",
+                          }}
+                        >
+                          Удалить ответ
+                        </button>
+                      </div>
                     ) : (
-                      <div
-                        style={{
-                          marginTop: 14,
-                          fontSize: 13,
-                          color: styles.muted,
-                          lineHeight: 1.45,
-                        }}
-                      >
-                        Документ снят с публикации; ответ сохранён только во входящих.
+                      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+                        <div
+                          style={{
+                            fontSize: 13,
+                            color: styles.muted,
+                            lineHeight: 1.45,
+                          }}
+                        >
+                          Документ снят с публикации; ответ сохранён только во входящих.
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeIncoming(s.id)}
+                          style={{
+                            justifySelf: "start",
+                            border: "1px solid rgba(220, 38, 38, 0.35)",
+                            borderRadius: 999,
+                            padding: "10px 18px",
+                            fontSize: 13,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            background: "rgba(220, 38, 38, 0.08)",
+                            color: "#b91c1c",
+                            fontFamily: "inherit",
+                          }}
+                        >
+                          Удалить ответ
+                        </button>
                       </div>
                     )}
                   </div>

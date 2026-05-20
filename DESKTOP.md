@@ -28,24 +28,39 @@ npm run electron:build
 
 Используется **не** встроенный NSIS auto-updater (установщик свой), а проверка **JSON по HTTPS**.
 
-**Автоматическая настройка при сборке:** в корне проекта файл **`release-config.json`** — укажите **одну строку**:
+Установленное приложение раз в сутки (и при возврате в окно) запрашивает манифест. Если **`version`** в манифесте **новее**, чем в установленной копии, пользователь видит:
+
+1. Системное уведомление Windows «Доступно обновление „Трасса“».
+2. Диалог **«Обновить»** / **«Позже»** — по кнопке «Обновить» открывается ссылка на новый **`trassa-setup.exe`**.
+
+### Как выпустить новую версию (кратко)
+
+1. В **`package.json`** увеличьте **`"version"`** (например `0.2.0` → `0.2.1`).
+2. В **`release-config.json`** укажите, откуда приложение читает манифест (GitHub Releases или свой сайт):
+
+```json
+{
+  "publicBaseUrl": "",
+  "manifestUrl": "https://github.com/ВАШ_ЛОГИН/ВАШ_РЕПО/releases/latest/download/app-update.json"
+}
+```
+
+3. Соберите установщик: **`npm run electron:build`** → файл **`release/trassa-setup-<версия>.exe`** и копия в **`public/downloads/trassa-setup.exe`**.
+4. Опубликуйте:
+   - **GitHub:** `git push origin main` — Actions соберёт релиз, если для этой версии ещё нет тега **`v*`** (см. ниже).
+   - **Свой сайт:** выложите **`dist/`**, **`public/downloads/trassa-setup.exe`** и **`public/app-update.json`** (генерируется при сборке).
+
+Перед сборкой скрипт **`scripts/apply-release-config.cjs`** (или **`npm run release:config`**) записывает **`electron-assets/update.json`** с **`manifestUrl`** — без HTTPS-адреса проверка в приложении **выключена**.
+
+Если свой сайт без GitHub:
 
 ```json
 { "publicBaseUrl": "https://ваш-сайт.ru" }
 ```
 
-(без слэша в конце). Перед **`npm run build`** / **`npm run electron:build`** скрипт **`scripts/apply-release-config.cjs`** сам создаёт:
+Манифест: `https://ваш-сайт.ru/app-update.json`, установщик: `/downloads/trassa-setup.exe`.
 
-- **`public/app-update.json`** — положите на сайт вместе с деплоем (будет доступен как `https://ваш-сайт.ru/app-update.json`);
-- **`electron-assets/update.json`** — подставит **`manifestUrl`** на этот адрес.
-
-Установщик в манифесте задаётся как **`/downloads/trassa-setup.exe`** (тот же файл, что и для кнопки «Скачать» после **`sync-setup-download`**). Поднимите версию в **`package.json`**, соберите проект, выложите **`dist/`** и **`downloads/trassa-setup.exe`** на сайт.
-
-Альтернатива без правки файла: переменная окружения **`TRASSA_PUBLIC_URL`** (имеет приоритет над **`release-config.json`**).
-
-Если **`publicBaseUrl`** пустой, диалог обновления в приложении **не включается**, но **`public/app-update.json`** всё равно генерируется для ручного деплоя.
-
-Через ~12 с после запуска приложение запрашивает манифест; если **`version`** в манифесте новее установленной, показывается «Обновить / Позже». Подробнее — **`deploy/app-update-manifest.example.json`**.
+Подробнее — **`deploy/app-update-manifest.example.json`**.
 
 ### Вариант: только GitHub (без своего сайта)
 

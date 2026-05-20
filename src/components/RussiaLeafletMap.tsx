@@ -2,7 +2,9 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
+  SubjectMarkerGeo,
   FEDERAL_DISTRICTS_GEO,
+  formatSubjectDisplayName,
   getRussiaMapBoundsCorners,
   getSubjectsForDistrict,
 } from "../data/page2MapGeo";
@@ -12,7 +14,12 @@ import styles from "./RussiaLeafletMap.module.css";
 type Props = {
   selectedDistrict: number | null;
   onToggleDistrict: (districtId: number) => void;
-  onSubjectClick: (subjectName: string) => void;
+  onSubjectClick: (subject: SubjectMarkerGeo) => void;
+  activeSubjectName: string | null;
+  activeCategory: "education" | "contractors" | null;
+  onCategoryChange: (category: "education" | "contractors") => void;
+  educationLabel: string;
+  contractorsLabel: string;
 };
 
 type AdminProps = {
@@ -56,12 +63,37 @@ function RussiaLeafletMapInner({
   selectedDistrict,
   onToggleDistrict,
   onSubjectClick,
+  activeSubjectName,
+  activeCategory,
+  onCategoryChange,
+  educationLabel,
+  contractorsLabel,
 }: Props) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.FeatureGroup | null>(null);
   const adminLayerRef = useRef<L.GeoJSON | null>(null);
   const [zoomLabel, setZoomLabel] = useState(100);
+  const [popupPoint, setPopupPoint] = useState<{ x: number; y: number } | null>(null);
+  const [popupSubject, setPopupSubject] = useState<SubjectMarkerGeo | null>(null);
+  const popupSubjectRef = useRef<SubjectMarkerGeo | null>(null);
+
+  const updatePopupPosition = useCallback(
+    (subject: SubjectMarkerGeo | null) => {
+      const map = mapRef.current;
+      if (!map || !subject) {
+        setPopupPoint(null);
+        return;
+      }
+      const point = map.latLngToContainerPoint([subject.lat, subject.lon]);
+      setPopupPoint({ x: point.x, y: point.y });
+    },
+    []
+  );
+
+  useEffect(() => {
+    popupSubjectRef.current = popupSubject;
+  }, [popupSubject]);
 
   const rebuildMarkers = useCallback(
     (map: L.Map) => {
@@ -110,11 +142,15 @@ function RussiaLeafletMapInner({
       if (selectedDistrict != null) {
         const subs = getSubjectsForDistrict(selectedDistrict);
         for (const s of subs) {
-          addDistrict([s.lat, s.lon], s.name, "#3a8ec4", 7, () => onSubjectClick(s.name));
+          addDistrict([s.lat, s.lon], s.name, "#3a8ec4", 7, () => {
+            setPopupSubject(s);
+            updatePopupPosition(s);
+            onSubjectClick(s);
+          });
         }
       }
     },
-    [onSubjectClick, onToggleDistrict, selectedDistrict]
+    [onSubjectClick, onToggleDistrict, selectedDistrict, updatePopupPosition]
   );
 
   useEffect(() => {
@@ -155,16 +191,42 @@ function RussiaLeafletMapInner({
 
     const onZoom = () => setZoomLabel(zoomToPercent(map.getZoom()));
     map.on("zoomend", onZoom);
+    const onMove = () => {
+      setZoomLabel(zoomToPercent(map.getZoom()));
+      updatePopupPosition(popupSubjectRef.current);
+    };
+    map.on("move", onMove);
 
     return () => {
       map.off("zoomend", onZoom);
+      map.off("move", onMove);
       markersLayerRef.current = null;
       adminLayerRef.current = null;
       map.remove();
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- инициализация карты один раз
-  }, []);
+  }, [updatePopupPosition]);
+
+  useEffect(() => {
+    const el = hostRef.current;
+    const map = mapRef.current;
+    if (!el || !map) return;
+    let rafId = 0;
+
+    const ro = new ResizeObserver(() => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        map.invalidateSize({ pan: false, animate: false });
+        updatePopupPosition(popupSubjectRef.current);
+      });
+    });
+    ro.observe(el);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
+  }, [popupSubject, updatePopupPosition]);
 
   useEffect(() => {
     const gj = adminLayerRef.current;
@@ -182,6 +244,20 @@ function RussiaLeafletMapInner({
     rebuildMarkers(map);
   }, [rebuildMarkers]);
 
+  useEffect(() => {
+    if (!activeSubjectName) {
+      setPopupSubject(null);
+      setPopupPoint(null);
+      return;
+    }
+    const map = mapRef.current;
+    if (!map) return;
+    const subjects = selectedDistrict != null ? getSubjectsForDistrict(selectedDistrict) : [];
+    const found = subjects.find((s) => s.name === activeSubjectName) ?? null;
+    setPopupSubject(found);
+    updatePopupPosition(found);
+  }, [activeSubjectName, selectedDistrict, updatePopupPosition]);
+
   const handleZoomIn = useCallback(() => {
     mapRef.current?.zoomIn(1);
   }, []);
@@ -193,6 +269,46 @@ function RussiaLeafletMapInner({
   return (
     <div className={styles.wrap} lang="ru">
       <div ref={hostRef} className={styles.mapHost} lang="ru" />
+      {popupSubject && popupPoint ? (
+        <div
+          className={styles.subjectPopup}
+          style={{
+            left: popupPoint.x,
+            top: popupPoint.y - 64,
+          }}
+        >
+          <div className={styles.subjectPopupHead}>
+            <span className={styles.subjectPopupTitle}>{formatSubjectDisplayName(popupSubject.name)}</span>
+            <button
+              type="button"
+              className={styles.subjectPopupClose}
+              aria-label="Закрыть плашку субъекта"
+              onClick={() => {
+                setPopupSubject(null);
+                setPopupPoint(null);
+              }}
+            >
+              ×
+            </button>
+          </div>
+          <div className={styles.subjectPopupActions}>
+            <button
+              type="button"
+              className={`${styles.subjectPopupBtn} ${activeCategory === "education" ? styles.subjectPopupBtnActive : ""}`}
+              onClick={() => onCategoryChange("education")}
+            >
+              {educationLabel} <span aria-hidden>→</span>
+            </button>
+            <button
+              type="button"
+              className={`${styles.subjectPopupBtn} ${activeCategory === "contractors" ? styles.subjectPopupBtnActive : ""}`}
+              onClick={() => onCategoryChange("contractors")}
+            >
+              {contractorsLabel} <span aria-hidden>→</span>
+            </button>
+          </div>
+        </div>
+      ) : null}
       <div className={styles.zoomCluster}>
         <button
           type="button"

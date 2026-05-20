@@ -28,7 +28,17 @@ import {
   clearAdminReturnMark,
   shouldShowReturnToAdminDashboard,
 } from "../utils/adminReturnNavigation";
+import {
+  APP_LOGO_SRC,
+  CABINET_HERO_BG,
+  ICON_AVATAR,
+  ICON_LOGOUT,
+  ICON_PROFILE_CHEVRON,
+  ICON_SEARCH,
+  ICON_THEME,
+} from "../assets/appIcons";
 import { Page5MessengerView } from "./Page5MessengerView";
+import { buildAssociationPageTheme } from "../theme/cabinetPalettes";
 import { ProforientationResultsTable } from "../components/ProforientationEmployerPanels";
 import AssociationDocumentsView from "./AssociationDocumentsView";
 import AssociationIncomingDocumentsView from "./AssociationIncomingDocumentsView";
@@ -133,16 +143,14 @@ function injectMessengerTestIncoming(): void {
   }
 }
 
-const ROLES_GRID_ICON =
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/ujfy3mdv_expires_30_days.png";
-
 const PAGE5_PRELOAD_IMAGES = [
-  ROLES_GRID_ICON,
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/w5oazpzp_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/k21ztar3_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/uz9yxbza_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/u4te4tx0_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/ac7lp2lp_expires_30_days.png",
+  ICON_LOGOUT,
+  ICON_SEARCH,
+  APP_LOGO_SRC,
+  ICON_THEME,
+  ICON_AVATAR,
+  ICON_PROFILE_CHEVRON,
+  CABINET_HERO_BG,
 ] as const;
 
 export function AssociationPage({ variant }: { variant: AssociationVariant }) {
@@ -317,106 +325,99 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
     navigate("/profile", { state: { from: location.pathname } });
   }, [navigate, location.pathname]);
 
-  const styles = useMemo(
-    () => ({
-      pageBg: isDark ? "#0f172a" : "#e8edf5",
-      text: isDark ? "#f8fafc" : "#1c2b45",
-      muted: isDark ? "#a9bfe0" : "#5f728f",
-      surfaceBg: isDark ? "#1c2b45" : "#f8fafc",
-      cardBg: isDark ? "#16202f" : "#edf3fb",
-      sectionBg: isDark ? "#1b2c47" : "#f7faff",
-      inputBg: isDark ? "#172636" : "#eef3f8",
-      buttonBg: "#243b74",
-      buttonText: "#f8fafc",
-      cardShadow: isDark
-        ? "20px 20px 40px rgba(0, 0, 0, 0.35)"
-        : "20px 20px 40px rgba(142, 154, 178, 0.16), -20px -20px 40px rgba(255, 255, 255, 0.9)",
-      insetShadow: isDark
-        ? "inset 8px 8px 18px rgba(0, 0, 0, 0.24)"
-        : "inset 8px 8px 18px rgba(142, 154, 178, 0.16), inset -8px -8px 18px rgba(255, 255, 255, 0.8)",
-    }),
-    [isDark]
-  );
+  const styles = useMemo(() => buildAssociationPageTheme(variant, isDark), [variant, isDark]);
 
   /** Неоморфные плашки разделов главной (РАДОР / АДО) */
   const neoDashboardCards = useMemo(() => {
     const cardRaised = (): CSSProperties => ({
       position: "relative",
-      borderRadius: 32,
-      padding: "26px 24px 22px",
+      borderRadius: 34,
+      padding: "18px 20px 18px",
       overflow: "hidden",
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
-      minHeight: 288,
-      border: isDark ? "1px solid rgba(255,255,255,0.07)" : "1px solid rgba(255,255,255,0.78)",
+      minHeight: 334,
+      border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid rgba(255,255,255,0.76)",
       background: isDark
-        ? `linear-gradient(165deg, #1e2e46 0%, #172236 42%, #121b2c 100%)`
-        : `linear-gradient(165deg, #f7faff 0%, #eef3fb 48%, #e7eff8 100%)`,
+        ? "linear-gradient(145deg, rgba(36, 59, 116, 0.88) 0%, rgba(31, 52, 102, 0.86) 52%, rgba(26, 42, 82, 0.84) 100%)"
+        : "radial-gradient(118% 94% at 14% 98%, rgba(36, 59, 116, 0.26) 0%, rgba(36, 59, 116, 0.16) 24%, rgba(36, 59, 116, 0.08) 44%, rgba(36,59,116,0) 68%), radial-gradient(88% 76% at 88% 6%, rgba(26, 42, 82, 0.2) 0%, rgba(26,42,82,0) 52%), linear-gradient(155deg, rgba(236, 240, 248, 0.99) 0%, rgba(224, 231, 247, 0.98) 54%, rgba(211, 221, 242, 0.98) 100%)",
       boxShadow: isDark
-        ? "16px 16px 38px rgba(0,0,0,0.48), -12px -12px 34px rgba(42,64,96,0.28), inset 1px 1px 0 rgba(255,255,255,0.05)"
-        : "20px 20px 44px rgba(118, 136, 168, 0.32), -16px -16px 42px rgba(255, 255, 255, 0.98), inset 2px 2px 5px rgba(255, 255, 255, 0.92)",
+        ? "0 18px 34px rgba(6,10,24,0.44), inset 0 1px 0 rgba(255,255,255,0.16)"
+        : "0 22px 36px rgba(92,101,136,0.2), inset 0 1px 0 rgba(255,255,255,0.92)",
+      backdropFilter: "blur(20px) saturate(106%)",
+      WebkitBackdropFilter: "blur(20px) saturate(106%)",
     });
 
     const accentBar = (accent: string, accentSoft: string): CSSProperties => ({
       position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      height: 5,
-      borderRadius: "0 0 14px 14px",
+      left: -44,
+      bottom: -62,
+      width: 190,
+      height: 190,
+      borderRadius: 999,
       background: isDark
-        ? `linear-gradient(90deg, ${accent} 0%, ${accent}99 55%, ${accent}66 100%)`
-        : `linear-gradient(90deg, ${accent}dd 0%, ${accent} 40%, ${accentSoft} 100%)`,
-      boxShadow: isDark ? `0 2px 12px ${accentSoft}` : `0 3px 14px ${accentSoft}`,
+        ? `radial-gradient(circle, ${accent}40 0%, ${accent}20 44%, rgba(0,0,0,0) 76%)`
+        : `radial-gradient(circle, rgba(36, 59, 116, 0.24) 0%, rgba(36, 59, 116, 0.14) 34%, rgba(36, 59, 116, 0.06) 56%, rgba(0,0,0,0) 84%)`,
+      filter: "blur(5px)",
+      opacity: isDark ? 0.64 : 0.7,
+      pointerEvents: "none",
     });
 
     const iconWell = (accent: string): CSSProperties => ({
-      width: 72,
-      height: 72,
-      borderRadius: 22,
+      width: 24,
+      height: 24,
+      borderRadius: 999,
       display: "grid",
       placeItems: "center",
-      fontSize: 30,
+      fontSize: 12,
       lineHeight: 1,
       flexShrink: 0,
       background: isDark
-        ? `linear-gradient(150deg, rgba(255,255,255,0.07) 0%, rgba(0,0,0,0.22) 100%)`
-        : `linear-gradient(150deg, #ffffff 0%, ${accent}14 100%)`,
+        ? `linear-gradient(150deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.24) 100%)`
+        : `linear-gradient(150deg, rgba(255,255,255,0.86) 0%, ${accent}1a 100%)`,
       boxShadow: isDark
-        ? "inset 8px 8px 18px rgba(0,0,0,0.42), inset -3px -3px 12px rgba(100,140,220,0.1)"
-        : "inset 10px 10px 22px rgba(148, 162, 190, 0.42), inset -5px -5px 16px rgba(255, 255, 255, 1)",
-      border: `1px solid ${isDark ? `${accent}45` : "rgba(255,255,255,0.92)"}`,
+        ? "inset 4px 4px 9px rgba(0,0,0,0.3), inset -1px -1px 5px rgba(255,255,255,0.1)"
+        : "inset 2px 2px 6px rgba(0,0,0,0.08), inset -1px -1px 6px rgba(255,255,255,0.66)",
+      border: `1px solid ${isDark ? `${accent}52` : "rgba(255,255,255,0.72)"}`,
+      color: isDark ? "#eef2ff" : "rgba(96, 105, 133, 0.88)",
     });
 
     const tagChip: CSSProperties = {
-      padding: "9px 14px",
-      borderRadius: 999,
+      padding: 0,
+      borderRadius: 0,
       fontSize: 11,
-      fontWeight: 800,
-      letterSpacing: "0.07em",
-      textTransform: "uppercase",
-      color: isDark ? "rgba(226, 232, 240, 0.88)" : styles.muted,
-      background: isDark ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.72)",
-      boxShadow: isDark
-        ? "4px 4px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)"
-        : "6px 6px 14px rgba(154, 170, 198, 0.35), -3px -3px 12px rgba(255,255,255,0.95), inset 1px 1px 2px rgba(255,255,255,0.95)",
-      border: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(255,255,255,0.85)",
+      fontWeight: 500,
+      letterSpacing: "0.02em",
+      textTransform: "none",
+      color: isDark ? "rgba(226, 233, 248, 0.8)" : "rgba(95, 102, 122, 0.72)",
+      background: "transparent",
+      boxShadow: "none",
+      border: "none",
     };
 
     const openBtn: CSSProperties = {
-      border: "none",
-      borderRadius: 999,
-      padding: "13px 28px",
-      fontWeight: 700,
-      fontSize: 14,
+      border: isDark ? "1px solid rgba(255,255,255,0.34)" : "1px solid rgba(255,255,255,0.9)",
+      borderRadius: 24,
+      padding: "18px 24px",
+      fontWeight: 600,
+      fontSize: 15,
       cursor: "pointer",
       fontFamily: "inherit",
-      color: styles.buttonText,
-      background: `linear-gradient(155deg, #2f4d92 0%, ${styles.buttonBg} 55%, #1e3260 100%)`,
+      color: "#f8fbff",
+      background: isDark
+        ? "linear-gradient(160deg, rgba(141, 153, 204, 0.84) 0%, rgba(122, 136, 189, 0.88) 55%, rgba(108, 122, 176, 0.9) 100%)"
+        : "linear-gradient(160deg, rgba(129, 141, 186, 0.95) 0%, rgba(117, 129, 176, 0.96) 50%, rgba(105, 118, 167, 0.97) 100%)",
       boxShadow: isDark
-        ? "6px 6px 18px rgba(0,0,0,0.4), -2px -2px 10px rgba(80,120,200,0.15), inset 0 1px 0 rgba(255,255,255,0.18)"
-        : "8px 8px 22px rgba(100, 124, 168, 0.4), -4px -4px 16px rgba(255,255,255,0.85), inset 0 1px 0 rgba(255,255,255,0.25)",
+        ? "0 10px 20px rgba(8, 14, 34, 0.38), inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(18, 26, 52, 0.45)"
+        : "0 12px 24px rgba(74, 84, 126, 0.28), inset 0 1px 0 rgba(255,255,255,0.94), inset 0 -1px 0 rgba(85, 97, 145, 0.34)",
+      backdropFilter: "blur(10px) saturate(104%)",
+      WebkitBackdropFilter: "blur(10px) saturate(104%)",
+      minWidth: 180,
+      width: "100%",
+      textAlign: "center",
+      letterSpacing: "0",
+      lineHeight: 1,
     };
 
     const metaDot = (accent: string): CSSProperties => ({
@@ -430,7 +431,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
     });
 
     return { cardRaised, accentBar, iconWell, tagChip, openBtn, metaDot };
-  }, [isDark, styles.buttonBg, styles.buttonText, styles.muted]);
+  }, [isDark, styles]);
 
   const proforientationLayoutStyles = useMemo(
     () =>
@@ -503,7 +504,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
         minHeight: "100vh",
         background: styles.pageBg,
         color: styles.text,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "\"Montserrat\", \"Segoe UI\", Roboto, Arial, sans-serif",
         padding: "24px",
         display: "flex",
         flexDirection: "column",
@@ -572,7 +573,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
             >
               <img
                 decoding="async"
-                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/w5oazpzp_expires_30_days.png"
+                src={ICON_SEARCH}
                 alt="search icon"
                 style={{ width: 18, height: 18 }}
               />
@@ -598,7 +599,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
             <img
               decoding="async"
               fetchPriority="high"
-              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/k21ztar3_expires_30_days.png"
+              src={APP_LOGO_SRC}
               alt="Логотип"
               style={{ width: 160, height: 26, objectFit: "contain" }}
             />
@@ -696,8 +697,8 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 12,
-                padding: "10px 14px 10px 12px",
+                gap: 10,
+                padding: "8px 10px",
                 borderRadius: 22,
                 background: isDark
                   ? "linear-gradient(145deg, #1e3a5f 0%, #14263b 52%, #0f1f38 100%)"
@@ -718,11 +719,13 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                   aria-label="Переключить тему"
                   style={{
                     border: "none",
-                    background: "rgba(255,255,255,0.1)",
-                    padding: 10,
-                    borderRadius: 14,
+                    background: isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.12)",
+                    padding: 8,
+                    borderRadius: 12,
                     cursor: "pointer",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
+                    boxShadow: isDark
+                      ? "inset 0 1px 0 rgba(255,255,255,0.18)"
+                      : "inset 0 1px 0 rgba(255,255,255,0.2)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -731,31 +734,38 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 >
                   <img
                     decoding="async"
-                    src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/uz9yxbza_expires_30_days.png"
+                    src={ICON_THEME}
                     alt=""
                     style={{ width: 22, height: 22, display: "block" }}
                   />
                 </button>
               </HoverTooltip>
-              <img
-                decoding="async"
-                fetchPriority="high"
-                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/u4te4tx0_expires_30_days.png"
-                alt=""
-                width={36}
-                height={36}
-                style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
-              />
-              <div
+              <button
+                type="button"
+                onClick={goToProfile}
+                aria-label="Профиль"
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 2,
+                  flex: 1,
                   minWidth: 0,
-                  maxWidth: 148,
-                  justifyContent: "center",
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "2px 4px",
+                  fontFamily: "inherit",
                 }}
               >
+                <img
+                  decoding="async"
+                  fetchPriority="high"
+                  src={ICON_AVATAR}
+                  alt=""
+                  width={30}
+                  height={30}
+                  style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
+                />
                 <span
                   style={{
                     fontSize: 14,
@@ -768,49 +778,27 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 >
                   {plaqueName}
                 </span>
-              </div>
+                <img
+                  decoding="async"
+                  src={ICON_PROFILE_CHEVRON}
+                  alt=""
+                  width={16}
+                  height={16}
+                  style={{ flexShrink: 0, display: "block" }}
+                />
+              </button>
               <HoverTooltip
                 preset={sidebarTooltipPreset}
                 isDark={isDark}
-                content={<span style={{ whiteSpace: "nowrap" }}>Настройки профиля</span>}
-              >
-                <button
-                  type="button"
-                  onClick={goToProfile}
-                  aria-label="Настройки профиля"
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    padding: 4,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    borderRadius: 10,
-                  }}
-                >
-                  <img
-                    decoding="async"
-                    src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/ac7lp2lp_expires_30_days.png"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </button>
-              </HoverTooltip>
-              <HoverTooltip
-                preset={sidebarTooltipPreset}
-                isDark={isDark}
-                content={<span style={{ whiteSpace: "nowrap" }}>К выбору роли входа</span>}
+                content={<span style={{ whiteSpace: "nowrap" }}>Выйти / сменить роль</span>}
               >
                 <button
                   type="button"
                   onClick={goToRoleSelection}
-                  aria-label="К выбору роли"
+                  aria-label="Выйти"
                   style={{
                     border: "none",
-                    background: "rgba(255,255,255,0.1)",
+                    background: isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.12)",
                     padding: 8,
                     cursor: "pointer",
                     display: "flex",
@@ -818,10 +806,12 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                     justifyContent: "center",
                     flexShrink: 0,
                     borderRadius: 12,
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
+                    boxShadow: isDark
+                      ? "inset 0 1px 0 rgba(255,255,255,0.18)"
+                      : "inset 0 1px 0 rgba(255,255,255,0.12)",
                   }}
                 >
-                  <img decoding="async" src={ROLES_GRID_ICON} alt="" width={22} height={22} />
+                  <img decoding="async" src={ICON_LOGOUT} alt="" width={22} height={22} />
                 </button>
               </HoverTooltip>
             </div>
@@ -860,19 +850,22 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 padding: "14px 26px",
                 fontWeight: 700,
                 fontSize: 15,
-                color: styles.text,
                 fontFamily: "inherit",
                 ...(!isProforientationRoute &&
                 !isDocumentsSectionRoute &&
                 !isTeamsRoute &&
                 cabinetSection === "dashboard"
                   ? {
-                      background: styles.cardBg,
-                      boxShadow: styles.insetShadow,
+                      background:
+                        "linear-gradient(138deg, rgba(36, 59, 116, 0.94) 0%, rgba(26, 42, 82, 0.92) 100%)",
+                      boxShadow:
+                        "0 12px 24px rgba(20, 32, 62, 0.28), inset 0 1px 0 rgba(255,255,255,0.24)",
+                      color: "#f8fafc",
                     }
                   : {
                       background: styles.sectionBg,
                       boxShadow: styles.cardShadow,
+                      color: styles.text,
                     }),
               }}
             >
@@ -891,16 +884,19 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 padding: "14px 26px",
                 fontWeight: 700,
                 fontSize: 15,
-                color: styles.text,
                 fontFamily: "inherit",
                 ...(cabinetSection === "events"
                   ? {
-                      background: styles.cardBg,
-                      boxShadow: styles.insetShadow,
+                      background:
+                        "linear-gradient(138deg, rgba(36, 59, 116, 0.94) 0%, rgba(26, 42, 82, 0.92) 100%)",
+                      boxShadow:
+                        "0 12px 24px rgba(20, 32, 62, 0.28), inset 0 1px 0 rgba(255,255,255,0.24)",
+                      color: "#f8fafc",
                     }
                   : {
                       background: styles.sectionBg,
                       boxShadow: styles.cardShadow,
+                      color: styles.text,
                     }),
               }}
             >
@@ -1008,8 +1004,8 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
               gap: 28,
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
-              <div style={{ maxWidth: 680 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "stretch", gap: 24, flexWrap: "wrap" }}>
+              <div style={{ maxWidth: 560, flex: "1 1 460px" }}>
                 <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", marginBottom: 14, color: styles.muted }}>
                   {associationCopy.badgeTitle}
                 </div>
@@ -1021,34 +1017,72 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 </p>
               </div>
 
-              <div style={{ minWidth: 220, padding: 24, borderRadius: 32, background: styles.cardBg, color: styles.text, boxShadow: styles.insetShadow }}>
+              <div
+                style={{
+                  minWidth: 560,
+                  flex: "2 1 760px",
+                  padding: 24,
+                  borderRadius: 32,
+                  background: styles.cardBg,
+                  color: styles.text,
+                  boxShadow: styles.insetShadow,
+                  display: "grid",
+                  gap: 16,
+                  alignContent: "start",
+                }}
+              >
                 <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 12, color: styles.muted }}>
-                  Статус проекта
+                  Статус кабинета
                 </div>
-                <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>Июнь 2026</div>
                 <div style={{ fontSize: 14, lineHeight: 1.7, color: styles.muted }}>
                   Прозрачный обзор работы подрядчиков, статистика ответов и статус документов.
                 </div>
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 20 }}>
-              {projectMetrics.map((metric) => (
                 <div
-                  key={metric.title}
                   style={{
-                    borderRadius: 36,
-                    padding: 24,
-                    background: styles.cardBg,
+                    borderRadius: 24,
+                    padding: 22,
+                    background: styles.sectionBg,
                     boxShadow: styles.cardShadow,
-                    minHeight: 120,
-                    border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(255,255,255,0.9)",
+                    border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(255,255,255,0.88)",
                   }}
                 >
-                  <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "1px", color: styles.muted }}>{metric.title}</div>
-                  <div style={{ fontSize: 34, fontWeight: 700, color: styles.text }}>{metric.value}</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 18, alignItems: "stretch" }}>
+                    {projectMetrics.map((metric) => (
+                      <div
+                        key={metric.title}
+                        style={{
+                          minHeight: 108,
+                          display: "grid",
+                          gridTemplateRows: "42px 1fr",
+                          alignContent: "start",
+                          justifyItems: "center",
+                          gap: 8,
+                          textAlign: "center",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 10,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.7px",
+                            color: styles.muted,
+                            lineHeight: 1.2,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "100%",
+                          }}
+                        >
+                          {metric.title}
+                        </div>
+                        <div style={{ fontSize: 42, fontWeight: 700, color: styles.text, lineHeight: 1, alignSelf: "start", width: "100%" }}>
+                          {metric.value}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
 
             <div
@@ -1073,23 +1107,26 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                     <div
                       style={{
                         display: "flex",
-                        alignItems: "flex-start",
+                        alignItems: "center",
                         justifyContent: "space-between",
                         gap: 14,
-                        marginBottom: 18,
+                        marginBottom: 14,
                       }}
                     >
-                      <div style={neoDashboardCards.iconWell(card.accent)}>{card.icon}</div>
                       <span style={neoDashboardCards.tagChip}>{card.tag}</span>
+                      <div style={neoDashboardCards.iconWell(card.accent)}>{card.icon}</div>
                     </div>
                     <div
                       style={{
-                        fontSize: 21,
-                        fontWeight: 800,
-                        lineHeight: 1.25,
-                        marginBottom: 12,
-                        color: styles.text,
+                        fontSize: "clamp(19px, 1.35vw, 25px)",
+                        fontWeight: 700,
+                        lineHeight: 1.18,
+                        marginBottom: 8,
+                        color: isDark ? "#f8fbff" : "rgba(42, 50, 73, 0.94)",
                         letterSpacing: "-0.02em",
+                        textShadow: isDark
+                          ? "0 1px 0 rgba(12,18,34,0.26)"
+                          : "0 1px 0 rgba(255,255,255,0.32)",
                       }}
                     >
                       {card.title}
@@ -1097,9 +1134,9 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                     <p
                       style={{
                         margin: 0,
-                        fontSize: 14,
-                        lineHeight: 1.75,
-                        color: styles.muted,
+                        fontSize: 13,
+                        lineHeight: 1.5,
+                        color: isDark ? "rgba(231, 237, 250, 0.88)" : "rgba(68, 78, 105, 0.88)",
                       }}
                     >
                       {card.description}
@@ -1112,7 +1149,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                       zIndex: 1,
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
+                      justifyContent: "flex-start",
                       gap: 14,
                       marginTop: 22,
                       flexWrap: "wrap",
@@ -1120,6 +1157,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                   >
                     <button
                       type="button"
+                      className="softtouch-plaque"
                       onClick={() => {
                         leaveProforientationPath();
                         if (card.title === "Мероприятия") {
@@ -1134,12 +1172,6 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                     >
                       Открыть
                     </button>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={neoDashboardCards.metaDot(card.accent)} />
-                      <span style={{ fontSize: 12, fontWeight: 600, color: styles.muted, letterSpacing: "0.02em" }}>
-                        Рабочая панель
-                      </span>
-                    </div>
                   </div>
                 </div>
               ))}
@@ -1163,7 +1195,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
               }}
             >
               <div
-                style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.08em", color: styles.muted, marginBottom: 4 }}
+                style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: styles.muted, marginBottom: 4 }}
               >
                 ПРОФОРИЕНТАЦИЯ
               </div>

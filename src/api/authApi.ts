@@ -171,3 +171,33 @@ export async function authListUsers(): Promise<{ ok: true; users: ServerUserReco
   }
   return { ok: true, users: d.users };
 }
+
+export async function authAdminUpdateUser(
+  emailNorm: string,
+  profile: ProfileSettingsData
+): Promise<{ ok: true; user: ServerUserRecord } | AuthErr> {
+  const r = await jsonFetch<{ ok?: boolean; user?: ServerUserRecord; error?: string }>(
+    `/api/auth/users/${encodeURIComponent(emailNorm)}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ profile }),
+    }
+  );
+  if (!r.ok) return { ok: false, error: r.error };
+  const d = r.data;
+  if (!d?.user) {
+    return { ok: false, error: d?.error ?? "Не удалось обновить пользователя." };
+  }
+  return { ok: true, user: d.user };
+}
+
+export async function authAdminDeleteUser(emailNorm: string): Promise<{ ok: true } | AuthErr> {
+  const r = await jsonFetch<{ ok?: boolean; error?: string }>(
+    `/api/auth/users/${encodeURIComponent(emailNorm)}`,
+    { method: "DELETE" }
+  );
+  if (!r.ok) return { ok: false, error: r.error };
+  const d = r.data;
+  if (!d?.ok) return { ok: false, error: d?.error ?? "Не удалось удалить пользователя." };
+  return { ok: true };
+}

@@ -36,6 +36,12 @@ import {
 } from "../utils/adminReturnNavigation";
 import ContractorOrgPicker from "../components/ContractorOrgPicker";
 import styles from "./Page3.module.css";
+import {
+  ROLE_ICON_CONTRACTOR,
+  ROLE_ICON_INSTITUTION,
+  ROLE_ICON_SCHOOL,
+  ROLE_ICON_STUDENT,
+} from "../assets/appIcons";
 
 function contractorOrgValidationMessage(
   selectedRole: number | null,
@@ -61,7 +67,7 @@ const fourthCardHoverPhoto = new URL("../assets/admin-photo.png", import.meta.ur
 const firstCardExpandedPhoto = new URL("../assets/page3-expanded-role1.png", import.meta.url).href;
 const secondCardExpandedPhoto = new URL("../assets/page3-expanded-role2.png", import.meta.url).href;
 const thirdCardExpandedPhoto = new URL("../assets/page3-expanded-role3.png", import.meta.url).href;
-const firstCardIcon = "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/b3pnceya_expires_30_days.png";
+const firstCardIcon = ROLE_ICON_SCHOOL;
 
 const ROLE_HOVER_OVERLAY_SRC = [
   firstCardExpandedPhoto,
@@ -105,9 +111,9 @@ function getLoginBadgeText(
 
 const PAGE3_PRELOAD_IMAGES = [
   firstCardIcon,
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/66h5rmum_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/0tenwd9b_expires_30_days.png",
-  "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/boty0uwi_expires_30_days.png",
+  ROLE_ICON_STUDENT,
+  ROLE_ICON_CONTRACTOR,
+  ROLE_ICON_INSTITUTION,
   firstCardPhoto,
   secondCardPhoto,
   thirdCardPhoto,
@@ -126,19 +132,19 @@ const roleIcons = [
     alt: "Роль 1",
   },
   {
-    iconSrc: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/66h5rmum_expires_30_days.png",
+    iconSrc: ROLE_ICON_STUDENT,
     overlay: true,
     overlaySrc: secondCardPhoto,
     alt: "Роль 2",
   },
   {
-    iconSrc: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/0tenwd9b_expires_30_days.png",
+    iconSrc: ROLE_ICON_CONTRACTOR,
     overlay: true,
     overlaySrc: thirdCardPhoto,
     alt: "Роль 3",
   },
   {
-    iconSrc: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/boty0uwi_expires_30_days.png",
+    iconSrc: ROLE_ICON_INSTITUTION,
     overlay: true,
     overlaySrc: fourthCardPhoto,
     alt: "Роль 4",
@@ -208,7 +214,12 @@ const RoleCard = memo(({ icon, index, isSelected, onSelect, onLeave }: RoleCardP
           onClick={handleButtonClick}
           aria-label={icon.alt}
         >
-          <img decoding="async" src={icon.iconSrc} alt={icon.alt} className={styles.roleIcon} />
+          <img
+            decoding="async"
+            src={icon.iconSrc}
+            alt={icon.alt}
+            className={`${styles.roleIcon} ${index === 1 ? styles.roleIconStudent : ""}`}
+          />
         </button>
       </div>
       <div

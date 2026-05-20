@@ -1,6 +1,7 @@
 ﻿import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import CabinetChromeLayout, { type CabinetChromeContext } from "../components/CabinetChromeLayout";
+import { ICON_HERO_HOME } from "../assets/appIcons";
 import { ContractorCabinetAside } from "../components/ContractorCabinetAside";
 import { AUDIENCE_LABELS, getUpcomingStudentSchoolEventsForPanel } from "./Page5EventsView";
 import {
@@ -13,7 +14,7 @@ import ContractorDocumentsView from "./ContractorDocumentsView";
 import ContractorStudentTeamsView from "./ContractorStudentTeamsView";
 
 function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
-  const { styles, layoutStyles, profilePlaque } = ctx;
+  const { styles, layoutStyles, profilePlaque, isDark } = ctx;
   const location = useLocation();
   const isDocumentsPage = location.pathname === "/page4/documents";
   const isTeamsPage = location.pathname === "/page4/teams";
@@ -44,11 +45,20 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
     () => getUpcomingStudentSchoolEventsForPanel(sharedCalendarEvents, 6),
     [sharedCalendarEvents]
   );
+  const instituteCardDarkBg =
+    "linear-gradient(145deg, rgba(36, 59, 116, 0.88) 0%, rgba(31, 52, 102, 0.86) 52%, rgba(26, 42, 82, 0.84) 100%)";
+  const institutePanelDarkBg =
+    "linear-gradient(152deg, rgba(26, 42, 82, 0.82) 0%, rgba(31, 52, 102, 0.78) 48%, rgba(20, 34, 70, 0.84) 100%)";
 
   if (isDocumentsPage) {
     return (
       <main style={layoutStyles.main}>
-        <ContractorCabinetAside styles={styles} layoutStyles={layoutStyles} active="documents" />
+        <ContractorCabinetAside
+          styles={styles}
+          layoutStyles={layoutStyles}
+          isDark={ctx.isDark}
+          active="documents"
+        />
         <section style={layoutStyles.section}>
           <ContractorDocumentsView styles={styles} layoutStyles={layoutStyles} isDark={ctx.isDark} />
         </section>
@@ -59,7 +69,12 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
   if (isTeamsPage) {
     return (
       <main style={layoutStyles.main}>
-        <ContractorCabinetAside styles={styles} layoutStyles={layoutStyles} active="teams" />
+        <ContractorCabinetAside
+          styles={styles}
+          layoutStyles={layoutStyles}
+          isDark={ctx.isDark}
+          active="teams"
+        />
         <section style={layoutStyles.section}>
           <ContractorStudentTeamsView styles={styles} layoutStyles={layoutStyles} />
         </section>
@@ -73,6 +88,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
         <ContractorCabinetAside
           styles={styles}
           layoutStyles={layoutStyles}
+          isDark={ctx.isDark}
           active="proforientation"
         />
         <Page4ContractorProforientationMain ctx={ctx} />
@@ -82,28 +98,36 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
 
   return (
     <main style={layoutStyles.main}>
-      <ContractorCabinetAside styles={styles} layoutStyles={layoutStyles} active="home" />
+      <ContractorCabinetAside
+        styles={styles}
+        layoutStyles={layoutStyles}
+        isDark={ctx.isDark}
+        active="home"
+      />
       <section style={layoutStyles.section}>
         <div
+          className="dashboard-glass-frame ref-stage ref-surface-soft"
           style={{
+            padding: 22,
+            background: isDark
+              ? `${styles.plaqueAccentStripe}, ${institutePanelDarkBg}`
+              : `${styles.plaqueAccentStripe}, ${styles.sectionBg}`,
+            border: styles.panelBorder,
+            boxShadow: styles.cardShadow,
+            backdropFilter: "blur(26px) saturate(125%)",
+            WebkitBackdropFilter: "blur(26px) saturate(125%)",
             display: "grid",
-            gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 0.95fr)",
-            gap: 24,
-            alignItems: "stretch",
+            gap: 22,
           }}
         >
-          <div style={layoutStyles.heroCard}>
+          <div className="dashboard-hero-grid">
+            <div className="ref-radius-a" style={{ ...layoutStyles.heroCard, minHeight: 404 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <button type="button" style={layoutStyles.heroTag}>
                 Письма, практика и обучение
               </button>
               <button type="button" style={layoutStyles.heroButton}>
-                <img
-                  decoding="async"
-                  src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/KMgTjwx8lt/of5s9282_expires_30_days.png"
-                  alt=""
-                  style={{ width: 22, height: 22 }}
-                />
+                <img decoding="async" src={ICON_HERO_HOME} alt="" style={{ width: 22, height: 22 }} />
               </button>
             </div>
             {contractorHeroTitle ? (
@@ -114,30 +138,91 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
               </div>
             )}
           </div>
-          <div style={{ display: "grid", gap: 22 }}>
-            <div style={layoutStyles.infoCard}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 14 }}>
+              <div
+                className="ref-utility-card ref-radius-b ref-overlap-up"
+                style={{
+                  ...layoutStyles.infoCard,
+                  gridColumn: "1 / -1",
+                  background: isDark ? instituteCardDarkBg : layoutStyles.infoCard.background,
+                }}
+              >
               <div style={layoutStyles.infoLabel}>письмо от Ассоциации «РАДОР»</div>
-              <div style={layoutStyles.infoTitle}>Запрос на летнюю практику 2026</div>
+              <div style={{ ...layoutStyles.infoTitle, fontSize: "clamp(22px, 2.1vw, 28px)" }}>
+                Запрос на летнюю практику 2026
+              </div>
               <div style={layoutStyles.infoText}>
                 Подрядчик может редактировать письмо и структуру таблицы. Может просматривать, готовить ответ и загружать
                 сопровождающие файлы в существующих шаблонах таблиц.
               </div>
             </div>
-            <button type="button" style={layoutStyles.actionCard}>
-              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>Письма и уведомления</div>
-              <div style={{ fontSize: 13, color: styles.muted }}>
+            <button
+              type="button"
+                className="softtouch-plaque ref-radius-c ref-overlap-left"
+                style={{
+                  ...layoutStyles.actionCard,
+                  minHeight: 132,
+                  display: "flex",
+                  flexDirection: "column",
+                  background: isDark ? instituteCardDarkBg : layoutStyles.actionCard.background,
+                }}
+            >
+              <div
+                style={{
+                  fontSize: 16,
+                  fontWeight: 700,
+                  marginBottom: 8,
+                  letterSpacing: "-0.01em",
+                  minHeight: 40,
+                  display: "flex",
+                  alignItems: "flex-start",
+                }}
+              >
+                Письма и уведомления
+              </div>
+              <div style={{ fontSize: 13, color: styles.plaqueButtonMuted, lineHeight: 1.5 }}>
                 Открыть список писем и увидеть последние запросы.
               </div>
             </button>
-            <button type="button" style={layoutStyles.actionCard}>
-              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>Таблица практики</div>
-              <div style={{ fontSize: 13, color: styles.muted }}>
+            <button
+              type="button"
+                className="softtouch-plaque ref-radius-b ref-overlap-right"
+                style={{
+                  ...layoutStyles.actionCard,
+                  minHeight: 132,
+                  display: "flex",
+                  flexDirection: "column",
+                  background: isDark ? instituteCardDarkBg : layoutStyles.actionCard.background,
+                }}
+            >
+              <div
+                style={{
+                  fontSize: 16,
+                  fontWeight: 700,
+                  marginBottom: 8,
+                  letterSpacing: "-0.01em",
+                  minHeight: 40,
+                  display: "flex",
+                  alignItems: "flex-start",
+                }}
+              >
+                Таблица практики
+              </div>
+              <div style={{ fontSize: 13, color: styles.plaqueButtonMuted, lineHeight: 1.5 }}>
                 Открыть таблицу, которую администратор может редактировать и наполнять.
               </div>
             </button>
+            </div>
           </div>
-        </div>
-        <div style={layoutStyles.recentPanel}>
+          <div
+            className="ref-utility-card ref-radius-a"
+            style={{
+              ...layoutStyles.recentPanel,
+              padding: 24,
+              minHeight: 276,
+              background: isDark ? institutePanelDarkBg : layoutStyles.recentPanel.background,
+            }}
+          >
           <div style={layoutStyles.recentTitle}>Ближайшие мероприятия</div>
           <div style={{ fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 4 }}>
             Мероприятия для студентов и школьников, которые создают ассоциации РАДОР и АДО во вкладке «Мероприятия».
@@ -189,6 +274,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
               );
             })
           )}
+          </div>
         </div>
       </section>
     </main>

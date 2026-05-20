@@ -21,7 +21,12 @@ const Page5 = lazy(() => import("./pages/Page5"));
 const Page6 = lazy(() => import("./pages/Page6"));
 const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const CabinetSchool = lazy(() => import("./pages/CabinetSchool"));
+const CabinetSchoolCalendar = lazy(() => import("./pages/CabinetSchoolCalendar"));
+const CabinetSchoolMessages = lazy(() => import("./pages/CabinetSchoolMessages"));
+const CabinetSchoolMaterials = lazy(() => import("./pages/CabinetSchoolMaterials"));
 const CabinetSpo = lazy(() => import("./pages/CabinetSpo"));
+const CabinetSpoPortfolio = lazy(() => import("./pages/CabinetSpoPortfolio"));
+const CabinetSpoRequests = lazy(() => import("./pages/CabinetSpoRequests"));
 const DownloadDesktopPage = lazy(() => import("./pages/DownloadDesktopPage"));
 
 /** Создаём элементы маршрутов один раз при загрузке модуля — без лишних пересозданий при рендере App */
@@ -30,7 +35,12 @@ const APP_ROUTES = [
   { path: "/services", element: <Page2 /> },
   { path: "/page3", element: <Page3 /> },
   { path: "/cabinet-school", element: <CabinetSchool /> },
+  { path: "/cabinet-school/materials", element: <CabinetSchoolMaterials /> },
+  { path: "/cabinet-school/messages", element: <CabinetSchoolMessages /> },
+  { path: "/cabinet-school/calendar", element: <CabinetSchoolCalendar /> },
   { path: "/cabinet-spo", element: <CabinetSpo /> },
+  { path: "/cabinet-spo/requests", element: <CabinetSpoRequests /> },
+  { path: "/cabinet-spo/portfolio", element: <CabinetSpoPortfolio /> },
   { path: "/page4", element: <Page4 /> },
   { path: "/page4/proforientation", element: <Page4 /> },
   { path: "/page4/documents", element: <Page4 /> },
@@ -146,6 +156,21 @@ function App() {
         return {
           title: "Личный кабинет — Школа — ТрассА",
           metaDescription: "Кабинет обучающегося",
+        };
+      case "/cabinet-school/calendar":
+        return {
+          title: "Календарь активностей — Школа — ТрассА",
+          metaDescription: "Отдельная страница календаря мероприятий для школьников",
+        };
+      case "/cabinet-school/messages":
+        return {
+          title: "Объявления и письма — Школа — ТрассА",
+          metaDescription: "Отдельная страница объявлений и писем для школьников",
+        };
+      case "/cabinet-school/materials":
+        return {
+          title: "Материалы и задания — Школа — ТрассА",
+          metaDescription: "Отдельная страница материалов и заданий для школьников",
         };
       case "/cabinet-spo":
         return {

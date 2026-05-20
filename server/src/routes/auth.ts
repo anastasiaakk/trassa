@@ -39,6 +39,10 @@ const loginSchema = z.object({
   password: z.string().min(1).max(500),
 });
 
+const adminUserUpdateSchema = z.object({
+  profile: profileSchema,
+});
+
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
@@ -208,4 +212,73 @@ authRouter.get("/users", (_req: Request, res: Response) => {
   });
 
   res.json({ ok: true, users });
+});
+
+authRouter.patch("/users/:emailNorm", (req: Request, res: Response) => {
+  const emailNorm = normalizeEmail(String(req.params.emailNorm ?? ""));
+  if (!emailNorm) {
+    res.status(400).json({ ok: false, error: "Не указан пользователь." });
+    return;
+  }
+  const parsed = adminUserUpdateSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ ok: false, error: "Некорректные данные профиля." });
+    return;
+  }
+
+  const row = db.prepare("SELECT id, created_at FROM users WHERE email_norm = ?").get(emailNorm) as
+    | { id: string; created_at: string }
+    | undefined;
+  if (!row) {
+    res.status(404).json({ ok: false, error: "Пользователь не найден." });
+    return;
+  }
+
+  const nextProfile = defaultProfile({
+    ...parsed.data.profile,
+    email: (parsed.data.profile.email ?? "").trim(),
+  });
+  const newEmailNorm = normalizeEmail(nextProfile.email);
+
+  if (!newEmailNorm) {
+    res.status(400).json({ ok: false, error: "E-mail обязателен." });
+    return;
+  }
+
+  if (newEmailNorm !== emailNorm) {
+    const taken = db.prepare("SELECT 1 FROM users WHERE email_norm = ? AND id != ?").get(newEmailNorm, row.id);
+    if (taken) {
+      res.status(409).json({ ok: false, error: "Этот e-mail уже занят." });
+      return;
+    }
+  }
+
+  db.prepare("UPDATE users SET email_norm = ?, profile_json = ? WHERE id = ?").run(
+    newEmailNorm,
+    JSON.stringify(nextProfile),
+    row.id
+  );
+
+  res.json({
+    ok: true,
+    user: {
+      emailNorm: newEmailNorm,
+      createdAt: row.created_at,
+      profile: nextProfile,
+    },
+  });
+});
+
+authRouter.delete("/users/:emailNorm", (req: Request, res: Response) => {
+  const emailNorm = normalizeEmail(String(req.params.emailNorm ?? ""));
+  if (!emailNorm) {
+    res.status(400).json({ ok: false, error: "Не указан пользователь." });
+    return;
+  }
+  const result = db.prepare("DELETE FROM users WHERE email_norm = ?").run(emailNorm);
+  if (result.changes === 0) {
+    res.status(404).json({ ok: false, error: "Пользователь не найден." });
+    return;
+  }
+  res.json({ ok: true });
 });

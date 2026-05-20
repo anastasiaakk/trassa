@@ -304,3 +304,15 @@ export function markNotificationReadForSubmissionId(submissionId: string): void 
     writeStore(store);
   }
 }
+
+/** Полностью удаляет входящий ответ подрядчика и связанное уведомление. */
+export function removeSubmissionById(submissionId: string): void {
+  const store = readStore();
+  const prevSubmissionsLen = store.submissions.length;
+  const prevNotificationsLen = store.notifications.length;
+  store.submissions = store.submissions.filter((s) => s.id !== submissionId);
+  store.notifications = store.notifications.filter((n) => n.submissionId !== submissionId);
+  if (store.submissions.length !== prevSubmissionsLen || store.notifications.length !== prevNotificationsLen) {
+    writeStore(store);
+  }
+}
