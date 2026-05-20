@@ -55,7 +55,7 @@ import { fetchAppUpdateManifest, publishAppUpdate } from "../api/appUpdateApi";
 import { TRASSA_SETUP_DOWNLOAD_URL } from "../config/desktopRelease";
 import styles from "./AdminPanel.module.css";
 
-const APP_VERSION = "0.2.4";
+const APP_VERSION = "0.2.5";
 
 type Props = {
   onLogout: () => void;
@@ -197,6 +197,20 @@ export default function AdminDashboard({
   useEffect(() => {
     refreshUsers();
   }, [refreshUsers]);
+
+  /** Автообновление списка пользователей с сервера между ноутбуками. */
+  useEffect(() => {
+    if (!authApiMode) return;
+    const refresh = () => refreshUsers();
+    const id = window.setInterval(refresh, 20_000);
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.clearInterval(id);
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+  }, [authApiMode, refreshUsers]);
 
   const deleteUser = useCallback(
     async (u: LocalUserRecord) => {
