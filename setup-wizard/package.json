@@ -1,6 +1,6 @@
 {
   "name": "trassa-setup-wizard",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "main": "main.cjs",
   "scripts": {
@@ -21,8 +21,8 @@
   },
   "build": {
     "appId": "com.myapp.trassa.setup",
-    "productName": "Трасса Setup",
-    "copyright": "Copyright © Трасса",
+    "productName": "РўСЂР°СЃСЃР° Setup",
+    "copyright": "Copyright В© РўСЂР°СЃСЃР°",
     "directories": {
       "output": "../release/setup-dist"
     },
@@ -55,3 +55,4 @@
     "nodeGypRebuild": false
   }
 }
+

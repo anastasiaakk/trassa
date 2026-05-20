@@ -176,8 +176,8 @@ function main() {
   }
 
   const next = {
-    ...updateDefaults,
     ...prev,
+    ...updateDefaults,
     manifestUrl,
   };
   fs.writeFileSync(updatePath, JSON.stringify(next, null, 2) + "\n", "utf8");

@@ -55,7 +55,7 @@ import { fetchAppUpdateManifest, publishAppUpdate } from "../api/appUpdateApi";
 import { TRASSA_SETUP_DOWNLOAD_URL } from "../config/desktopRelease";
 import styles from "./AdminPanel.module.css";
 
-const APP_VERSION = "0.2.0";
+const APP_VERSION = "0.2.2";
 
 type Props = {
   onLogout: () => void;
@@ -114,6 +114,7 @@ export default function AdminDashboard({
   const [newUserPassword, setNewUserPassword] = useState("");
   const [pwMessage, setPwMessage] = useState<string | null>(null);
   const [dataMessage, setDataMessage] = useState<string | null>(null);
+  const [maintenanceMsg, setMaintenanceMsg] = useState<string | null>(null);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
   const [syncBusy, setSyncBusy] = useState(false);
   const [releaseVersion, setReleaseVersion] = useState(APP_VERSION);
@@ -281,7 +282,12 @@ export default function AdminDashboard({
     (active: boolean) => {
       const next = { ...maintenance, active };
       setMaintenance(next);
-      saveMaintenanceState(next);
+      setMaintenanceMsg(null);
+      void saveMaintenanceState(next).then((r) => {
+        if (!r.ok) {
+          setMaintenanceMsg(`Не удалось сохранить на сервере: ${r.error}`);
+        }
+      });
     },
     [maintenance]
   );
@@ -290,7 +296,12 @@ export default function AdminDashboard({
     (message: string) => {
       const next = { ...maintenance, message };
       setMaintenance(next);
-      saveMaintenanceState(next);
+      setMaintenanceMsg(null);
+      void saveMaintenanceState(next).then((r) => {
+        if (!r.ok) {
+          setMaintenanceMsg(`Не удалось сохранить на сервере: ${r.error}`);
+        }
+      });
     },
     [maintenance]
   );
@@ -483,6 +494,7 @@ export default function AdminDashboard({
             onChange={(e) => updateMaintenanceMessage(e.target.value)}
             placeholder="Текст для пользователей"
           />
+          {maintenanceMsg ? <p className={styles.error}>{maintenanceMsg}</p> : null}
         </div>
 
         <div className={styles.section}>

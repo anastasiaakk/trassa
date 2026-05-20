@@ -4,7 +4,7 @@
  */
 
 import { PORTAL_KV } from "../config/portalKeys";
-import { pushPortalKv } from "./portalSync";
+import { pushPortalKvWithAck } from "./portalSync";
 
 const KEY = "trassa-maintenance-v1";
 
@@ -33,8 +33,10 @@ export function loadMaintenanceState(): MaintenanceState {
   }
 }
 
-export function saveMaintenanceState(state: MaintenanceState): void {
-  pushPortalKv(PORTAL_KV.MAINTENANCE, {
+export async function saveMaintenanceState(
+  state: MaintenanceState
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  return pushPortalKvWithAck(PORTAL_KV.MAINTENANCE, {
     active: state.active,
     message: state.message.trim() || DEFAULT_MESSAGE,
   });

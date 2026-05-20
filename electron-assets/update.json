@@ -1,6 +1,6 @@
 {
   "startupDelayMs": 12000,
-  "checkIntervalHours": 24,
+  "checkIntervalHours": 6,
   "remindLaterDays": 7,
   "manifestUrl": "https://github.com/anastasiaakk/trassa/releases/latest/download/app-update.json"
 }

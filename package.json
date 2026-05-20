@@ -49,7 +49,7 @@
   },
   "build": {
     "appId": "com.myapp.id",
-    "productName": "Трасса",
+    "productName": "РўСЂР°СЃСЃР°",
     "directories": {
       "output": "packaged-app"
     },
@@ -109,5 +109,6 @@
     "server:install": "npm install --prefix server",
     "dev:all": "concurrently -k \"npm run server:dev\" \"npm run dev\""
   },
-  "version": "0.2.1"
+  "version": "0.2.2"
 }
+

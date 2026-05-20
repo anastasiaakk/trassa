@@ -75,6 +75,25 @@ export function pushPortalKv(key: PortalKvKey, value: unknown): void {
   })();
 }
 
+/** Записать ключ и дождаться ответа API (для критичных админ-переключателей). */
+export async function pushPortalKvWithAck(
+  key: PortalKvKey,
+  value: unknown
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  applyKvToLocal(key, value);
+  if (!isPortalSyncEnabled()) return { ok: true };
+
+  const result = ADMIN_KEYS.has(key)
+    ? await putPortalKvAdmin(key, value)
+    : await putPortalKvUser(key, value);
+  if (result.ok) {
+    await refreshPortalStateFromServer();
+    return { ok: true };
+  }
+  console.warn("[portal-sync] не сохранено на сервере:", key, result.error);
+  return result;
+}
+
 /** Однократно отправить все локальные ключи на сервер (из админки). */
 export async function migrateLocalPortalStateToServer(): Promise<
   { ok: true; imported: number } | { ok: false; error: string }
