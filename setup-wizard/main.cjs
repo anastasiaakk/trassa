@@ -155,6 +155,19 @@ function findPayloadDir() {
   return null;
 }
 
+function findInstalledExe(dir) {
+  try {
+    if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) return null;
+    const files = fs.readdirSync(dir);
+    const exes = files.filter((f) => f.toLowerCase().endsWith(".exe"));
+    if (exes.length === 0) return null;
+    const preferred = exes.find((f) => !/setup/i.test(f)) || exes[0];
+    return path.join(dir, preferred);
+  } catch {
+    return null;
+  }
+}
+
 ipcMain.handle("default-path", () => {
   const base = process.env.LOCALAPPDATA || path.join(require("os").homedir(), "AppData", "Local");
   return path.join(base, "Трасса");
@@ -185,9 +198,9 @@ ipcMain.handle("install", async (_e, destPath) => {
     const msg = err instanceof Error ? err.message : String(err);
     return { ok: false, error: msg };
   }
-  const exePath = path.join(destPath, "Трасса.exe");
-  if (!fs.existsSync(exePath)) {
-    return { ok: false, error: "Файл Трасса.exe не найден после копирования." };
+  const exePath = findInstalledExe(destPath);
+  if (!exePath) {
+    return { ok: false, error: "Файл приложения .exe не найден после копирования." };
   }
   try {
     createDesktopShortcut(exePath, destPath);

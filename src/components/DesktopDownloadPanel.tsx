@@ -31,6 +31,9 @@ function DesktopDownloadPanel({ embedded }: Props) {
   const [version, setVersion] = useState<string | null>(null);
   const [checkBusy, setCheckBusy] = useState(false);
   const [checkMsg, setCheckMsg] = useState<string | null>(null);
+  const hasLocalMirror =
+    typeof window !== "undefined" &&
+    (window.location.protocol === "http:" || window.location.protocol === "https:");
 
   useEffect(() => {
     let cancelled = false;
@@ -99,13 +102,15 @@ function DesktopDownloadPanel({ embedded }: Props) {
           {checkBusy ? "Проверка..." : "Проверить обновления сейчас"}
         </button>
         {checkMsg ? <p className={styles.checkHint}>{checkMsg}</p> : null}
-        <p className={styles.downloadMirror}>
-          Если ссылка не открывается,{" "}
-          <a className={styles.mirrorLink} href={TRASSA_SETUP_LOCAL_URL} download="trassa-setup.exe">
-            скачать копию с этого сайта
-          </a>
-          .
-        </p>
+        {hasLocalMirror ? (
+          <p className={styles.downloadMirror}>
+            Если ссылка не открывается,{" "}
+            <a className={styles.mirrorLink} href={TRASSA_SETUP_LOCAL_URL} download="trassa-setup.exe">
+              скачать копию с этого сайта
+            </a>
+            .
+          </p>
+        ) : null}
       </div>
     </div>
   );
