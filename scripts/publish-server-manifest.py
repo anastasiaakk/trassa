@@ -7,10 +7,13 @@ import tempfile
 
 import paramiko
 
+import datetime
+
 MANIFEST = {
     "version": "0.2.11",
     "setupUrl": "https://github.com/anastasiaakk/trassa/releases/latest/download/trassa-setup.exe",
     "releaseNotes": "Быстрая синхронизация (3 с), исправления админки и установщика.",
+    "updatedAt": datetime.datetime.utcnow().isoformat() + "Z",
 }
 
 REMOTE_SCRIPT = """\
