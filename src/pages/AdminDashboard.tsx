@@ -1,4 +1,4 @@
-﻿import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import type { ProfileSettingsData } from "../profileSettingsStorage";
 import {
@@ -75,13 +75,13 @@ function ruPlural(n: number, one: string, few: string, many: string): string {
 }
 
 function orgListSummary(count: number): string {
-  if (count === 0) return "СЃРїРёСЃРѕРє РїСѓСЃС‚";
-  return `${count} ${ruPlural(count, "РѕСЂРіР°РЅРёР·Р°С†РёСЏ", "РѕСЂРіР°РЅРёР·Р°С†РёРё", "РѕСЂРіР°РЅРёР·Р°С†РёР№")}`;
+  if (count === 0) return "список пуст";
+  return `${count} ${ruPlural(count, "организация", "организации", "организаций")}`;
 }
 
 function usersListSummary(count: number): string {
-  if (count === 0) return "РЅРµС‚ Р·Р°РїРёСЃРµР№";
-  return `${count} ${ruPlural(count, "РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ", "РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ", "РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№")}`;
+  if (count === 0) return "нет записей";
+  return `${count} ${ruPlural(count, "пользователь", "пользователя", "пользователей")}`;
 }
 
 export default function AdminDashboard({
@@ -178,7 +178,7 @@ export default function AdminDashboard({
     if (authApiMode) {
       void authListUsers().then((r) => {
         if (!r.ok) {
-          setDataMessage(`РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ СЃ СЃРµСЂРІРµСЂР°: ${r.error}`);
+          setDataMessage(`Не удалось загрузить пользователей с сервера: ${r.error}`);
           return;
         }
         const mapped: LocalUserRecord[] = r.users.map((u) => ({
@@ -203,7 +203,7 @@ export default function AdminDashboard({
       const label = u.profile.email || u.emailNorm;
       if (
         !window.confirm(
-          `РЈРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ ${label}?\nР’С…РѕРґ РїРѕ СЌС‚РѕРјСѓ Р°РґСЂРµСЃСѓ СЃС‚Р°РЅРµС‚ РЅРµРІРѕР·РјРѕР¶РµРЅ. РЎРІСЏР·Р°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ (РІ С‚.С‡. РїСЂРѕС„РѕСЂРёРµРЅС‚Р°С†РёСЏ) Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹. Р”РµР№СЃС‚РІРёРµ РЅРµРѕР±СЂР°С‚РёРјРѕ.`
+          `Удалить пользователя ${label}?\nВход по этому адресу станет невозможен. Связанные данные (в т.ч. профориентация) будут удалены. Действие необратимо.`
         )
       ) {
         return;
@@ -212,10 +212,10 @@ export default function AdminDashboard({
         ? await authAdminDeleteUser(u.emailNorm)
         : deleteRegisteredUser(u.emailNorm);
       if (!r.ok) {
-        setDataMessage(r.error ?? "РќРµ СѓРґР°Р»РѕСЃСЊ СѓРґР°Р»РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.");
+        setDataMessage(r.error ?? "Не удалось удалить пользователя.");
         return;
       }
-      setDataMessage(`РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ ${label} СѓРґР°Р»С‘РЅ.`);
+      setDataMessage(`Пользователь ${label} удалён.`);
       if (editing?.emailNorm === u.emailNorm) {
         setEditing(null);
         setEditForm(null);
@@ -242,11 +242,11 @@ export default function AdminDashboard({
       if (authApiMode) {
         const r = await authAdminUpdateUser(editing.emailNorm, editForm);
         if (!r.ok) {
-          setDataMessage(r.error ?? "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.");
+          setDataMessage(r.error ?? "Не удалось сохранить изменения пользователя.");
           return;
         }
       } else if (!adminOverrideUserProfile(editing.emailNorm, editForm)) {
-        setDataMessage("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.");
+        setDataMessage("Не удалось сохранить изменения пользователя.");
         return;
       }
       refreshUsers();
@@ -268,7 +268,7 @@ export default function AdminDashboard({
       }
       const r = await resetPasswordForEmail(pwUserEmail, newUserPassword);
       if (r.ok) {
-        setPwMessage("РџР°СЂРѕР»СЊ РѕР±РЅРѕРІР»С‘РЅ.");
+        setPwMessage("Пароль обновлён.");
         setNewUserPassword("");
         setPwUserEmail(null);
       } else {
@@ -285,7 +285,7 @@ export default function AdminDashboard({
       setMaintenanceMsg(null);
       void saveMaintenanceState(next).then((r) => {
         if (!r.ok) {
-          setMaintenanceMsg(`РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ РЅР° СЃРµСЂРІРµСЂРµ: ${r.error}`);
+          setMaintenanceMsg(`Не удалось сохранить на сервере: ${r.error}`);
         }
       });
     },
@@ -299,7 +299,7 @@ export default function AdminDashboard({
       setMaintenanceMsg(null);
       void saveMaintenanceState(next).then((r) => {
         if (!r.ok) {
-          setMaintenanceMsg(`РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ РЅР° СЃРµСЂРІРµСЂРµ: ${r.error}`);
+          setMaintenanceMsg(`Не удалось сохранить на сервере: ${r.error}`);
         }
       });
     },
@@ -319,7 +319,7 @@ export default function AdminDashboard({
       if (r.ok) {
         setNewOrgName("");
         refreshContractorOrgs();
-        setOrgListMsg("РћСЂРіР°РЅРёР·Р°С†РёСЏ РґРѕР±Р°РІР»РµРЅР° РІ СЃРїРёСЃРѕРє РґР»СЏ РїРѕРґСЂСЏРґС‡РёРєРѕРІ.");
+        setOrgListMsg("Организация добавлена в список для подрядчиков.");
       } else {
         setOrgListMsg(r.error);
       }
@@ -331,7 +331,7 @@ export default function AdminDashboard({
     (name: string) => {
       removeContractorOrganization(name);
       refreshContractorOrgs();
-      setOrgListMsg("РќР°Р·РІР°РЅРёРµ СѓРґР°Р»РµРЅРѕ РёР· СЃРїРёСЃРєР°.");
+      setOrgListMsg("Название удалено из списка.");
     },
     [refreshContractorOrgs]
   );
@@ -342,7 +342,7 @@ export default function AdminDashboard({
       setAdminPwMsg(null);
       const r = await updateAdminPassword(adminOldPw, adminNewPw);
       if (r.ok) {
-        setAdminPwMsg("РџР°СЂРѕР»СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° РёР·РјРµРЅС‘РЅ.");
+        setAdminPwMsg("Пароль администратора изменён.");
         setAdminOldPw("");
         setAdminNewPw("");
       } else {
@@ -357,7 +357,7 @@ export default function AdminDashboard({
       e.preventDefault();
       saveMapCategoryLabels(mapLabels);
       setMapLabels(loadMapCategoryLabels());
-      setMapLabelsMsg("РќР°Р·РІР°РЅРёСЏ СЂР°Р·РґРµР»РѕРІ РЅР° РєР°СЂС‚Рµ СЃРѕС…СЂР°РЅРµРЅС‹.");
+      setMapLabelsMsg("Названия разделов на карте сохранены.");
     },
     [mapLabels]
   );
@@ -387,7 +387,7 @@ export default function AdminDashboard({
       setMapEducationOpen(newMapKind === "education" ? true : mapEducationOpen);
       setMapContractorsOpen(newMapKind === "contractors" ? true : mapContractorsOpen);
       refreshMapOrgs();
-      setMapOrgMsg("Р—Р°РїРёСЃСЊ РґРѕР±Р°РІР»РµРЅР°.");
+      setMapOrgMsg("Запись добавлена.");
     },
     [mapContractorsOpen, mapEducationOpen, newMapKind, newMapName, newMapSubject, refreshMapOrgs]
   );
@@ -409,20 +409,20 @@ export default function AdminDashboard({
       setEditingMapOrgId(null);
       setEditingMapName("");
       refreshMapOrgs();
-      setMapOrgMsg("Р—Р°РїРёСЃСЊ РѕР±РЅРѕРІР»РµРЅР°.");
+      setMapOrgMsg("Запись обновлена.");
     },
     [editingMapKind, editingMapName, editingMapOrgId, editingMapSubject, refreshMapOrgs]
   );
 
   const handleDeleteMapOrg = useCallback(
     (row: MapSubjectOrganization) => {
-      if (!window.confirm(`РЈРґР°Р»РёС‚СЊ Р·Р°РїРёСЃСЊ В«${row.name}В»?`)) return;
+      if (!window.confirm(`Удалить запись «${row.name}»?`)) return;
       removeMapSubjectOrganization(row.id);
       if (editingMapOrgId === row.id) {
         setEditingMapOrgId(null);
       }
       refreshMapOrgs();
-      setMapOrgMsg("Р—Р°РїРёСЃСЊ СѓРґР°Р»РµРЅР°.");
+      setMapOrgMsg("Запись удалена.");
     },
     [editingMapOrgId, refreshMapOrgs]
   );
@@ -446,30 +446,30 @@ export default function AdminDashboard({
       <div className={styles.shell}>
         <header className={styles.cabinetHero}>
           <div className={styles.cabinetHeroText}>
-            <p className={styles.cabinetKicker}>Р›РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°</p>
+            <p className={styles.cabinetKicker}>Личный кабинет администратора</p>
             <h2 className={styles.cabinetTitle}>
-              Р—РґСЂР°РІСЃС‚РІСѓР№С‚Рµ, {cabinet.displayName}!
+              Здравствуйте, {cabinet.displayName}!
             </h2>
             <p className={styles.cabinetEmail}>{adminEmail ?? ""}</p>
           </div>
           <div className={styles.cabinetHeroActions}>
             <button type="button" className={styles.btnNeoDanger} onClick={handleLogout}>
-              Р’С‹Р№С‚Рё
+              Выйти
             </button>
           </div>
         </header>
 
         <div className={`${styles.neoCard} ${styles.cabinetCard}`}>
-        <h3 className={styles.dashboardSectionHeading}>РЈРїСЂР°РІР»РµРЅРёРµ РїРѕСЂС‚Р°Р»РѕРј</h3>
+        <h3 className={styles.dashboardSectionHeading}>Управление порталом</h3>
         <p className={styles.subtitleNeo}>
-          РќР°СЃС‚СЂРѕР№РєРё РЅРёР¶Рµ РїСЂРёРјРµРЅСЏСЋС‚СЃСЏ СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ СЃРѕС…СЂР°РЅРµРЅРёСЏ.
+          Настройки ниже применяются сразу после сохранения.
         </p>
 
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>РўРµС…РЅРёС‡РµСЃРєРёРµ СЂР°Р±РѕС‚С‹</h3>
+          <h3 className={styles.sectionTitle}>Технические работы</h3>
           <p className={styles.subtitle} style={{ marginBottom: 12 }}>
-            РџСЂРё РІРєР»СЋС‡РµРЅРёРё РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЃС‚СЂР°РЅРёС†С‹ РїРѕСЂС‚Р°Р»Р° РЅРµРґРѕСЃС‚СѓРїРЅС‹. Р Р°Р·РґРµР» В«РљР°СЂС‚Р°
-            РїРѕРґСЂСЏРґС‡РёРєРѕРІВ» (/services) РѕСЃС‚Р°С‘С‚СЃСЏ РѕС‚РєСЂС‹С‚С‹Рј РґР»СЏ РІС…РѕРґР° Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°.
+            При включении остальные страницы портала недоступны. Раздел «Карта
+            подрядчиков» (/services) остаётся открытым для входа администратора.
           </p>
           <div className={styles.toggleRow}>
             <label
@@ -485,23 +485,23 @@ export default function AdminDashboard({
                 checked={maintenance.active}
                 onChange={(e) => toggleMaintenance(e.target.checked)}
               />
-              <span>Р РµР¶РёРј С‚РµС…РЅРёС‡РµСЃРєРёС… СЂР°Р±РѕС‚</span>
+              <span>Режим технических работ</span>
             </label>
           </div>
           <textarea
             className={styles.textarea}
             value={maintenance.message}
             onChange={(e) => updateMaintenanceMessage(e.target.value)}
-            placeholder="РўРµРєСЃС‚ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№"
+            placeholder="Текст для пользователей"
           />
           {maintenanceMsg ? <p className={styles.error}>{maintenanceMsg}</p> : null}
         </div>
 
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Р¤РѕРЅРѕРІР°СЏ Р°РЅРёРјР°С†РёСЏ</h3>
+          <h3 className={styles.sectionTitle}>Фоновая анимация</h3>
           <p className={styles.subtitle} style={{ marginBottom: 12 }}>
-            Р›РµРїРµСЃС‚РєРё Рё СЌС„С„РµРєС‚С‹ РЅР° С„РѕРЅРµ РІСЃРµС… СЃС‚СЂР°РЅРёС† РїРѕСЂС‚Р°Р»Р°. РР·РјРµРЅРµРЅРёРµ
-            РїСЂРёРјРµРЅСЏРµС‚СЃСЏ СЃСЂР°Р·Сѓ, РІ С‚РѕРј С‡РёСЃР»Рµ РІ РґСЂСѓРіРёС… РѕС‚РєСЂС‹С‚С‹С… РІРєР»Р°РґРєР°С….
+            Лепестки и эффекты на фоне всех страниц портала. Изменение
+            применяется сразу, в том числе в других открытых вкладках.
           </p>
           <div
             style={{
@@ -513,11 +513,11 @@ export default function AdminDashboard({
           >
             {(
               [
-                ["off", "Р’С‹РєР»СЋС‡РµРЅРѕ"],
-                ["spring", "Р’РµСЃРЅР° вЂ” Р»РµРїРµСЃС‚РєРё СЏР±Р»РѕРЅРё"],
-                ["summer", "Р›РµС‚Рѕ вЂ” Р·РµР»С‘РЅС‹Рµ Р»РёСЃС‚СЊСЏ"],
-                ["autumn", "РћСЃРµРЅСЊ вЂ” РѕРїР°РґР°СЋС‰Р°СЏ Р»РёСЃС‚РІР°"],
-                ["winter", "Р—РёРјР° вЂ” СЃРЅРµР¶РёРЅРєРё"],
+                ["off", "Выключено"],
+                ["spring", "Весна — лепестки яблони"],
+                ["summer", "Лето — зелёные листья"],
+                ["autumn", "Осень — опадающая листва"],
+                ["winter", "Зима — снежинки"],
               ] as const
             ).map(([value, label]) => (
               <label
@@ -554,32 +554,32 @@ export default function AdminDashboard({
               className={`${styles.collapseChevron} ${orgsOpen ? styles.collapseChevronOpen : ""}`}
               aria-hidden
             >
-              в–¶
+              ▶
             </span>
             <h3 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>
-              РћСЂРіР°РЅРёР·Р°С†РёРё РїРѕРґСЂСЏРґС‡РёРєРѕРІ
+              Организации подрядчиков
             </h3>
             <span className={styles.collapseMeta}>{orgListSummary(contractorOrgs.length)}</span>
           </button>
           {orgsOpen ? (
             <div className={styles.collapseBody}>
               <p className={styles.subtitle} style={{ marginBottom: 12 }}>
-                РЎРїРёСЃРѕРє РґР»СЏ РІС…РѕРґР° Рё СЂРµРіРёСЃС‚СЂР°С†РёРё РІ СЂРѕР»Рё В«РџРѕРґСЂСЏРґС‡РёРєВ». Р‘РµР· РІС‹Р±РѕСЂР° РѕСЂРіР°РЅРёР·Р°С†РёРё РёР· СЌС‚РѕРіРѕ СЃРїРёСЃРєР°
-                РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РїРѕРїР°РґС‘С‚ РІ РєР°Р±РёРЅРµС‚.
+                Список для входа и регистрации в роли «Подрядчик». Без выбора организации из этого списка
+                пользователь не попадёт в кабинет.
               </p>
               <form className={styles.form} onSubmit={handleAddContractorOrg}>
                 <label className={styles.label}>
-                  РќРѕРІР°СЏ РѕСЂРіР°РЅРёР·Р°С†РёСЏ
+                  Новая организация
                   <input
                     className={styles.input}
                     value={newOrgName}
                     onChange={(e) => setNewOrgName(e.target.value)}
-                    placeholder="РџРѕР»РЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ"
+                    placeholder="Полное наименование"
                     maxLength={200}
                   />
                 </label>
                 <button type="submit" className={styles.btnNeoPrimary}>
-                  Р”РѕР±Р°РІРёС‚СЊ РІ СЃРїРёСЃРѕРє
+                  Добавить в список
                 </button>
               </form>
               {orgListMsg ? <p className={styles.okMsg}>{orgListMsg}</p> : null}
@@ -587,7 +587,7 @@ export default function AdminDashboard({
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th>РќР°Р·РІР°РЅРёРµ</th>
+                      <th>Название</th>
                       <th style={{ width: 120 }} />
                     </tr>
                   </thead>
@@ -595,7 +595,7 @@ export default function AdminDashboard({
                     {contractorOrgs.length === 0 ? (
                       <tr>
                         <td colSpan={2}>
-                          <span className={styles.hint}>РЎРїРёСЃРѕРє РїСѓСЃС‚ вЂ” РґРѕР±Р°РІСЊС‚Рµ РѕСЂРіР°РЅРёР·Р°С†РёРё РІС‹С€Рµ.</span>
+                          <span className={styles.hint}>Список пуст — добавьте организации выше.</span>
                         </td>
                       </tr>
                     ) : (
@@ -608,7 +608,7 @@ export default function AdminDashboard({
                               className={styles.btnSmall}
                               onClick={() => handleRemoveContractorOrg(name)}
                             >
-                              РЈРґР°Р»РёС‚СЊ
+                              Удалить
                             </button>
                           </td>
                         </tr>
@@ -633,24 +633,24 @@ export default function AdminDashboard({
                 className={`${styles.collapseChevron} ${releaseOpen ? styles.collapseChevronOpen : ""}`}
                 aria-hidden
               >
-                в–¶
+                ▶
               </span>
               <h3 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>
-                РћР±РЅРѕРІР»РµРЅРёРµ РїСЂРёР»РѕР¶РµРЅРёСЏ (.exe)
+                Обновление приложения (.exe)
               </h3>
               <span className={styles.collapseMeta}>
-                {publishedVersion ? `РѕРїСѓР±Р»РёРєРѕРІР°РЅР° v${publishedVersion}` : "РЅРµ РѕРїСѓР±Р»РёРєРѕРІР°РЅРѕ"}
+                {publishedVersion ? `опубликована v${publishedVersion}` : "не опубликовано"}
               </span>
             </button>
             {releaseOpen ? (
               <div className={styles.collapseBody}>
                 <p className={styles.subtitle} style={{ marginBottom: 12 }}>
-                  <strong>Р”Р°РЅРЅС‹Рµ РїРѕСЂС‚Р°Р»Р°</strong> (РєР°СЂС‚Р°, РґРѕРєСѓРјРµРЅС‚С‹, РєР°Р»РµРЅРґР°СЂСЊ) Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РѕР±РЅРѕРІР»СЏСЋС‚СЃСЏ
-                  СЃР°РјРё РєР°Р¶РґС‹Рµ ~25 СЃРµРєСѓРЅРґ.
+                  <strong>Данные портала</strong> (карта, документы, календарь) у пользователей обновляются
+                  сами каждые ~25 секунд.
                   <br />
-                  <strong>РќРѕРІР°СЏ РІРµСЂСЃРёСЏ РїСЂРѕРіСЂР°РјРјС‹</strong>: СЃРѕР±РµСЂРёС‚Рµ СѓСЃС‚Р°РЅРѕРІС‰РёРє, Р·Р°РіСЂСѓР·РёС‚Рµ РЅР° GitHub (РёР»Рё РґСЂСѓРіРѕР№
-                  https), СѓРєР°Р¶РёС‚Рµ РІРµСЂСЃРёСЋ Рё СЃСЃС‹Р»РєСѓ РЅРёР¶Рµ Рё РЅР°Р¶РјРёС‚Рµ В«РћРїСѓР±Р»РёРєРѕРІР°С‚СЊВ». РџСЂРѕРіСЂР°РјРјС‹ РїСЂРѕРІРµСЂСЏСЋС‚ РѕР±РЅРѕРІР»РµРЅРёРµ
-                  СЂР°Р· РІ СЃСѓС‚РєРё Рё РїСЂРё РІРѕР·РІСЂР°С‚Рµ РІ РѕРєРЅРѕ.
+                  <strong>Новая версия программы</strong>: соберите установщик, загрузите на GitHub (или другой
+                  https), укажите версию и ссылку ниже и нажмите «Опубликовать». Программы проверяют обновление
+                  раз в сутки и при возврате в окно.
                 </p>
                 <form
                   className={styles.form}
@@ -667,7 +667,7 @@ export default function AdminDashboard({
                       if (res.ok) {
                         setPublishedVersion(res.manifest.version);
                         setReleaseMsg(
-                          `Р’РµСЂСЃРёСЏ ${res.manifest.version} РѕРїСѓР±Р»РёРєРѕРІР°РЅР°. РџРѕР»СЊР·РѕРІР°С‚РµР»Рё СѓРІРёРґСЏС‚ РїСЂРµРґР»РѕР¶РµРЅРёРµ РѕР±РЅРѕРІРёС‚СЊСЃСЏ РїСЂРё СЃР»РµРґСѓСЋС‰РµР№ РїСЂРѕРІРµСЂРєРµ.`
+                          `Версия ${res.manifest.version} опубликована. Пользователи увидят предложение обновиться при следующей проверке.`
                         );
                       } else {
                         setReleaseMsg(res.error);
@@ -676,7 +676,7 @@ export default function AdminDashboard({
                   }}
                 >
                   <label className={styles.label}>
-                    Р’РµСЂСЃРёСЏ (РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІС‹С€Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕР№ Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№)
+                    Версия (должна быть выше установленной у пользователей)
                     <input
                       className={styles.input}
                       value={releaseVersion}
@@ -686,7 +686,7 @@ export default function AdminDashboard({
                     />
                   </label>
                   <label className={styles.label}>
-                    РЎСЃС‹Р»РєР° РЅР° СѓСЃС‚Р°РЅРѕРІС‰РёРє (https)
+                    Ссылка на установщик (https)
                     <input
                       className={styles.input}
                       value={releaseSetupUrl}
@@ -695,7 +695,7 @@ export default function AdminDashboard({
                     />
                   </label>
                   <label className={styles.label}>
-                    Р§С‚Рѕ РЅРѕРІРѕРіРѕ (РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)
+                    Что нового (необязательно)
                     <textarea
                       className={styles.input}
                       rows={3}
@@ -704,7 +704,7 @@ export default function AdminDashboard({
                     />
                   </label>
                   <button type="submit" className={styles.btnNeoPrimary} disabled={releaseBusy}>
-                    {releaseBusy ? "РџСѓР±Р»РёРєР°С†РёСЏвЂ¦" : "РћРїСѓР±Р»РёРєРѕРІР°С‚СЊ РѕР±РЅРѕРІР»РµРЅРёРµ"}
+                    {releaseBusy ? "Публикация…" : "Опубликовать обновление"}
                   </button>
                 </form>
                 {releaseMsg ? <p className={styles.okMsg}>{releaseMsg}</p> : null}
@@ -715,10 +715,10 @@ export default function AdminDashboard({
 
         {authApiMode && isPortalSyncEnabled() ? (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ РїРѕСЂС‚Р°Р»Р°</h3>
+            <h3 className={styles.sectionTitle}>Синхронизация портала</h3>
             <p className={styles.subtitle}>
-              Р’СЃРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рµ РїСЂРёР»РѕР¶РµРЅРёСЏ Рё Р±СЂР°СѓР·РµСЂС‹ РёСЃРїРѕР»СЊР·СѓСЋС‚ РѕРґРЅСѓ Р±Р°Р·Сѓ РЅР° СЃРµСЂРІРµСЂРµ. Р•СЃР»Рё РґР°РЅРЅС‹Рµ
-              РѕСЃС‚Р°Р»РёСЃСЊ С‚РѕР»СЊРєРѕ РЅР° СЌС‚РѕРј РєРѕРјРїСЊСЋС‚РµСЂРµ, Р·Р°РіСЂСѓР·РёС‚Рµ РёС… РѕРґРёРЅ СЂР°Р·.
+              Все установленные приложения и браузеры используют одну базу на сервере. Если данные
+              остались только на этом компьютере, загрузите их один раз.
             </p>
             <button
               type="button"
@@ -732,8 +732,8 @@ export default function AdminDashboard({
                   if (res.ok) {
                     setSyncMessage(
                       res.imported > 0
-                        ? `РќР° СЃРµСЂРІРµСЂ Р·Р°РіСЂСѓР¶РµРЅРѕ РєР»СЋС‡РµР№: ${res.imported}.`
-                        : "РќР° СЃРµСЂРІРµСЂРµ СѓР¶Рµ РµСЃС‚СЊ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ (РЅРѕРІС‹С… РєР»СЋС‡РµР№ РЅРµС‚)."
+                        ? `На сервер загружено ключей: ${res.imported}.`
+                        : "На сервере уже есть актуальные данные (новых ключей нет)."
                     );
                   } else {
                     setSyncMessage(res.error);
@@ -741,16 +741,16 @@ export default function AdminDashboard({
                 });
               }}
             >
-              {syncBusy ? "Р—Р°РіСЂСѓР·РєР°вЂ¦" : "РЎРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ РґР°РЅРЅС‹Рµ СЃ СЃРµСЂРІРµСЂРѕРј"}
+              {syncBusy ? "Загрузка…" : "Синхронизировать данные с сервером"}
             </button>
             {syncMessage ? <p className={styles.okMsg}>{syncMessage}</p> : null}
           </div>
         ) : null}
 
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Р”Р°РЅРЅС‹Рµ РєР°Р±РёРЅРµС‚РѕРІ</h3>
+          <h3 className={styles.sectionTitle}>Данные кабинетов</h3>
           <p className={styles.subtitle}>
-            РћС‡РёСЃС‚РєР° РґРµРјРѕ-РґР°РЅРЅС‹С…. Р”РµР№СЃС‚РІРёРµ РЅРµРѕР±СЂР°С‚РёРјРѕ.
+            Очистка демо-данных. Действие необратимо.
           </p>
           <div className={styles.rowBtns}>
             <button
@@ -758,20 +758,20 @@ export default function AdminDashboard({
               className={styles.btnNeoGhost}
               onClick={() => {
                 clearSharedCalendarEvents();
-                setDataMessage("РћР±С‰РёР№ РєР°Р»РµРЅРґР°СЂСЊ РјРµСЂРѕРїСЂРёСЏС‚РёР№ РѕС‡РёС‰РµРЅ.");
+                setDataMessage("Общий календарь мероприятий очищен.");
               }}
             >
-              РћС‡РёСЃС‚РёС‚СЊ РѕР±С‰РёР№ РєР°Р»РµРЅРґР°СЂСЊ
+              Очистить общий календарь
             </button>
             <button
               type="button"
               className={styles.btnNeoGhost}
               onClick={() => {
                 resetMessengerLocalData();
-                setDataMessage("Р”Р°РЅРЅС‹Рµ РјРµСЃСЃРµРЅРґР¶РµСЂР° СЃР±СЂРѕС€РµРЅС‹.");
+                setDataMessage("Данные мессенджера сброшены.");
               }}
             >
-              РЎР±СЂРѕСЃРёС‚СЊ РјРµСЃСЃРµРЅРґР¶РµСЂ
+              Сбросить мессенджер
             </button>
           </div>
           {dataMessage ? <p className={styles.okMsg}>{dataMessage}</p> : null}
@@ -788,65 +788,65 @@ export default function AdminDashboard({
               className={`${styles.collapseChevron} ${mapEditingOpen ? styles.collapseChevronOpen : ""}`}
               aria-hidden
             >
-              в–¶
+              ▶
             </span>
             <h3 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>
-              Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РєР°СЂС‚С‹
+              Редактирование карты
             </h3>
             <span className={styles.collapseMeta}>
-              {mapEducationRows.length + mapContractorRows.length} Р·Р°РїРёСЃРµР№
+              {mapEducationRows.length + mapContractorRows.length} записей
             </span>
           </button>
           {mapEditingOpen ? (
             <div className={styles.collapseBody}>
-              <h4 className={styles.sectionTitle}>РќР°Р·РІР°РЅРёСЏ СЂР°Р·РґРµР»РѕРІ РЅР° РєР°СЂС‚Рµ</h4>
+              <h4 className={styles.sectionTitle}>Названия разделов на карте</h4>
               <p className={styles.subtitle}>
-                Р­С‚Рё РЅР°Р·РІР°РЅРёСЏ РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ РІ РїР»Р°С€РєРµ РЅР°Рґ СЃСѓР±СЉРµРєС‚РѕРј Рё РІ РїСЂР°РІРѕР№ РїР°РЅРµР»Рё РєР°СЂС‚С‹ РїРѕРґСЂСЏРґС‡РёРєРѕРІ.
+                Эти названия показываются в плашке над субъектом и в правой панели карты подрядчиков.
               </p>
               <form className={styles.form} onSubmit={handleMapLabelsSave}>
                 <label className={styles.label}>
-                  РќР°Р·РІР°РЅРёРµ Р±Р»РѕРєР° Р’РЈР— / РЎРџРћ
+                  Название блока ВУЗ / СПО
                   <input
                     className={styles.input}
                     value={mapLabels.education}
                     onChange={(e) => setMapLabels({ ...mapLabels, education: e.target.value })}
-                    placeholder="Р’РЈР— / РЎРџРћ"
+                    placeholder="ВУЗ / СПО"
                     maxLength={80}
                   />
                 </label>
                 <label className={styles.label}>
-                  РќР°Р·РІР°РЅРёРµ Р±Р»РѕРєР° РїРѕРґСЂСЏРґС‡РёРєРѕРІ
+                  Название блока подрядчиков
                   <input
                     className={styles.input}
                     value={mapLabels.contractors}
                     onChange={(e) => setMapLabels({ ...mapLabels, contractors: e.target.value })}
-                    placeholder="РџРѕРґСЂСЏРґС‡РёРєРё"
+                    placeholder="Подрядчики"
                     maxLength={80}
                   />
                 </label>
                 <button type="submit" className={styles.btnNeoPrimary}>
-                  РЎРѕС…СЂР°РЅРёС‚СЊ РЅР°Р·РІР°РЅРёСЏ
+                  Сохранить названия
                 </button>
                 {mapLabelsMsg ? <p className={styles.okMsg}>{mapLabelsMsg}</p> : null}
               </form>
 
               <h4 className={styles.sectionTitle} style={{ marginTop: 14 }}>
-                РћСЂРіР°РЅРёР·Р°С†РёРё РїРѕ СЃСѓР±СЉРµРєС‚Р°Рј РґР»СЏ РєР°СЂС‚С‹
+                Организации по субъектам для карты
               </h4>
               <p className={styles.subtitle}>
-                Р¤РѕСЂРјР°С‚ СЃС‚СЂРѕРєРё: СЃСѓР±СЉРµРєС‚, С‚РёРї (Р’РЈР—/РЎРџРћ РёР»Рё РїРѕРґСЂСЏРґС‡РёРєРё), РЅР°РёРјРµРЅРѕРІР°РЅРёРµ. Р­С‚Рё РґР°РЅРЅС‹Рµ РѕС‚РѕР±СЂР°Р¶Р°СЋС‚СЃСЏ СЃРїСЂР°РІР°
-                РЅР° РєР°СЂС‚Рµ РїРѕСЃР»Рµ РІС‹Р±РѕСЂР° СЃСѓР±СЉРµРєС‚Р° Рё С‚РёРїР°.
+                Формат строки: субъект, тип (ВУЗ/СПО или подрядчики), наименование. Эти данные отображаются справа
+                на карте после выбора субъекта и типа.
               </p>
 
               <form className={styles.form} onSubmit={handleAddMapOrg}>
                 <label className={styles.label}>
-                  РЎСѓР±СЉРµРєС‚
+                  Субъект
                   <select
                     className={styles.input}
                     value={newMapSubject}
                     onChange={(e) => setNewMapSubject(e.target.value)}
                   >
-                    <option value="">Р’С‹Р±РµСЂРёС‚Рµ СЃСѓР±СЉРµРєС‚</option>
+                    <option value="">Выберите субъект</option>
                     {subjectOptions.map((s) => (
                       <option key={s} value={s}>
                         {formatSubjectDisplayName(s)}
@@ -855,7 +855,7 @@ export default function AdminDashboard({
                   </select>
                 </label>
                 <label className={styles.label}>
-                  РўРёРї
+                  Тип
                   <select
                     className={styles.input}
                     value={newMapKind}
@@ -866,17 +866,17 @@ export default function AdminDashboard({
                   </select>
                 </label>
                 <label className={styles.label}>
-                  РќР°РёРјРµРЅРѕРІР°РЅРёРµ
+                  Наименование
                   <input
                     className={styles.input}
                     value={newMapName}
                     onChange={(e) => setNewMapName(e.target.value)}
-                    placeholder="Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё"
+                    placeholder="Введите название организации"
                     maxLength={240}
                   />
                 </label>
                 <button type="submit" className={styles.btnNeoPrimary}>
-                  Р”РѕР±Р°РІРёС‚СЊ СЃС‚СЂРѕРєСѓ
+                  Добавить строку
                 </button>
               </form>
 
@@ -893,7 +893,7 @@ export default function AdminDashboard({
                 className={`${styles.collapseChevron} ${mapEducationOpen ? styles.collapseChevronOpen : ""}`}
                 aria-hidden
               >
-                в–¶
+                ▶
               </span>
               <h4 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>{mapLabels.education}</h4>
               <span className={styles.collapseMeta}>{mapEducationRows.length}</span>
@@ -903,8 +903,8 @@ export default function AdminDashboard({
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th>РЎСѓР±СЉРµРєС‚</th>
-                      <th>РќР°РёРјРµРЅРѕРІР°РЅРёРµ</th>
+                      <th>Субъект</th>
+                      <th>Наименование</th>
                       <th style={{ width: 180 }} />
                     </tr>
                   </thead>
@@ -915,10 +915,10 @@ export default function AdminDashboard({
                         <td>{row.name}</td>
                         <td>
                           <button type="button" className={styles.btnSmall} onClick={() => startEditMapOrg(row)}>
-                            РР·РјРµРЅРёС‚СЊ
+                            Изменить
                           </button>{" "}
                           <button type="button" className={styles.btnSmallDanger} onClick={() => handleDeleteMapOrg(row)}>
-                            РЈРґР°Р»РёС‚СЊ
+                            Удалить
                           </button>
                         </td>
                       </tr>
@@ -926,7 +926,7 @@ export default function AdminDashboard({
                     {mapEducationRows.length === 0 ? (
                       <tr>
                         <td colSpan={3}>
-                          <span className={styles.hint}>РЎРїРёСЃРѕРє РїСѓСЃС‚.</span>
+                          <span className={styles.hint}>Список пуст.</span>
                         </td>
                       </tr>
                     ) : null}
@@ -947,7 +947,7 @@ export default function AdminDashboard({
                 className={`${styles.collapseChevron} ${mapContractorsOpen ? styles.collapseChevronOpen : ""}`}
                 aria-hidden
               >
-                в–¶
+                ▶
               </span>
               <h4 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>{mapLabels.contractors}</h4>
               <span className={styles.collapseMeta}>{mapContractorRows.length}</span>
@@ -957,8 +957,8 @@ export default function AdminDashboard({
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th>РЎСѓР±СЉРµРєС‚</th>
-                      <th>РќР°РёРјРµРЅРѕРІР°РЅРёРµ</th>
+                      <th>Субъект</th>
+                      <th>Наименование</th>
                       <th style={{ width: 180 }} />
                     </tr>
                   </thead>
@@ -969,10 +969,10 @@ export default function AdminDashboard({
                         <td>{row.name}</td>
                         <td>
                           <button type="button" className={styles.btnSmall} onClick={() => startEditMapOrg(row)}>
-                            РР·РјРµРЅРёС‚СЊ
+                            Изменить
                           </button>{" "}
                           <button type="button" className={styles.btnSmallDanger} onClick={() => handleDeleteMapOrg(row)}>
-                            РЈРґР°Р»РёС‚СЊ
+                            Удалить
                           </button>
                         </td>
                       </tr>
@@ -980,7 +980,7 @@ export default function AdminDashboard({
                     {mapContractorRows.length === 0 ? (
                       <tr>
                         <td colSpan={3}>
-                          <span className={styles.hint}>РЎРїРёСЃРѕРє РїСѓСЃС‚.</span>
+                          <span className={styles.hint}>Список пуст.</span>
                         </td>
                       </tr>
                     ) : null}
@@ -993,16 +993,16 @@ export default function AdminDashboard({
               {editingMapOrgId ? (
                 <form className={styles.editGrid} style={{ marginTop: 14 }} onSubmit={handleSaveMapOrg}>
               <h4 className={styles.sectionTitle} style={{ gridColumn: "1 / -1" }}>
-                Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё
+                Редактирование строки
               </h4>
               <label className={styles.label}>
-                РЎСѓР±СЉРµРєС‚
+                Субъект
                 <select
                   className={styles.input}
                   value={editingMapSubject}
                   onChange={(e) => setEditingMapSubject(e.target.value)}
                 >
-                  <option value="">Р’С‹Р±РµСЂРёС‚Рµ СЃСѓР±СЉРµРєС‚</option>
+                  <option value="">Выберите субъект</option>
                   {subjectOptions.map((s) => (
                     <option key={s} value={s}>
                       {formatSubjectDisplayName(s)}
@@ -1011,7 +1011,7 @@ export default function AdminDashboard({
                 </select>
               </label>
               <label className={styles.label}>
-                РўРёРї
+                Тип
                 <select
                   className={styles.input}
                   value={editingMapKind}
@@ -1022,7 +1022,7 @@ export default function AdminDashboard({
                 </select>
               </label>
               <label className={styles.label} style={{ gridColumn: "1 / -1" }}>
-                РќР°РёРјРµРЅРѕРІР°РЅРёРµ
+                Наименование
                 <input
                   className={styles.input}
                   value={editingMapName}
@@ -1032,14 +1032,14 @@ export default function AdminDashboard({
               </label>
               <div className={styles.rowBtns} style={{ gridColumn: "1 / -1" }}>
                 <button type="submit" className={styles.btnNeoPrimary}>
-                  РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ
+                  Сохранить изменения
                 </button>
                 <button
                   type="button"
                   className={styles.btnNeoGhost}
                   onClick={() => setEditingMapOrgId(null)}
                 >
-                  РћС‚РјРµРЅР°
+                  Отмена
                 </button>
               </div>
                 </form>
@@ -1059,10 +1059,10 @@ export default function AdminDashboard({
               className={`${styles.collapseChevron} ${usersOpen ? styles.collapseChevronOpen : ""}`}
               aria-hidden
             >
-              в–¶
+              ▶
             </span>
             <h3 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>
-              РџРѕР»СЊР·РѕРІР°С‚РµР»Рё РїРѕСЂС‚Р°Р»Р°
+              Пользователи портала
             </h3>
             <span className={styles.collapseMeta}>{usersListSummary(users.length)}</span>
           </button>
@@ -1070,23 +1070,23 @@ export default function AdminDashboard({
             <div className={styles.collapseBody}>
           {legacy && !authApiMode ? (
             <p className={styles.hint}>
-              Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РїРѕРєР° РЅРµС‚ вЂ” РЅР° СЃС‚СЂР°РЅРёС†Рµ РІС…РѕРґР°
-              РґРѕРїСѓСЃРєР°РµС‚СЃСЏ РїСЂРµР¶РЅРёР№ РґРµРјРѕ-РІС…РѕРґ СЃ Р»СЋР±С‹Рј Р»РѕРіРёРЅРѕРј Рё РїР°СЂРѕР»РµРј.
+              Зарегистрированных пользователей пока нет — на странице входа
+              допускается прежний демо-вход с любым логином и паролем.
             </p>
           ) : null}
           {authApiMode ? (
             <p className={styles.hint}>
-              РЎРїРёСЃРѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Р·Р°РіСЂСѓР¶Р°РµС‚СЃСЏ СЃ СЃРµСЂРІРµСЂР°. Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РїСЂРѕС„РёР»СЏ Рё СѓРґР°Р»РµРЅРёРµ РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ
-              РЅР° СЃРµСЂРІРµСЂРЅРѕР№ СЃС‚РѕСЂРѕРЅРµ. РЎР±СЂРѕСЃ РїР°СЂРѕР»СЏ РїРѕРєР° РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РІ Р»РѕРєР°Р»СЊРЅРѕРј СЂРµР¶РёРјРµ.
+              Список пользователей загружается с сервера. Редактирование профиля и удаление выполняются
+              на серверной стороне. Сброс пароля пока доступен только в локальном режиме.
             </p>
           ) : null}
           <div className={styles.tableWrap}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Р­Р»РµРєС‚СЂРѕРЅРЅР°СЏ РїРѕС‡С‚Р°</th>
-                  <th>РРјСЏ</th>
-                  <th>Р”РѕР»Р¶РЅРѕСЃС‚СЊ</th>
+                  <th>Электронная почта</th>
+                  <th>Имя</th>
+                  <th>Должность</th>
                   <th />
                 </tr>
               </thead>
@@ -1105,7 +1105,7 @@ export default function AdminDashboard({
                           className={styles.btnSmall}
                           onClick={() => openEdit(u)}
                         >
-                          РџСЂР°РІРёС‚СЊ
+                          Править
                         </button>{" "}
                         {!authApiMode ? (
                           <button
@@ -1117,7 +1117,7 @@ export default function AdminDashboard({
                               setNewUserPassword("");
                             }}
                           >
-                            РџР°СЂРѕР»СЊ
+                            Пароль
                           </button>
                         ) : null}
                         <button
@@ -1125,7 +1125,7 @@ export default function AdminDashboard({
                           className={styles.btnSmallDanger}
                           onClick={() => void deleteUser(u)}
                         >
-                          РЈРґР°Р»РёС‚СЊ
+                          Удалить
                         </button>
                       </>
                     </td>
@@ -1138,10 +1138,10 @@ export default function AdminDashboard({
           {editing && editForm ? (
             <form className={styles.editGrid} onSubmit={saveEdit}>
               <h4 className={styles.sectionTitle} style={{ gridColumn: "1 / -1" }}>
-                РџСЂРѕС„РёР»СЊ: {editing.emailNorm}
+                Профиль: {editing.emailNorm}
               </h4>
               <label className={styles.label}>
-                РРјСЏ
+                Имя
                 <input
                   className={styles.input}
                   value={editForm.firstName}
@@ -1151,7 +1151,7 @@ export default function AdminDashboard({
                 />
               </label>
               <label className={styles.label}>
-                Р¤Р°РјРёР»РёСЏ
+                Фамилия
                 <input
                   className={styles.input}
                   value={editForm.lastName}
@@ -1161,7 +1161,7 @@ export default function AdminDashboard({
                 />
               </label>
               <label className={styles.label}>
-                Р”РѕР»Р¶РЅРѕСЃС‚СЊ / СЂРѕР»СЊ РІ СЃРёСЃС‚РµРјРµ
+                Должность / роль в системе
                 <input
                   className={styles.input}
                   value={editForm.roleLabel}
@@ -1171,7 +1171,7 @@ export default function AdminDashboard({
                 />
               </label>
               <label className={styles.label}>
-                РўРµР»РµС„РѕРЅ
+                Телефон
                 <input
                   className={styles.input}
                   value={editForm.phone}
@@ -1181,7 +1181,7 @@ export default function AdminDashboard({
                 />
               </label>
               <label className={styles.label} style={{ gridColumn: "1 / -1" }}>
-                РћСЂРіР°РЅРёР·Р°С†РёСЏ (РїРѕРґСЂСЏРґС‡РёРє)
+                Организация (подрядчик)
                 <input
                   className={styles.input}
                   value={editForm.contractorCompanyName}
@@ -1201,7 +1201,7 @@ export default function AdminDashboard({
                     setEditForm({ ...editForm, notifyEmail: e.target.checked })
                   }
                 />{" "}
-                РЈРІРµРґРѕРјР»РµРЅРёСЏ e-mail
+                Уведомления e-mail
               </label>
               <label className={styles.label}>
                 <input
@@ -1215,7 +1215,7 @@ export default function AdminDashboard({
               </label>
               <div className={styles.rowBtns} style={{ gridColumn: "1 / -1" }}>
                 <button type="submit" className={styles.btnNeoPrimary}>
-                  РЎРѕС…СЂР°РЅРёС‚СЊ
+                  Сохранить
                 </button>
                 <button
                   type="button"
@@ -1225,7 +1225,7 @@ export default function AdminDashboard({
                     setEditForm(null);
                   }}
                 >
-                  РћС‚РјРµРЅР°
+                  Отмена
                 </button>
               </div>
             </form>
@@ -1234,11 +1234,11 @@ export default function AdminDashboard({
           {!authApiMode && pwUserEmail ? (
             <form className={styles.form} style={{ marginTop: 16 }} onSubmit={setUserPassword}>
               <h4 className={styles.sectionTitle}>
-                РќРѕРІС‹Р№ РїР°СЂРѕР»СЊ РґР»СЏ {pwUserEmail}
+                Новый пароль для {pwUserEmail}
               </h4>
               <p className={styles.hint}>{PASSWORD_RULES_SHORT}</p>
               <label className={styles.label}>
-                РќРѕРІС‹Р№ РїР°СЂРѕР»СЊ
+                Новый пароль
                 <input
                   className={styles.input}
                   type="password"
@@ -1250,7 +1250,7 @@ export default function AdminDashboard({
               {pwMessage ? (
                 <p
                   className={
-                    pwMessage.includes("РѕР±РЅРѕРІР»С‘РЅ") ? styles.okMsg : styles.error
+                    pwMessage.includes("обновлён") ? styles.okMsg : styles.error
                   }
                 >
                   {pwMessage}
@@ -1258,14 +1258,14 @@ export default function AdminDashboard({
               ) : null}
               <div className={styles.rowBtns}>
                 <button type="submit" className={styles.btnNeoPrimary}>
-                  РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїР°СЂРѕР»СЊ
+                  Установить пароль
                 </button>
                 <button
                   type="button"
                   className={styles.btnNeoGhost}
                   onClick={() => setPwUserEmail(null)}
                 >
-                  РћС‚РјРµРЅР°
+                  Отмена
                 </button>
               </div>
             </form>
@@ -1275,10 +1275,10 @@ export default function AdminDashboard({
         </div>
 
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>РЎРјРµРЅР° РїР°СЂРѕР»СЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°</h3>
+          <h3 className={styles.sectionTitle}>Смена пароля администратора</h3>
           <form className={styles.form} onSubmit={handleAdminPassword}>
             <label className={styles.label}>
-              РўРµРєСѓС‰РёР№ РїР°СЂРѕР»СЊ
+              Текущий пароль
               <input
                 className={styles.input}
                 type="password"
@@ -1288,7 +1288,7 @@ export default function AdminDashboard({
               />
             </label>
             <label className={styles.label}>
-              РќРѕРІС‹Р№ РїР°СЂРѕР»СЊ
+              Новый пароль
               <input
                 className={styles.input}
                 type="password"
@@ -1301,41 +1301,41 @@ export default function AdminDashboard({
             {adminPwMsg ? (
               <p
                 className={
-                  adminPwMsg.includes("РёР·РјРµРЅС‘РЅ") ? styles.okMsg : styles.error
+                  adminPwMsg.includes("изменён") ? styles.okMsg : styles.error
                 }
               >
                 {adminPwMsg}
               </p>
             ) : null}
             <button type="submit" className={styles.btnNeoPrimaryNeutral}>
-              РЎРјРµРЅРёС‚СЊ РїР°СЂРѕР»СЊ
+              Сменить пароль
             </button>
           </form>
         </div>
 
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Р‘С‹СЃС‚СЂС‹Рµ СЃСЃС‹Р»РєРё</h3>
+          <h3 className={styles.sectionTitle}>Быстрые ссылки</h3>
           <div className={styles.links}>
             <Link to="/page3" onClick={markNavigationFromAdminDashboard}>
-              Р’С…РѕРґ РІ РєР°Р±РёРЅРµС‚С‹ (СЂРѕР»Рё)
+              Вход в кабинеты (роли)
             </Link>
             <Link to="/cabinet-school" onClick={markNavigationFromAdminDashboard}>
-              РљР°Р±РёРЅРµС‚ С€РєРѕР»СЊРЅРёРєР°
+              Кабинет школьника
             </Link>
             <Link to="/cabinet-spo" onClick={markNavigationFromAdminDashboard}>
-              РљР°Р±РёРЅРµС‚ СЃС‚СѓРґРµРЅС‚Р°
+              Кабинет студента
             </Link>
             <Link to="/page4" onClick={markNavigationFromAdminDashboard}>
-              РџРѕРґСЂСЏРґС‡РёРє
+              Подрядчик
             </Link>
             <Link to="/page5" onClick={markNavigationFromAdminDashboard}>
-              Р РђР”РћР 
+              РАДОР
             </Link>
             <Link to="/page6" onClick={markNavigationFromAdminDashboard}>
-              РђР”Рћ
+              АДО
             </Link>
             <Link to="/profile" onClick={markNavigationFromAdminDashboard}>
-              РќР°СЃС‚СЂРѕР№РєРё РїСЂРѕС„РёР»СЏ
+              Настройки профиля
             </Link>
           </div>
         </div>
@@ -1344,4 +1344,3 @@ export default function AdminDashboard({
     </div>
   );
 }
-
