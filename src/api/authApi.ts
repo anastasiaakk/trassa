@@ -1,4 +1,6 @@
 import type { ProfileSettingsData } from "../profileSettingsStorage";
+import { fetchWithTimeout } from "./fetchWithTimeout";
+import { getAdminApiToken } from "./adminApi";
 
 const TOKEN_KEY = "trassa_api_access_token";
 const DESKTOP_FALLBACK_API_BASE = "https://trassa-api.duckdns.org";
@@ -55,7 +57,7 @@ async function jsonFetch<T>(
     headers.Authorization = `Bearer ${bearer}`;
   }
   try {
-    const res = await fetch(`${base}${path}`, {
+    const res = await fetchWithTimeout(`${base}${path}`, {
       ...init,
       credentials: "include",
       headers,
@@ -161,9 +163,17 @@ export async function authPatchProfile(profile: ProfileSettingsData): Promise<Au
 }
 
 export async function authListUsers(): Promise<{ ok: true; users: ServerUserRecord[] } | AuthErr> {
+  const extra: Record<string, string> = {};
+  const adminToken = getAdminApiToken();
+  if (adminToken) {
+    extra["X-Trassa-Admin-Token"] = adminToken;
+  }
   const r = await jsonFetch<{ ok?: boolean; users?: ServerUserRecord[]; error?: string }>(
     `/api/auth/users`,
-    { method: "GET" }
+    {
+      method: "GET",
+      headers: extra,
+    }
   );
   if (!r.ok) return { ok: false, error: r.error };
   const d = r.data;

@@ -1,4 +1,5 @@
 import { getApiBase } from "./authApi";
+import { fetchWithTimeout } from "./fetchWithTimeout";
 import { adminHeaders } from "./portalApi";
 
 export type AppUpdateManifest = {
@@ -13,7 +14,7 @@ export async function fetchAppUpdateManifest(): Promise<
 > {
   const base = getApiBase();
   try {
-    const res = await fetch(`${base}/api/app-update/current`, { cache: "no-store" });
+    const res = await fetchWithTimeout(`${base}/api/app-update/current`, { cache: "no-store" });
     const body = (await res.json()) as { ok?: boolean; manifest?: AppUpdateManifest; error?: string };
     if (!res.ok || !body.ok || !body.manifest) {
       return { ok: false, error: body.error ?? res.statusText };
@@ -31,7 +32,7 @@ export async function publishAppUpdate(manifest: {
 }): Promise<{ ok: true; manifest: AppUpdateManifest } | { ok: false; error: string }> {
   const base = getApiBase();
   try {
-    const res = await fetch(`${base}/api/admin/app-update/publish`, {
+    const res = await fetchWithTimeout(`${base}/api/admin/app-update/publish`, {
       method: "PUT",
       credentials: "include",
       headers: adminHeaders(),

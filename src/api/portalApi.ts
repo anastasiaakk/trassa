@@ -1,4 +1,5 @@
 import { getApiBase, getStoredAccessToken } from "./authApi";
+import { fetchWithTimeout } from "./fetchWithTimeout";
 import type { PortalKvKey } from "../config/portalKeys";
 
 export type PortalStateResponse = {
@@ -29,7 +30,7 @@ export async function fetchPortalState(): Promise<
 > {
   const base = getApiBase();
   try {
-    const res = await fetch(`${base}/api/portal/state`, {
+    const res = await fetchWithTimeout(`${base}/api/portal/state`, {
       credentials: "include",
       cache: "no-store",
     });
@@ -49,7 +50,7 @@ export async function putPortalKvAdmin(
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const base = getApiBase();
   try {
-    const res = await fetch(`${base}/api/portal/kv/${key}`, {
+    const res = await fetchWithTimeout(`${base}/api/portal/kv/${key}`, {
       method: "PUT",
       credentials: "include",
       headers: adminHeaders(),
@@ -71,7 +72,7 @@ export async function putPortalKvUser(
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const base = getApiBase();
   try {
-    const res = await fetch(`${base}/api/portal/user-kv/${key}`, {
+    const res = await fetchWithTimeout(`${base}/api/portal/user-kv/${key}`, {
       method: "PUT",
       credentials: "include",
       headers: adminHeaders(),
@@ -92,7 +93,7 @@ export async function bootstrapPortalFromClient(
 ): Promise<{ ok: true; imported: number } | { ok: false; error: string }> {
   const base = getApiBase();
   try {
-    const res = await fetch(`${base}/api/portal/bootstrap`, {
+    const res = await fetchWithTimeout(`${base}/api/portal/bootstrap`, {
       method: "POST",
       credentials: "include",
       headers: adminHeaders(),

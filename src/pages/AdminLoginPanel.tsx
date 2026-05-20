@@ -27,12 +27,14 @@ export default function AdminLoginPanel({
       setError(null);
       setBusy(true);
       try {
-        const ok = await loginAdmin(email, password);
-        if (ok) {
+        const result = await loginAdmin(email, password);
+        if (result.ok) {
           onSuccess();
         } else {
-          setError("Неверный логин или пароль.");
+          setError(result.error);
         }
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Не удалось войти.");
       } finally {
         setBusy(false);
       }

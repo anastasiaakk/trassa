@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { isPortalSyncEnabled, refreshPortalStateFromServer } from "../utils/portalSync";
 
-const POLL_MS = 25_000;
+const POLL_MS = 45_000;
 
 /** Периодически подтягивает общие данные портала с API. */
 export default function PortalSyncProvider({ children }: { children: React.ReactNode }) {

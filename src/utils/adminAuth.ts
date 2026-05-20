@@ -132,20 +132,22 @@ export function getAdminCabinetInfo(emailNorm: string | null): {
   return { cabinetId: "ksenia", displayName: emailNorm };
 }
 
-export async function loginAdmin(email: string, password: string): Promise<boolean> {
+function isLikelyNetworkError(message: string): boolean {
+  const m = message.toLowerCase();
+  return (
+    m.includes("сеть") ||
+    m.includes("network") ||
+    m.includes("fetch") ||
+    m.includes("timeout") ||
+    m.includes("abort") ||
+    m.includes("не ответил") ||
+    m.includes("failed") ||
+    m.includes("econnrefused")
+  );
+}
+
+async function loginAdminLocally(emailNorm: string, password: string): Promise<boolean> {
   await ensureBuiltinAdminUsers();
-  const emailNorm = normalizeEmail(email);
-  if (!emailNorm || !password) return false;
-
-  if (isAuthApiEnabled()) {
-    const api = await adminApiLogin(emailNorm, password);
-    if (!api.ok) return false;
-    setAdminApiToken(api.adminToken);
-    sessionStorage.setItem(SESSION_KEY, emailNorm);
-    void import("./portalSync").then(({ refreshPortalStateFromServer }) => refreshPortalStateFromServer());
-    return true;
-  }
-
   const file = readFile();
   const user = file.users.find((u) => u.emailNorm === emailNorm);
   if (!user) return false;
@@ -153,6 +155,48 @@ export async function loginAdmin(email: string, password: string): Promise<boole
   if (h !== user.passwordHash) return false;
   sessionStorage.setItem(SESSION_KEY, emailNorm);
   return true;
+}
+
+export async function loginAdmin(
+  email: string,
+  password: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const emailNorm = normalizeEmail(email);
+  if (!emailNorm || !password) {
+    return { ok: false, error: "Введите e-mail и пароль." };
+  }
+
+  if (isAuthApiEnabled()) {
+    const api = await adminApiLogin(emailNorm, password);
+    if (api.ok) {
+      setAdminApiToken(api.adminToken);
+      sessionStorage.setItem(SESSION_KEY, emailNorm);
+      void import("./portalSync").then(({ refreshPortalStateFromServer }) =>
+        refreshPortalStateFromServer()
+      );
+      return { ok: true };
+    }
+    if (isLikelyNetworkError(api.error)) {
+      const localOk = await loginAdminLocally(emailNorm, password);
+      if (localOk) {
+        setAdminApiToken(null);
+        return {
+          ok: true,
+        };
+      }
+      return {
+        ok: false,
+        error: `${api.error} Локальный вход не удался — проверьте логин и пароль из подсказки ниже.`,
+      };
+    }
+    return { ok: false, error: api.error };
+  }
+
+  const localOk = await loginAdminLocally(emailNorm, password);
+  if (!localOk) {
+    return { ok: false, error: "Неверный логин или пароль." };
+  }
+  return { ok: true };
 }
 
 export function logoutAdmin(): void {

@@ -55,7 +55,7 @@ import { fetchAppUpdateManifest, publishAppUpdate } from "../api/appUpdateApi";
 import { TRASSA_SETUP_DOWNLOAD_URL } from "../config/desktopRelease";
 import styles from "./AdminPanel.module.css";
 
-const APP_VERSION = "0.2.9";
+const APP_VERSION = "0.2.10";
 
 type Props = {
   onLogout: () => void;
@@ -202,7 +202,7 @@ export default function AdminDashboard({
   useEffect(() => {
     if (!authApiMode) return;
     const refresh = () => refreshUsers();
-    const id = window.setInterval(refresh, 20_000);
+    const id = window.setInterval(refresh, 45_000);
     window.addEventListener("focus", refresh);
     document.addEventListener("visibilitychange", refresh);
     return () => {

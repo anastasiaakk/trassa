@@ -35,27 +35,39 @@ function applyKvToLocal(key: PortalKvKey, value: unknown): void {
   }
 }
 
+let portalRefreshInFlight: Promise<boolean> | null = null;
+
 /** Скачать состояние с сервера в localStorage (все клиенты видят одно и то же). */
 export async function refreshPortalStateFromServer(): Promise<boolean> {
   if (!isPortalSyncEnabled()) return false;
-  const res = await fetchPortalState();
-  if (!res.ok) return false;
+  if (portalRefreshInFlight) return portalRefreshInFlight;
 
-  const prevVersion = localStorage.getItem(VERSION_KEY);
-  if (prevVersion === (res.version ?? "")) {
-    return true;
-  }
+  portalRefreshInFlight = (async () => {
+    const res = await fetchPortalState();
+    if (!res.ok) return false;
 
-  for (const key of Object.values(PORTAL_KV)) {
-    if (Object.prototype.hasOwnProperty.call(res.data, key)) {
-      applyKvToLocal(key, res.data[key]);
+    const prevVersion = localStorage.getItem(VERSION_KEY);
+    if (prevVersion === (res.version ?? "")) {
+      return true;
     }
+
+    for (const key of Object.values(PORTAL_KV)) {
+      if (Object.prototype.hasOwnProperty.call(res.data, key)) {
+        applyKvToLocal(key, res.data[key]);
+      }
+    }
+    if (res.version) {
+      localStorage.setItem(VERSION_KEY, res.version);
+    }
+    window.dispatchEvent(new CustomEvent(PORTAL_STATE_SYNCED_EVENT));
+    return true;
+  })();
+
+  try {
+    return await portalRefreshInFlight;
+  } finally {
+    portalRefreshInFlight = null;
   }
-  if (res.version) {
-    localStorage.setItem(VERSION_KEY, res.version);
-  }
-  window.dispatchEvent(new CustomEvent(PORTAL_STATE_SYNCED_EVENT));
-  return true;
 }
 
 /** Записать в localStorage и на сервер (если включён API). */

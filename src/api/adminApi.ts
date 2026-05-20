@@ -1,4 +1,5 @@
 import { getApiBase } from "./authApi";
+import { fetchWithTimeout } from "./fetchWithTimeout";
 
 const ADMIN_API_TOKEN_KEY = "trassa-admin-api-token";
 
@@ -25,7 +26,7 @@ export async function adminApiLogin(
 ): Promise<{ ok: true; adminToken: string } | { ok: false; error: string }> {
   const base = getApiBase();
   try {
-    const res = await fetch(`${base}/api/admin/login`, {
+    const res = await fetchWithTimeout(`${base}/api/admin/login`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -48,7 +49,7 @@ export async function adminApiChangePassword(
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const base = getApiBase();
   try {
-    const res = await fetch(`${base}/api/admin/password`, {
+    const res = await fetchWithTimeout(`${base}/api/admin/password`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
