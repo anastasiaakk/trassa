@@ -2,6 +2,9 @@
  * Справочник организаций для входа/регистрации подрядчиков.
  */
 
+import { PORTAL_KV } from "../config/portalKeys";
+import { pushPortalKv } from "./portalSync";
+
 const STORAGE_KEY = "trassa-contractor-organizations-v1";
 
 /** Начальный набор, если список ещё не задан администратором */
@@ -46,7 +49,7 @@ export function loadContractorOrganizations(): string[] {
 export function saveContractorOrganizations(names: string[]): void {
   const uniq = Array.from(new Set(names.map(normalizeOrgName))).filter(Boolean);
   uniq.sort((a, b) => a.localeCompare(b, "ru"));
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(uniq));
+  pushPortalKv(PORTAL_KV.CONTRACTOR_ORGS, uniq);
 }
 
 export function addContractorOrganization(name: string): { ok: true } | { ok: false; error: string } {

@@ -17,9 +17,15 @@ import {
   getInvitePayloadFromProfile,
 } from "../utils/messengerInvite";
 import type { Page5ThemeStyles } from "./Page5EventsView";
+import {
+  MESSENGER_PEERS_KEY,
+  MESSENGER_STORE_KEY,
+  saveMessengerPeers,
+  saveMessengerStore,
+} from "../utils/messengerStorage";
 
-const STORAGE_KEY = "trassa-messenger-v1";
-const PEERS_STORAGE_KEY = "trassa-messenger-peers-v1";
+const STORAGE_KEY = MESSENGER_STORE_KEY;
+const PEERS_STORAGE_KEY = MESSENGER_PEERS_KEY;
 const MAX_ATTACH_BYTES = 1_800_000;
 
 export type MessengerPeer = {
@@ -67,7 +73,7 @@ function loadPeers(): MessengerPeer[] {
 
 function savePeers(peers: MessengerPeer[]) {
   try {
-    localStorage.setItem(PEERS_STORAGE_KEY, JSON.stringify(peers));
+    saveMessengerPeers(peers);
   } catch {
     /* ignore */
   }
@@ -116,7 +122,7 @@ function loadThreadStore(peerIds: string[]): Record<string, MessengerMessage[]> 
 
 function saveMessages(data: Record<string, MessengerMessage[]>) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    saveMessengerStore(data as Record<string, unknown>);
   } catch {
     /* ignore */
   }

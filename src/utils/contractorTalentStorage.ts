@@ -2,7 +2,9 @@
  * Запросы подрядчика по направлениям для подбора школьников и студентов.
  */
 
+import { PORTAL_KV } from "../config/portalKeys";
 import { PROF_ORIENTATION_TAGS, type ProfOrientationTag } from "./proforientationStorage";
+import { pushPortalKv } from "./portalSync";
 
 const KEY = "trassa-contractor-talent-filters-v1";
 
@@ -30,8 +32,7 @@ function read(): File {
 }
 
 function write(file: File) {
-  localStorage.setItem(KEY, JSON.stringify(file));
-  window.dispatchEvent(new CustomEvent("trassa-contractor-talent-changed"));
+  pushPortalKv(PORTAL_KV.CONTRACTOR_TALENT, file);
 }
 
 export function loadContractorTalentFilters(contractorEmail: string): ContractorTalentFilters {

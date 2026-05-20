@@ -16,6 +16,11 @@ import {
   SHARED_CALENDAR_EVENTS_KEY,
 } from "../utils/sharedCalendarEvents";
 import { ensureMessengerUidInProfile } from "../utils/messengerInvite";
+import {
+  MESSENGER_PEERS_KEY,
+  MESSENGER_STORE_KEY,
+  saveMessengerStore,
+} from "../utils/messengerStorage";
 import { isMessengerHiddenForMe } from "../utils/messengerHiddenForMe";
 import {
   applyMessengerInvitePayload,
@@ -110,9 +115,6 @@ function scanMessengerInboxUnread(seenAt: number): boolean {
   return false;
 }
 
-const MESSENGER_STORE_KEY = "trassa-messenger-v1";
-const MESSENGER_PEERS_KEY = "trassa-messenger-peers-v1";
-
 /** Локальная симуляция входящего (нет сервера). Для проверки бейджа: сверните мессенджер, нажмите «Тест: входящее». */
 function injectMessengerTestIncoming(): void {
   try {
@@ -136,8 +138,7 @@ function injectMessengerTestIncoming(): void {
       createdAt: new Date().toISOString(),
     };
     data[peerId] = [...arr, msg];
-    localStorage.setItem(MESSENGER_STORE_KEY, JSON.stringify(data));
-    window.dispatchEvent(new CustomEvent("trassa-messenger-updated"));
+    saveMessengerStore(data as Record<string, unknown>);
   } catch {
     /* ignore */
   }

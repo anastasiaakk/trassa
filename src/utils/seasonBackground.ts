@@ -2,6 +2,9 @@
  * Фоновая анимация по сезону (настраивается в панели администратора).
  */
 
+import { PORTAL_KV } from "../config/portalKeys";
+import { pushPortalKv } from "./portalSync";
+
 const KEY = "trassa-season-bg-v1";
 
 export type SeasonMode = "off" | "spring" | "summer" | "autumn" | "winter";
@@ -27,6 +30,5 @@ export function loadSeasonBackground(): SeasonMode {
 }
 
 export function saveSeasonBackground(mode: SeasonMode): void {
-  localStorage.setItem(KEY, JSON.stringify(mode));
-  window.dispatchEvent(new CustomEvent("trassa-season-bg-changed"));
+  pushPortalKv(PORTAL_KV.SEASON_BG, mode);
 }

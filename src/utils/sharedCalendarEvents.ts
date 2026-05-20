@@ -1,4 +1,6 @@
 import type { CalendarEventItem } from "../pages/Page5EventsView";
+import { PORTAL_KV } from "../config/portalKeys";
+import { pushPortalKv } from "./portalSync";
 
 /** Общий календарь РАДОР/АДО — виден подрядчикам в «Ближайшие мероприятия». */
 export const SHARED_CALENDAR_EVENTS_KEY = "trassa-association-calendar-events-v1";
@@ -19,8 +21,7 @@ export function loadSharedCalendarEvents(): CalendarEventItem[] {
 
 export function saveSharedCalendarEvents(events: CalendarEventItem[]): void {
   try {
-    localStorage.setItem(SHARED_CALENDAR_EVENTS_KEY, JSON.stringify(events));
-    window.dispatchEvent(new CustomEvent(SHARED_CALENDAR_UPDATED_EVENT));
+    pushPortalKv(PORTAL_KV.CALENDAR_EVENTS, events);
   } catch {
     /* ignore */
   }

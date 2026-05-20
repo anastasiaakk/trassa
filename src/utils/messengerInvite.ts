@@ -6,10 +6,15 @@
 
 import { loadProfileSettings, saveProfileSettings, type ProfileSettingsData } from "../profileSettingsStorage";
 import { syncCurrentUserProfile } from "./localAuth";
+import {
+  MESSENGER_PEERS_KEY,
+  MESSENGER_STORE_KEY,
+  saveMessengerPeers,
+  saveMessengerStore,
+} from "./messengerStorage";
 
-/** Совпадает с Page5MessengerView */
-const MESSAGES_KEY = "trassa-messenger-v1";
-const PEERS_KEY = "trassa-messenger-peers-v1";
+const MESSAGES_KEY = MESSENGER_STORE_KEY;
+const PEERS_KEY = MESSENGER_PEERS_KEY;
 
 export const MSGR_INVITE_PARAM = "messengerInvite";
 
@@ -184,7 +189,7 @@ export function applyMessengerInvitePayload(payload: MessengerInvitePayload): {
     }
     const nextPeers = [...peers, { id, name, role }];
     try {
-      localStorage.setItem(PEERS_KEY, JSON.stringify(nextPeers));
+      saveMessengerPeers(nextPeers);
     } catch {
       /* ignore */
     }
@@ -192,7 +197,7 @@ export function applyMessengerInvitePayload(payload: MessengerInvitePayload): {
       const raw = localStorage.getItem(MESSAGES_KEY);
       const data = (raw ? JSON.parse(raw) : {}) as Record<string, unknown>;
       if (!Array.isArray(data[id])) data[id] = [];
-      localStorage.setItem(MESSAGES_KEY, JSON.stringify(data));
+      saveMessengerStore(data);
     } catch {
       /* ignore */
     }
@@ -224,7 +229,7 @@ export function applyMessengerInvitePayload(payload: MessengerInvitePayload): {
   const id = `u-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
   const nextPeers = [...peers, { id, name, role }];
   try {
-    localStorage.setItem(PEERS_KEY, JSON.stringify(nextPeers));
+    saveMessengerPeers(nextPeers);
   } catch {
     /* ignore */
   }
@@ -233,7 +238,7 @@ export function applyMessengerInvitePayload(payload: MessengerInvitePayload): {
     const raw = localStorage.getItem(MESSAGES_KEY);
     const data = (raw ? JSON.parse(raw) : {}) as Record<string, unknown>;
     if (!Array.isArray(data[id])) data[id] = [];
-    localStorage.setItem(MESSAGES_KEY, JSON.stringify(data));
+    saveMessengerStore(data);
   } catch {
     /* ignore */
   }

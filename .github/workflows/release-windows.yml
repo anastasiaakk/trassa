@@ -89,7 +89,9 @@ jobs:
 
       - name: "Build: assets + icons + release-config"
         if: steps.gate.outputs.run == 'true'
-        run: node scripts/sync-tagjs-assets.cjs && node scripts/ensure-public-assets.cjs && node scripts/generate-icon-ico.cjs && node scripts/apply-release-config.cjs
+        env:
+          TRASSA_API_URL: ${{ secrets.TRASSA_API_URL || 'https://trassa-api.duckdns.org' }}
+        run: node scripts/sync-tagjs-assets.cjs && node scripts/ensure-public-assets.cjs && node scripts/generate-icon-ico.cjs && node scripts/apply-release-config.cjs --installer
 
       - name: "Build: web (tsc + vite)"
         if: steps.gate.outputs.run == 'true'

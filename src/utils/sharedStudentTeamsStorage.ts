@@ -3,6 +3,8 @@
  */
 
 import type { AssociationId } from "./sharedAssociationDocumentsStorage";
+import { PORTAL_KV } from "../config/portalKeys";
+import { pushPortalKv } from "./portalSync";
 
 export type StudentTeamBulletin = {
   id: string;
@@ -27,8 +29,7 @@ function read(): StudentTeamBulletin[] {
 }
 
 function write(items: StudentTeamBulletin[]) {
-  localStorage.setItem(KEY, JSON.stringify(items));
-  window.dispatchEvent(new CustomEvent(STUDENT_TEAMS_UPDATED_EVENT));
+  pushPortalKv(PORTAL_KV.STUDENT_TEAMS, items);
 }
 
 export function listBulletins(association: AssociationId): StudentTeamBulletin[] {

@@ -62,6 +62,7 @@
       "electron-assets/icon.png",
       "electron-assets/icon.ico",
       "electron-assets/update.json",
+      "electron-assets/api.json",
       "electron-update-check.cjs"
     ],
     "extraResources": [
@@ -101,12 +102,12 @@
     "server:restoredeps": "npm install --prefix server",
     "icons:ico": "node scripts/generate-icon-ico.cjs",
     "release:prune": "node scripts/prune-release.cjs",
-    "electron:build": "node scripts/sync-tagjs-assets.cjs && node scripts/ensure-public-assets.cjs && node scripts/generate-icon-ico.cjs && node scripts/apply-release-config.cjs && tsc && vite build && npm run server:restoredeps && npm run build --prefix server && npm run server:proddeps && node scripts/clean-release-win-unpacked.cjs && electron-builder --win dir --publish never && node scripts/embed-win-icon.cjs && node scripts/build-neo-setup.cjs && node scripts/sync-setup-download.cjs && npm run server:restoredeps",
+    "electron:build": "node scripts/sync-tagjs-assets.cjs && node scripts/ensure-public-assets.cjs && node scripts/generate-icon-ico.cjs && node scripts/apply-release-config.cjs --installer && tsc && vite build && npm run server:restoredeps && npm run build --prefix server && npm run server:proddeps && node scripts/clean-release-win-unpacked.cjs && electron-builder --win dir --publish never && node scripts/embed-win-icon.cjs && node scripts/build-neo-setup.cjs && node scripts/sync-setup-download.cjs && npm run server:restoredeps",
     "release:config": "node scripts/apply-release-config.cjs",
     "dist": "electron-builder",
     "server:dev": "npm run dev --prefix server",
     "server:install": "npm install --prefix server",
     "dev:all": "concurrently -k \"npm run server:dev\" \"npm run dev\""
   },
-  "version": "0.2.0"
+  "version": "0.2.1"
 }

@@ -1,6 +1,7 @@
 import "./bootstrapPublicCssVars";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import PortalSyncProvider from "./components/PortalSyncProvider";
 import reportWebVitals from "./reportWebVitals";
 import { HashRouter } from "react-router-dom";
 import { ensureIntroRoute } from "./ensureIntroRoute";
@@ -17,7 +18,9 @@ const root = createRoot(container as Element);
 // Иначе при открытии …/services без hash сразу открывается Страница 2, минуя Страницу 1.
 root.render(
   <HashRouter>
-    <App />
+    <PortalSyncProvider>
+      <App />
+    </PortalSyncProvider>
   </HashRouter>
 );
 

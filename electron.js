@@ -39,6 +39,26 @@ const DEV_PORTS = [5173, 5174, 5175, 5176];
 /** Дочерний процесс API (только в установленном приложении) */
 let apiChild = null;
 
+function readPackagedApiConfig() {
+  const candidates = [];
+  if (app.isPackaged) {
+    candidates.push(path.join(process.resourcesPath, "app", "electron-assets", "api.json"));
+  }
+  candidates.push(path.join(__dirname, "electron-assets", "api.json"));
+  for (const p of candidates) {
+    try {
+      if (!fs.existsSync(p)) continue;
+      const j = JSON.parse(fs.readFileSync(p, "utf8"));
+      const apiUrl = typeof j?.apiUrl === "string" ? j.apiUrl.trim().replace(/\/+$/, "") : "";
+      const useRemoteApi = Boolean(j?.useRemoteApi && apiUrl);
+      return { apiUrl, useRemoteApi };
+    } catch {
+      /* try next */
+    }
+  }
+  return { apiUrl: "", useRemoteApi: false };
+}
+
 function probePort(port) {
   return new Promise((resolve, reject) => {
     const req = http.get(`http://127.0.0.1:${port}/`, (res) => {
@@ -173,6 +193,14 @@ function waitForBundledApi(maxMs = 25000) {
  */
 async function startBundledApiIfNeeded() {
   if (!app.isPackaged) return;
+
+  const apiCfg = readPackagedApiConfig();
+  if (apiCfg.useRemoteApi) {
+    console.log(
+      `[trassa] Общий сервер организации: ${apiCfg.apiUrl} (локальный API на этом ПК не запускается)`
+    );
+    return;
+  }
 
   const up = await apiHealthCheck();
   if (up) {

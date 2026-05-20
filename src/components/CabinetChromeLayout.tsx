@@ -16,6 +16,11 @@ import { getHoverTooltipPreset, HoverTooltip } from "./HoverTooltip";
 import { Page5MessengerView } from "../pages/Page5MessengerView";
 import { injectImagePreloads } from "../utils/imagePreload";
 import { ensureMessengerUidInProfile } from "../utils/messengerInvite";
+import {
+  MESSENGER_PEERS_KEY,
+  MESSENGER_STORE_KEY,
+  saveMessengerStore,
+} from "../utils/messengerStorage";
 import { isMessengerHiddenForMe } from "../utils/messengerHiddenForMe";
 import {
   applyMessengerInvitePayload,
@@ -79,9 +84,6 @@ function scanMessengerInboxUnread(seenAt: number): boolean {
   return false;
 }
 
-const MESSENGER_STORE_KEY = "trassa-messenger-v1";
-const MESSENGER_PEERS_KEY = "trassa-messenger-peers-v1";
-
 function injectMessengerTestIncoming(): void {
   try {
     let peerId = "p1";
@@ -104,8 +106,7 @@ function injectMessengerTestIncoming(): void {
       createdAt: new Date().toISOString(),
     };
     data[peerId] = [...arr, msg];
-    localStorage.setItem(MESSENGER_STORE_KEY, JSON.stringify(data));
-    window.dispatchEvent(new CustomEvent("trassa-messenger-updated"));
+    saveMessengerStore(data as Record<string, unknown>);
   } catch {
     /* ignore */
   }

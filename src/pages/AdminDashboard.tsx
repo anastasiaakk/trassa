@@ -47,7 +47,15 @@ import {
   type MapSubjectOrganization,
 } from "../utils/mapSubjectOrganizations";
 import { markNavigationFromAdminDashboard } from "../utils/adminReturnNavigation";
+import {
+  isPortalSyncEnabled,
+  migrateLocalPortalStateToServer,
+} from "../utils/portalSync";
+import { fetchAppUpdateManifest, publishAppUpdate } from "../api/appUpdateApi";
+import { TRASSA_SETUP_DOWNLOAD_URL } from "../config/desktopRelease";
 import styles from "./AdminPanel.module.css";
+
+const APP_VERSION = "0.2.0";
 
 type Props = {
   onLogout: () => void;
@@ -81,6 +89,18 @@ export default function AdminDashboard({
   useParentPageBackground = false,
 }: Props) {
   const authApiMode = isAuthApiEnabled();
+
+  useEffect(() => {
+    if (!authApiMode || !isPortalSyncEnabled()) return;
+    void fetchAppUpdateManifest().then((res) => {
+      if (res.ok) {
+        setPublishedVersion(res.manifest.version);
+        setReleaseVersion(res.manifest.version);
+        setReleaseSetupUrl(res.manifest.setupUrl);
+        setReleaseNotes(res.manifest.releaseNotes);
+      }
+    });
+  }, [authApiMode]);
   const adminEmail = useMemo(() => getAdminSessionEmail(), []);
   const cabinet = useMemo(() => getAdminCabinetInfo(adminEmail), [adminEmail]);
   const [users, setUsers] = useState<LocalUserRecord[]>(() =>
@@ -94,6 +114,14 @@ export default function AdminDashboard({
   const [newUserPassword, setNewUserPassword] = useState("");
   const [pwMessage, setPwMessage] = useState<string | null>(null);
   const [dataMessage, setDataMessage] = useState<string | null>(null);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [syncBusy, setSyncBusy] = useState(false);
+  const [releaseVersion, setReleaseVersion] = useState(APP_VERSION);
+  const [releaseSetupUrl, setReleaseSetupUrl] = useState(TRASSA_SETUP_DOWNLOAD_URL);
+  const [releaseNotes, setReleaseNotes] = useState("");
+  const [releaseMsg, setReleaseMsg] = useState<string | null>(null);
+  const [releaseBusy, setReleaseBusy] = useState(false);
+  const [publishedVersion, setPublishedVersion] = useState<string | null>(null);
   const [adminOldPw, setAdminOldPw] = useState("");
   const [adminNewPw, setAdminNewPw] = useState("");
   const [adminPwMsg, setAdminPwMsg] = useState<string | null>(null);
@@ -116,6 +144,7 @@ export default function AdminDashboard({
   const [mapEditingOpen, setMapEditingOpen] = useState(false);
   const [orgsOpen, setOrgsOpen] = useState(false);
   const [usersOpen, setUsersOpen] = useState(false);
+  const [releaseOpen, setReleaseOpen] = useState(false);
 
   const subjectOptions = useMemo(
     () => Array.from(new Set(SUBJECT_MARKERS_GEO.map((x) => x.name))).sort((a, b) => a.localeCompare(b, "ru")),
@@ -579,6 +608,132 @@ export default function AdminDashboard({
             </div>
           ) : null}
         </div>
+
+        {authApiMode && isPortalSyncEnabled() ? (
+          <div className={styles.section}>
+            <button
+              type="button"
+              className={styles.collapseTrigger}
+              aria-expanded={releaseOpen}
+              onClick={() => setReleaseOpen((v) => !v)}
+            >
+              <span
+                className={`${styles.collapseChevron} ${releaseOpen ? styles.collapseChevronOpen : ""}`}
+                aria-hidden
+              >
+                ▶
+              </span>
+              <h3 className={`${styles.sectionTitle} ${styles.collapseTitle}`}>
+                Обновление приложения (.exe)
+              </h3>
+              <span className={styles.collapseMeta}>
+                {publishedVersion ? `опубликована v${publishedVersion}` : "не опубликовано"}
+              </span>
+            </button>
+            {releaseOpen ? (
+              <div className={styles.collapseBody}>
+                <p className={styles.subtitle} style={{ marginBottom: 12 }}>
+                  <strong>Данные портала</strong> (карта, документы, календарь) у пользователей обновляются
+                  сами каждые ~25 секунд.
+                  <br />
+                  <strong>Новая версия программы</strong>: соберите установщик, загрузите на GitHub (или другой
+                  https), укажите версию и ссылку ниже и нажмите «Опубликовать». Программы проверяют обновление
+                  раз в сутки и при возврате в окно.
+                </p>
+                <form
+                  className={styles.form}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setReleaseBusy(true);
+                    setReleaseMsg(null);
+                    void publishAppUpdate({
+                      version: releaseVersion.trim(),
+                      setupUrl: releaseSetupUrl.trim(),
+                      releaseNotes: releaseNotes.trim(),
+                    }).then((res) => {
+                      setReleaseBusy(false);
+                      if (res.ok) {
+                        setPublishedVersion(res.manifest.version);
+                        setReleaseMsg(
+                          `Версия ${res.manifest.version} опубликована. Пользователи увидят предложение обновиться при следующей проверке.`
+                        );
+                      } else {
+                        setReleaseMsg(res.error);
+                      }
+                    });
+                  }}
+                >
+                  <label className={styles.label}>
+                    Версия (должна быть выше установленной у пользователей)
+                    <input
+                      className={styles.input}
+                      value={releaseVersion}
+                      onChange={(e) => setReleaseVersion(e.target.value)}
+                      placeholder="0.2.1"
+                      required
+                    />
+                  </label>
+                  <label className={styles.label}>
+                    Ссылка на установщик (https)
+                    <input
+                      className={styles.input}
+                      value={releaseSetupUrl}
+                      onChange={(e) => setReleaseSetupUrl(e.target.value)}
+                      required
+                    />
+                  </label>
+                  <label className={styles.label}>
+                    Что нового (необязательно)
+                    <textarea
+                      className={styles.input}
+                      rows={3}
+                      value={releaseNotes}
+                      onChange={(e) => setReleaseNotes(e.target.value)}
+                    />
+                  </label>
+                  <button type="submit" className={styles.btnNeoPrimary} disabled={releaseBusy}>
+                    {releaseBusy ? "Публикация…" : "Опубликовать обновление"}
+                  </button>
+                </form>
+                {releaseMsg ? <p className={styles.okMsg}>{releaseMsg}</p> : null}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
+        {authApiMode && isPortalSyncEnabled() ? (
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Синхронизация портала</h3>
+            <p className={styles.subtitle}>
+              Все установленные приложения и браузеры используют одну базу на сервере. Если данные
+              остались только на этом компьютере, загрузите их один раз.
+            </p>
+            <button
+              type="button"
+              className={styles.btnNeoGhost}
+              disabled={syncBusy}
+              onClick={() => {
+                setSyncBusy(true);
+                setSyncMessage(null);
+                void migrateLocalPortalStateToServer().then((res) => {
+                  setSyncBusy(false);
+                  if (res.ok) {
+                    setSyncMessage(
+                      res.imported > 0
+                        ? `На сервер загружено ключей: ${res.imported}.`
+                        : "На сервере уже есть актуальные данные (новых ключей нет)."
+                    );
+                  } else {
+                    setSyncMessage(res.error);
+                  }
+                });
+              }}
+            >
+              {syncBusy ? "Загрузка…" : "Синхронизировать данные с сервером"}
+            </button>
+            {syncMessage ? <p className={styles.okMsg}>{syncMessage}</p> : null}
+          </div>
+        ) : null}
 
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>Данные кабинетов</h3>

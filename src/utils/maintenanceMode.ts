@@ -3,6 +3,9 @@
  * Страница /services всегда доступна (вход администратора и карта).
  */
 
+import { PORTAL_KV } from "../config/portalKeys";
+import { pushPortalKv } from "./portalSync";
+
 const KEY = "trassa-maintenance-v1";
 
 export type MaintenanceState = {
@@ -31,12 +34,8 @@ export function loadMaintenanceState(): MaintenanceState {
 }
 
 export function saveMaintenanceState(state: MaintenanceState): void {
-  localStorage.setItem(
-    KEY,
-    JSON.stringify({
-      active: state.active,
-      message: state.message.trim() || DEFAULT_MESSAGE,
-    })
-  );
-  window.dispatchEvent(new CustomEvent("trassa-maintenance-changed"));
+  pushPortalKv(PORTAL_KV.MAINTENANCE, {
+    active: state.active,
+    message: state.message.trim() || DEFAULT_MESSAGE,
+  });
 }

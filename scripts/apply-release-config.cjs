@@ -44,11 +44,78 @@ function readPublicBaseUrl() {
   }
 }
 
+/** Общий API организации (все установщики ходят сюда). */
+function readApiUrl() {
+  const fromEnv = process.env.TRASSA_API_URL?.trim();
+  if (fromEnv) return fromEnv.replace(/\/+$/, "");
+  try {
+    if (!fs.existsSync(releasePath)) return "";
+    const j = JSON.parse(fs.readFileSync(releasePath, "utf8"));
+    const u = j?.apiUrl;
+    return typeof u === "string" ? u.trim().replace(/\/+$/, "") : "";
+  } catch {
+    return "";
+  }
+}
+
+function isLocalApiUrl(url) {
+  if (!url) return true;
+  return /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/i.test(url);
+}
+
+function writeDesktopBuildEnv(apiUrl) {
+  const envPath = path.join(root, ".env.production.local");
+  const lines = ["# Сгенерировано scripts/apply-release-config.cjs — не редактируйте вручную", "VITE_USE_AUTH_API=true"];
+  if (apiUrl) {
+    lines.push(`VITE_API_URL=${apiUrl}`);
+  }
+  fs.writeFileSync(envPath, lines.join("\n") + "\n", "utf8");
+  console.log(
+    "[apply-release-config] .env.production.local ←",
+    apiUrl ? `VITE_API_URL=${apiUrl}` : "без VITE_API_URL (локальный API на ПК)"
+  );
+}
+
+function writeElectronApiConfig(apiUrl) {
+  const useRemoteApi = Boolean(apiUrl && !isLocalApiUrl(apiUrl));
+  const apiPath = path.join(root, "electron-assets", "api.json");
+  const payload = {
+    apiUrl: apiUrl || "",
+    useRemoteApi,
+  };
+  fs.writeFileSync(apiPath, JSON.stringify(payload, null, 2) + "\n", "utf8");
+  console.log(
+    "[apply-release-config] electron-assets/api.json ←",
+    useRemoteApi ? `общий сервер ${apiUrl}` : "локальный API на каждом ПК"
+  );
+}
+
 function main() {
+  const installerMode = process.argv.includes("--installer");
   const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
   const version = pkg.version || "0.0.0";
   const base = readPublicBaseUrl();
   const explicitManifest = readExplicitManifestUrl();
+  const apiUrl = readApiUrl();
+
+  writeDesktopBuildEnv(apiUrl);
+  writeElectronApiConfig(apiUrl);
+
+  if (installerMode && !apiUrl) {
+    console.error(
+      "\n[apply-release-config] Для установщика с общей базой укажите apiUrl в release-config.json\n" +
+        '  пример: "apiUrl": "https://api.ваш-домен.ru"\n' +
+        "  или переменную окружения TRASSA_API_URL при сборке.\n" +
+        "  См. ORG-SERVER.md\n"
+    );
+    process.exit(1);
+  }
+
+  if (installerMode && isLocalApiUrl(apiUrl)) {
+    console.warn(
+      "[apply-release-config] apiUrl указывает на localhost — синхронизация между разными ПК работать не будет."
+    );
+  }
 
   const publicDir = path.join(root, "public");
   if (!fs.existsSync(publicDir)) {
@@ -70,7 +137,7 @@ function main() {
 
   const updateDefaults = {
     startupDelayMs: 12000,
-    checkIntervalHours: 24,
+    checkIntervalHours: apiUrl && !isLocalApiUrl(apiUrl) ? 6 : 24,
     remindLaterDays: 7,
   };
   const updatePath = path.join(root, "electron-assets", "update.json");
@@ -85,6 +152,9 @@ function main() {
 
   const manifestUrl =
     explicitManifest ||
+    (apiUrl && !isLocalApiUrl(apiUrl)
+      ? `${apiUrl.replace(/\/+$/, "")}/api/app-update/manifest`
+      : "") ||
     (base && (base.startsWith("https://") || base.startsWith("http://"))
       ? `${base.replace(/\/+$/, "")}/app-update.json`
       : "");

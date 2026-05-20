@@ -1,5 +1,8 @@
 import { SUBJECT_MARKERS_GEO } from "../data/page2MapGeo";
 
+import { PORTAL_KV } from "../config/portalKeys";
+import { pushPortalKv } from "./portalSync";
+
 const STORAGE_KEY = "trassa-map-subject-organizations-v1";
 
 export type MapOrgKind = "education" | "contractors";
@@ -78,8 +81,7 @@ function readRaw(): StoreFile {
 }
 
 function writeRaw(file: StoreFile): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(file));
-  window.dispatchEvent(new CustomEvent("trassa-map-subject-organizations-changed"));
+  pushPortalKv(PORTAL_KV.MAP_SUBJECT_ORGS, file);
 }
 
 export function loadMapSubjectOrganizations(): MapSubjectOrganization[] {

@@ -1,17 +1,49 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import styles from "./DesktopDownloadPanel.module.css";
-import { publicUrl } from "../utils/publicUrl";
-
-/** Имя файла в public/downloads/ и dist/downloads/ (копируется scripts/sync-setup-download.cjs). */
-const SETUP_FILE = "downloads/trassa-setup.exe";
+import {
+  TRASSA_APP_UPDATE_LOCAL_URL,
+  TRASSA_APP_UPDATE_MANIFEST_URL,
+  TRASSA_SETUP_DOWNLOAD_URL,
+  TRASSA_SETUP_LOCAL_URL,
+} from "../config/desktopRelease";
 
 type Props = {
   /** Узкая вёрстка внутри модального окна на /services */
   embedded?: boolean;
 };
 
+type UpdateManifest = {
+  version?: string;
+  releaseNotes?: string;
+};
+
+async function fetchManifest(url: string): Promise<UpdateManifest | null> {
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
+    return (await res.json()) as UpdateManifest;
+  } catch {
+    return null;
+  }
+}
+
 function DesktopDownloadPanel({ embedded }: Props) {
-  const href = publicUrl(SETUP_FILE);
+  const [version, setVersion] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const manifest =
+        (await fetchManifest(TRASSA_APP_UPDATE_LOCAL_URL)) ||
+        (await fetchManifest(TRASSA_APP_UPDATE_MANIFEST_URL));
+      if (!cancelled && manifest?.version) {
+        setVersion(manifest.version);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className={embedded ? styles.embedded : styles.standalone}>
@@ -19,14 +51,35 @@ function DesktopDownloadPanel({ embedded }: Props) {
         Приложение для компьютера (Windows)
       </h2>
       <p className={styles.lead}>
-        Портал «ТрассА» можно открывать в браузере. Если удобнее отдельное окно на рабочем столе — скачайте и
-        запустите установщик.
+        Установщик с автообновлением: после установки приложение «Трасса» само проверяет новые версии и
+        предложит обновиться. Сейчас на сайте и в браузере портал работает как обычно; отдельное окно на
+        рабочем столе — по желанию.
       </p>
+      <ul className={styles.featureList}>
+        <li>Установка в пару кликов (мастер установки)</li>
+        <li>Уведомление, когда выходит новая версия</li>
+        <li>Тот же интерфейс, что в браузере</li>
+      </ul>
       <div className={styles.downloadBlock}>
-        <a className={styles.downloadBtn} href={href} download="Трасса-Setup.exe">
-          Скачать
+        <a
+          className={styles.downloadBtn}
+          href={TRASSA_SETUP_DOWNLOAD_URL}
+          download="trassa-setup.exe"
+          rel="noopener noreferrer"
+        >
+          Скачать «Трасса» для Windows
         </a>
-        <p className={styles.downloadHint}>Файл: установщик Windows (.exe)</p>
+        <p className={styles.downloadHint}>
+          {version ? `Актуальная версия: ${version}. ` : ""}
+          Файл: <strong>trassa-setup.exe</strong> (установщик с автообновлением)
+        </p>
+        <p className={styles.downloadMirror}>
+          Если ссылка не открывается,{" "}
+          <a className={styles.mirrorLink} href={TRASSA_SETUP_LOCAL_URL} download="trassa-setup.exe">
+            скачать копию с этого сайта
+          </a>
+          .
+        </p>
       </div>
     </div>
   );

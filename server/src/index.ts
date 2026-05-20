@@ -6,6 +6,9 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { authRouter } from "./routes/auth.js";
+import { adminRouter } from "./routes/admin.js";
+import { adminAppUpdateRouter, appUpdateRouter } from "./routes/appUpdate.js";
+import { portalRouter } from "./routes/portal.js";
 
 const PORT = Number(process.env.PORT) || 4000;
 /** По умолчанию только localhost; для доступа из сети задайте LISTEN_HOST=0.0.0.0 (см. DEPLOY.md). */
@@ -44,12 +47,12 @@ app.use(
       callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-    methods: ["GET", "POST", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PATCH", "PUT", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Trassa-Admin-Token"],
   })
 );
 
-app.use(express.json({ limit: "512kb" }));
+app.use(express.json({ limit: "15mb" }));
 app.use(cookieParser());
 
 const authLimiter = rateLimit({
@@ -65,6 +68,10 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/auth", authLimiter, authRouter);
+app.use("/api/admin", authLimiter, adminRouter);
+app.use("/api/portal", portalRouter);
+app.use("/api/app-update", appUpdateRouter);
+app.use("/api/admin/app-update", adminAppUpdateRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ ok: false, error: "Not found" });

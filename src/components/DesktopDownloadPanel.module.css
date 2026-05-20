@@ -17,7 +17,19 @@
   font-size: 0.95rem;
   line-height: 1.6;
   opacity: 0.95;
+  margin: 0 0 1rem;
+}
+
+.featureList {
   margin: 0 0 1.25rem;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  opacity: 0.92;
+}
+
+.featureList li + li {
+  margin-top: 0.35rem;
 }
 
 .downloadBlock {
@@ -63,4 +75,21 @@
   font-size: 0.85rem;
   line-height: 1.45;
   opacity: 0.85;
+}
+
+.downloadMirror {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  opacity: 0.78;
+}
+
+.mirrorLink {
+  color: inherit;
+  font-weight: 600;
+  text-underline-offset: 2px;
+}
+
+.embedded .mirrorLink {
+  color: #1d4ed8;
 }

@@ -3,6 +3,9 @@
  * подрядчики заполняют и отправляют обратно; ассоциации получают уведомления.
  */
 
+import { PORTAL_KV } from "../config/portalKeys";
+import { pushPortalKv } from "./portalSync";
+
 export type AssociationId = "rador" | "ado";
 
 export type SharedDocFile = {
@@ -90,8 +93,7 @@ function readStore(): Store {
 }
 
 function writeStore(s: Store) {
-  localStorage.setItem(KEY, JSON.stringify(s));
-  window.dispatchEvent(new CustomEvent(SHARED_DOCS_UPDATED_EVENT));
+  pushPortalKv(PORTAL_KV.ASSOCIATION_DOCUMENTS, s);
 }
 
 export function listDocuments(association: AssociationId): AssociationDocument[] {

@@ -16,7 +16,7 @@ export function getApiBase(): string {
   return "";
 }
 
-function getStoredToken(): string | null {
+export function getStoredAccessToken(): string | null {
   try {
     return sessionStorage.getItem(TOKEN_KEY);
   } catch {
@@ -49,7 +49,7 @@ async function jsonFetch<T>(
     "Content-Type": "application/json",
     ...((init?.headers as Record<string, string>) ?? {}),
   };
-  const bearer = getStoredToken();
+  const bearer = getStoredAccessToken();
   if (bearer) {
     headers.Authorization = `Bearer ${bearer}`;
   }

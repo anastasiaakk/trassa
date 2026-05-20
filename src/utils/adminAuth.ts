@@ -4,7 +4,9 @@
  * Встроенные учётки: Ксения и Анастасия (добавляются при первом запуске / миграции).
  */
 
+import { adminApiChangePassword, adminApiLogin, setAdminApiToken } from "../api/adminApi";
 import { hashPassword } from "./localAuth";
+import { isAuthApiEnabled } from "./authMode";
 import { validatePasswordPolicy } from "./passwordPolicy";
 
 const ADMIN_USERS_KEY = "trassa-admin-users-v1";
@@ -134,6 +136,16 @@ export async function loginAdmin(email: string, password: string): Promise<boole
   await ensureBuiltinAdminUsers();
   const emailNorm = normalizeEmail(email);
   if (!emailNorm || !password) return false;
+
+  if (isAuthApiEnabled()) {
+    const api = await adminApiLogin(emailNorm, password);
+    if (!api.ok) return false;
+    setAdminApiToken(api.adminToken);
+    sessionStorage.setItem(SESSION_KEY, emailNorm);
+    void import("./portalSync").then(({ refreshPortalStateFromServer }) => refreshPortalStateFromServer());
+    return true;
+  }
+
   const file = readFile();
   const user = file.users.find((u) => u.emailNorm === emailNorm);
   if (!user) return false;
@@ -145,6 +157,7 @@ export async function loginAdmin(email: string, password: string): Promise<boole
 
 export function logoutAdmin(): void {
   sessionStorage.removeItem(SESSION_KEY);
+  setAdminApiToken(null);
 }
 
 export function getAdminSessionEmail(): string | null {
@@ -172,6 +185,12 @@ export async function updateAdminPassword(
   if (pwErr) {
     return { ok: false, error: pwErr };
   }
+
+  if (isAuthApiEnabled()) {
+    const api = await adminApiChangePassword(session, oldPassword, newPassword);
+    if (!api.ok) return api;
+  }
+
   const file = readFile();
   const user = file.users.find((u) => u.emailNorm === session);
   if (!user) {

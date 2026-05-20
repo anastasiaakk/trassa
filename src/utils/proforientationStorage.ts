@@ -3,7 +3,9 @@
  * Результаты доступны подрядчикам и кабинетам РАДОР/АДО для просмотра.
  */
 
+import { PORTAL_KV } from "../config/portalKeys";
 import { loadProfileSettings } from "../profileSettingsStorage";
+import { pushPortalKv } from "./portalSync";
 
 export const PROF_ORIENTATION_TAGS = [
   "Проектирование и сметы",
@@ -352,8 +354,7 @@ function readFile(): ResultsFile {
 }
 
 function writeFile(file: ResultsFile) {
-  localStorage.setItem(RESULTS_KEY, JSON.stringify(file));
-  window.dispatchEvent(new CustomEvent("trassa-proforientation-changed"));
+  pushPortalKv(PORTAL_KV.PROFORIENTATION, file);
 }
 
 export function listProforientationResults(): ProforientationResult[] {
