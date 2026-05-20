@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog, shell, Menu, nativeImage } = require("electron");
 const path = require("path");
 const fs = require("fs");
-const { execFileSync } = require("child_process");
+const { execFileSync, spawnSync } = require("child_process");
 
 /** В собранном установщике иконки лежат в resources/electron-assets (extraResources), не рядом с main.cjs. */
 function iconPath() {
@@ -168,6 +168,79 @@ function findInstalledExe(dir) {
   }
 }
 
+/** Закрыть запущенную «Трасса» из папки установки (иначе EPERM при обновлении .pak). */
+function stopTrassaInInstallDir(installDir) {
+  if (process.platform !== "win32") return { ok: true };
+  const dirLit = installDir.replace(/'/g, "''");
+  const ps1 = path.join(app.getPath("temp"), `trassa-stop-${Date.now()}.ps1`);
+  const script = `
+$dir = '${dirLit}'
+$procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+  $_.ExecutablePath -and ($_.ExecutablePath -like ($dir + '*'))
+}
+foreach ($p in $procs) {
+  Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
+}
+Start-Sleep -Seconds 2
+$left = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+  $_.ExecutablePath -and ($_.ExecutablePath -like ($dir + '*'))
+}).Count
+if ($left -gt 0) { exit 2 } else { exit 0 }
+`;
+  try {
+    fs.writeFileSync(ps1, "\uFEFF" + script, "utf8");
+    const r = spawnSync(
+      "powershell.exe",
+      ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ps1],
+      { windowsHide: true }
+    );
+    if (r.status === 2) {
+      return {
+        ok: false,
+        error:
+          "Приложение «Трасса» всё ещё запущено. Закройте его вручную (в том числе из трея) и повторите установку.",
+      };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  } finally {
+    try {
+      fs.unlinkSync(ps1);
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+function copyPayloadToInstallDir(payload, destPath) {
+  fs.mkdirSync(destPath, { recursive: true });
+  if (process.platform === "win32") {
+    const robocopy = `robocopy "${payload}" "${destPath}" /MIR /XJ /R:2 /W:2 /NFL /NDL /NJH /NJS /nc /ns /np`;
+    const rc = spawnSync(robocopy, { shell: true, stdio: "pipe" });
+    const code = rc.status ?? 1;
+    if (code >= 8) {
+      const err = (rc.stderr && rc.stderr.toString()) || (rc.stdout && rc.stdout.toString()) || "";
+      return {
+        ok: false,
+        error:
+          err.trim() ||
+          "Не удалось скопировать файлы (код robocopy " +
+            code +
+            "). Закройте «Трасса» и повторите.",
+      };
+    }
+    return { ok: true };
+  }
+  try {
+    fs.cpSync(payload, destPath, { recursive: true, force: true });
+    return { ok: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { ok: false, error: msg };
+  }
+}
+
 ipcMain.handle("default-path", () => {
   const base = process.env.LOCALAPPDATA || path.join(require("os").homedir(), "AppData", "Local");
   return path.join(base, "Трасса");
@@ -191,12 +264,13 @@ ipcMain.handle("install", async (_e, destPath) => {
         "(нужен шаг копирования packaged-app → setup-wizard/payload-app).",
     };
   }
-  try {
-    fs.mkdirSync(destPath, { recursive: true });
-    fs.cpSync(payload, destPath, { recursive: true, force: true });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    return { ok: false, error: msg };
+  const stop = stopTrassaInInstallDir(destPath);
+  if (!stop.ok) {
+    return { ok: false, error: stop.error };
+  }
+  const copied = copyPayloadToInstallDir(payload, destPath);
+  if (!copied.ok) {
+    return { ok: false, error: copied.error };
   }
   const exePath = findInstalledExe(destPath);
   if (!exePath) {

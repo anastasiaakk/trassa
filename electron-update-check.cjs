@@ -183,6 +183,14 @@ async function runUpdateCheck(mainWindow, cfg, options = {}) {
 
   if (response === 0) {
     await shell.openExternal(setupUrl);
+    /** Закрываем приложение, иначе установщик не сможет перезаписать файлы (EPERM на .pak). */
+    setTimeout(() => {
+      try {
+        app.quit();
+      } catch {
+        /* ignore */
+      }
+    }, 600);
     return;
   }
 
