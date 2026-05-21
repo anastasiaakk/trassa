@@ -14,6 +14,8 @@ import {
 } from "../utils/sharedCalendarEvents";
 import ProforientationTestSection from "../components/ProforientationTestSection";
 import { ROLE_ICON_SCHOOL, ROLE_ICON_STUDENT } from "../assets/appIcons";
+import HeroRoleIconButton from "../components/HeroRoleIconButton";
+import { buildCabinetHeroCardStyle, heroTopRowStyle } from "../utils/cabinetHero";
 
 const CABINET_HERO_SCHOOL = new URL("../assets/cabinet-hero-school.png", import.meta.url).href;
 const CABINET_HERO_STUDENT = new URL("../assets/cabinet-hero-student.png", import.meta.url).href;
@@ -136,20 +138,7 @@ function LearnerCabinetDashboard({
 
   const heroCardStyle = useMemo(() => {
     const heroUrl = variant === "school" ? CABINET_HERO_SCHOOL : CABINET_HERO_STUDENT;
-    return {
-      ...layoutStyles.heroCard,
-      backgroundImage:
-        "linear-gradient(180deg, rgba(" +
-        (isDark ? "15,23,42,0.58" : "46,69,108,0.45") +
-        ") 0%, rgba(" +
-        (isDark ? "15,23,42,0.72" : "34,56,88,0.52") +
-        ") 100%), url('" +
-        heroUrl +
-        "')",
-      backgroundSize: "cover",
-      backgroundPosition: "center center",
-      filter: "none",
-    };
+    return buildCabinetHeroCardStyle(layoutStyles.heroCard, heroUrl, isDark);
   }, [layoutStyles.heroCard, isDark, variant]);
   const heroRoleIconSrc = variant === "school" ? ROLE_ICON_SCHOOL : ROLE_ICON_STUDENT;
   const navigate = useNavigate();
@@ -435,34 +424,11 @@ function LearnerCabinetDashboard({
         >
           <div className="dashboard-hero-grid">
             <div className="ref-radius-a" style={{ ...heroCardStyle, minHeight: 404 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <button type="button" style={layoutStyles.heroTag}>
+            <div style={heroTopRowStyle}>
+              <button type="button" style={{ ...layoutStyles.heroTag, flexShrink: 1, minWidth: 0 }}>
                 {copy.heroTag}
               </button>
-              <button
-                type="button"
-                style={{
-                  ...layoutStyles.heroButton,
-                  width: 46,
-                  height: 46,
-                  minWidth: 46,
-                  minHeight: 46,
-                  padding: 0,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <img
-                  decoding="async"
-                  src={heroRoleIconSrc}
-                  alt=""
-                  width={28}
-                  height={28}
-                  style={{ display: "block", objectFit: "contain" }}
-                />
-              </button>
+              <HeroRoleIconButton iconSrc={heroRoleIconSrc} buttonBaseStyle={layoutStyles.heroButton} />
             </div>
             {heroDisplayName ? (
               <div style={layoutStyles.heroTitle}>{heroDisplayName}</div>

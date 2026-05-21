@@ -408,8 +408,8 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
       heroButton: {
         background: "#ffffff",
         border: "none",
-        borderRadius: 9999,
-        padding: 12,
+        borderRadius: "50%",
+        padding: 0,
         cursor: "pointer",
       },
       heroTitle: {
