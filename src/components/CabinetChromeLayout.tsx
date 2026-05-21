@@ -47,46 +47,6 @@ import {
 
 export { CABINET_CHROME_PRELOAD_IMAGES };
 
-/** Круглая плашка с иконкой внутри (шапка, герой кабинета). */
-export function CircleIconBadge({
-  src,
-  size = 36,
-  iconSize = 22,
-  background = "rgba(255,255,255,0.95)",
-}: {
-  src: string;
-  size?: number;
-  iconSize?: number;
-  background?: string;
-}) {
-  return (
-    <span
-      style={{
-        width: size,
-        height: size,
-        minWidth: size,
-        minHeight: size,
-        borderRadius: "50%",
-        background,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-        boxShadow: "0 4px 14px rgba(15, 23, 42, 0.2)",
-      }}
-    >
-      <img
-        decoding="async"
-        src={src}
-        alt=""
-        width={iconSize}
-        height={iconSize}
-        style={{ display: "block", objectFit: "contain" }}
-      />
-    </span>
-  );
-}
-
 export type CabinetSection = "dashboard" | "messenger";
 
 const MSGR_SEEN_KEY = "trassa-msgr-seen";
@@ -762,11 +722,14 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
                   fontFamily: "inherit",
                 }}
               >
-                <CircleIconBadge
+                <img
+                  decoding="async"
+                  fetchPriority="high"
                   src={ICON_AVATAR}
-                  size={36}
-                  iconSize={22}
-                  background="rgba(15, 23, 42, 0.42)"
+                  alt=""
+                  width={30}
+                  height={30}
+                  style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
                 />
                 <span
                   style={{
