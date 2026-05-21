@@ -37,7 +37,11 @@ import {
   APP_LOGO_SRC,
   CABINET_CHROME_PRELOAD_IMAGES,
   CABINET_HERO_BG,
+  CABINET_HERO_CONTRACTOR,
   ICON_AVATAR,
+  ROLE_ICON_CONTRACTOR,
+  ROLE_ICON_SCHOOL,
+  ROLE_ICON_STUDENT,
   ICON_LOGOUT,
   ICON_PROFILE_CHEVRON,
   ICON_SEARCH,
@@ -45,6 +49,41 @@ import {
 } from "../assets/appIcons";
 
 export { CABINET_CHROME_PRELOAD_IMAGES };
+
+function cabinetAvatarSrc(cabinetPath: string): string {
+  if (cabinetPath === "/page4") return ROLE_ICON_CONTRACTOR;
+  if (cabinetPath === "/cabinet-school") return ROLE_ICON_SCHOOL;
+  if (cabinetPath === "/cabinet-spo") return ROLE_ICON_STUDENT;
+  return ICON_AVATAR;
+}
+
+function CabinetAvatarImg({ src, size = 34 }: { src: string; size?: number }) {
+  return (
+    <span
+      style={{
+        width: size,
+        height: size,
+        minWidth: size,
+        minHeight: size,
+        borderRadius: "50%",
+        overflow: "hidden",
+        flexShrink: 0,
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(255,255,255,0.16)",
+        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.22)",
+      }}
+    >
+      <img
+        decoding="async"
+        src={src}
+        alt=""
+        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+      />
+    </span>
+  );
+}
 
 export type CabinetSection = "dashboard" | "messenger";
 
@@ -295,6 +334,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
   }, [navigate]);
 
   const plaqueName = profilePlaque.firstName.trim() || "Пользователь";
+  const avatarSrc = useMemo(() => cabinetAvatarSrc(cabinetPath), [cabinetPath]);
 
   const mainRegion = useMemo(
     () => ({
@@ -388,10 +428,10 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
           ") 0%, rgba(" +
           (isDark ? "15,23,42,0.65" : "34,56,88,0.55") +
           ") 100%), url('" +
-          CABINET_HERO_BG +
+          (cabinetPath === "/page4" ? CABINET_HERO_CONTRACTOR : CABINET_HERO_BG) +
           "')",
-        backgroundSize: "115%",
-        backgroundPosition: "center 40%",
+        backgroundSize: cabinetPath === "/page4" ? "cover" : "115%",
+        backgroundPosition: cabinetPath === "/page4" ? "center center" : "center 40%",
         filter: "brightness(1.08)",
         boxShadow: styles.cardShadow,
         color: "#ffffff",
@@ -485,7 +525,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
         letterSpacing: "-0.01em",
       },
     }),
-    [styles, isDark]
+    [styles, isDark, cabinetPath]
   );
 
   const ctx = useMemo<CabinetChromeContext>(
@@ -721,15 +761,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
                   fontFamily: "inherit",
                 }}
               >
-                <img
-                  decoding="async"
-                  fetchPriority="high"
-                  src={ICON_AVATAR}
-                  alt=""
-                  width={30}
-                  height={30}
-                  style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
-                />
+                <CabinetAvatarImg src={avatarSrc} size={34} />
                 <span
                   style={{
                     fontSize: 14,

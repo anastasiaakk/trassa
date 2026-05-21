@@ -1,7 +1,7 @@
 ﻿import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import CabinetChromeLayout, { type CabinetChromeContext } from "../components/CabinetChromeLayout";
-import { ICON_HERO_HOME } from "../assets/appIcons";
+import { ROLE_ICON_CONTRACTOR } from "../assets/appIcons";
 import { ContractorCabinetAside } from "../components/ContractorCabinetAside";
 import { AUDIENCE_LABELS, getUpcomingStudentSchoolEventsForPanel } from "./Page5EventsView";
 import {
@@ -40,6 +40,23 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
   }, []);
 
   const contractorHeroTitle = profilePlaque.contractorCompanyName.trim();
+
+  const contractorHeroCardStyle = useMemo(
+    () => ({
+      ...layoutStyles.heroCard,
+      backgroundImage:
+        "linear-gradient(180deg, rgba(" +
+        (isDark ? "15,23,42,0.58" : "46,69,108,0.45") +
+        ") 0%, rgba(" +
+        (isDark ? "15,23,42,0.72" : "34,56,88,0.52") +
+        ") 100%), url('" +
+        ROLE_ICON_CONTRACTOR +
+        "')",
+      backgroundSize: "cover",
+      backgroundPosition: "center center",
+    }),
+    [layoutStyles.heroCard, isDark]
+  );
 
   const contractorUpcomingEvents = useMemo(
     () => getUpcomingStudentSchoolEventsForPanel(sharedCalendarEvents, 6),
@@ -121,13 +138,32 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
           }}
         >
           <div className="dashboard-hero-grid">
-            <div className="ref-radius-a" style={{ ...layoutStyles.heroCard, minHeight: 404 }}>
+            <div className="ref-radius-a" style={{ ...contractorHeroCardStyle, minHeight: 404 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <button type="button" style={layoutStyles.heroTag}>
                 Письма, практика и обучение
               </button>
-              <button type="button" style={layoutStyles.heroButton}>
-                <img decoding="async" src={ICON_HERO_HOME} alt="" style={{ width: 22, height: 22 }} />
+              <button
+                type="button"
+                style={{
+                  ...layoutStyles.heroButton,
+                  width: 46,
+                  height: 46,
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "50%",
+                }}
+              >
+                <img
+                  decoding="async"
+                  src={ROLE_ICON_CONTRACTOR}
+                  alt=""
+                  width={28}
+                  height={28}
+                  style={{ display: "block", objectFit: "contain" }}
+                />
               </button>
             </div>
             {contractorHeroTitle ? (

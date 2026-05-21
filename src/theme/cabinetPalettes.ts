@@ -303,7 +303,9 @@ function paletteContractor(isDark: boolean): CabinetChromeStyles {
 
 export function buildCabinetChromeTheme(cabinetPath: string, isDark: boolean): CabinetChromeStyles {
   if (cabinetPath === "/cabinet-school") return paletteSchool(isDark);
-  if (cabinetPath === "/cabinet-spo") return paletteSchool(isDark);
+  if (cabinetPath === "/cabinet-spo") return paletteSpo(isDark);
+  if (cabinetPath === "/page4") return paletteContractor(isDark);
+  if (cabinetPath === "/page5" || cabinetPath === "/page6") return paletteSpo(isDark);
   return paletteSchool(isDark);
 }
 
