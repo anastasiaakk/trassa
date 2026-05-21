@@ -1,7 +1,7 @@
 ﻿import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import CabinetChromeLayout, { type CabinetChromeContext } from "../components/CabinetChromeLayout";
-import { ROLE_ICON_CONTRACTOR } from "../assets/appIcons";
+import { CABINET_HERO_CONTRACTOR, ICON_HERO_HOME } from "../assets/appIcons";
 import { ContractorCabinetAside } from "../components/ContractorCabinetAside";
 import { AUDIENCE_LABELS, getUpcomingStudentSchoolEventsForPanel } from "./Page5EventsView";
 import {
@@ -50,7 +50,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
         ") 0%, rgba(" +
         (isDark ? "15,23,42,0.72" : "34,56,88,0.52") +
         ") 100%), url('" +
-        ROLE_ICON_CONTRACTOR +
+        CABINET_HERO_CONTRACTOR +
         "')",
       backgroundSize: "cover",
       backgroundPosition: "center center",
@@ -143,27 +143,8 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
               <button type="button" style={layoutStyles.heroTag}>
                 Письма, практика и обучение
               </button>
-              <button
-                type="button"
-                style={{
-                  ...layoutStyles.heroButton,
-                  width: 46,
-                  height: 46,
-                  padding: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                }}
-              >
-                <img
-                  decoding="async"
-                  src={ROLE_ICON_CONTRACTOR}
-                  alt=""
-                  width={28}
-                  height={28}
-                  style={{ display: "block", objectFit: "contain" }}
-                />
+              <button type="button" style={layoutStyles.heroButton}>
+                <img decoding="async" src={ICON_HERO_HOME} alt="" style={{ width: 22, height: 22 }} />
               </button>
             </div>
             {contractorHeroTitle ? (

@@ -25,15 +25,14 @@ export const ROLE_ICON_SCHOOL = publicUrl("tagjs/b3pnceya.png");
 export const ROLE_ICON_STUDENT = publicUrl("tagjs/66h5rmum.png");
 export const ROLE_ICON_CONTRACTOR = publicUrl("tagjs/0tenwd9b.png");
 
-/** Фон героя в кабинете подрядчика (здания / организация). */
-export const CABINET_HERO_CONTRACTOR = ROLE_ICON_CONTRACTOR;
+/** Фон героя в кабинете подрядчика (Group 37227 — инженер с чертежами). */
+export const CABINET_HERO_CONTRACTOR = publicUrl("cabinet-hero-contractor.png");
 export const ROLE_ICON_INSTITUTION = publicUrl("tagjs/boty0uwi.png");
 
 export const CABINET_CHROME_PRELOAD_IMAGES = [
   APP_LOGO_SRC,
   CABINET_HERO_BG,
   CABINET_HERO_CONTRACTOR,
-  ROLE_ICON_CONTRACTOR,
   ICON_SEARCH,
   ICON_THEME,
   ICON_AVATAR,

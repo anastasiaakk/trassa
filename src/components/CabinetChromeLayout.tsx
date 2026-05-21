@@ -39,9 +39,6 @@ import {
   CABINET_HERO_BG,
   CABINET_HERO_CONTRACTOR,
   ICON_AVATAR,
-  ROLE_ICON_CONTRACTOR,
-  ROLE_ICON_SCHOOL,
-  ROLE_ICON_STUDENT,
   ICON_LOGOUT,
   ICON_PROFILE_CHEVRON,
   ICON_SEARCH,
@@ -49,41 +46,6 @@ import {
 } from "../assets/appIcons";
 
 export { CABINET_CHROME_PRELOAD_IMAGES };
-
-function cabinetAvatarSrc(cabinetPath: string): string {
-  if (cabinetPath === "/page4") return ROLE_ICON_CONTRACTOR;
-  if (cabinetPath === "/cabinet-school") return ROLE_ICON_SCHOOL;
-  if (cabinetPath === "/cabinet-spo") return ROLE_ICON_STUDENT;
-  return ICON_AVATAR;
-}
-
-function CabinetAvatarImg({ src, size = 34 }: { src: string; size?: number }) {
-  return (
-    <span
-      style={{
-        width: size,
-        height: size,
-        minWidth: size,
-        minHeight: size,
-        borderRadius: "50%",
-        overflow: "hidden",
-        flexShrink: 0,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(255,255,255,0.16)",
-        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.22)",
-      }}
-    >
-      <img
-        decoding="async"
-        src={src}
-        alt=""
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-      />
-    </span>
-  );
-}
 
 export type CabinetSection = "dashboard" | "messenger";
 
@@ -334,7 +296,6 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
   }, [navigate]);
 
   const plaqueName = profilePlaque.firstName.trim() || "Пользователь";
-  const avatarSrc = useMemo(() => cabinetAvatarSrc(cabinetPath), [cabinetPath]);
 
   const mainRegion = useMemo(
     () => ({
@@ -761,7 +722,24 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
                   fontFamily: "inherit",
                 }}
               >
-                <CabinetAvatarImg src={avatarSrc} size={34} />
+                <img
+                  decoding="async"
+                  fetchPriority="high"
+                  src={ICON_AVATAR}
+                  alt=""
+                  width={30}
+                  height={30}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    minWidth: 30,
+                    minHeight: 30,
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    flexShrink: 0,
+                    display: "block",
+                  }}
+                />
                 <span
                   style={{
                     fontSize: 14,
