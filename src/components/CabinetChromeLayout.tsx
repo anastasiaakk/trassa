@@ -37,7 +37,6 @@ import {
   APP_LOGO_SRC,
   CABINET_CHROME_PRELOAD_IMAGES,
   CABINET_HERO_BG,
-  CABINET_HERO_CONTRACTOR,
   ICON_AVATAR,
   ICON_LOGOUT,
   ICON_PROFILE_CHEVRON,
@@ -389,10 +388,10 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
           ") 0%, rgba(" +
           (isDark ? "15,23,42,0.65" : "34,56,88,0.55") +
           ") 100%), url('" +
-          (cabinetPath === "/page4" ? CABINET_HERO_CONTRACTOR : CABINET_HERO_BG) +
+          CABINET_HERO_BG +
           "')",
-        backgroundSize: cabinetPath === "/page4" ? "cover" : "115%",
-        backgroundPosition: cabinetPath === "/page4" ? "center center" : "center 40%",
+        backgroundSize: "115%",
+        backgroundPosition: "center 40%",
         filter: "brightness(1.08)",
         boxShadow: styles.cardShadow,
         color: "#ffffff",

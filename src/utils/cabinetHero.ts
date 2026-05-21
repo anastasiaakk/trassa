@@ -42,12 +42,20 @@ export function buildCabinetHeroCardStyle(
 ): CSSProperties {
   const scrimFrom = isDark ? "15,23,42,0.58" : "46,69,108,0.45";
   const scrimTo = isDark ? "15,23,42,0.72" : "34,56,88,0.52";
+  const {
+    backgroundImage: _bg,
+    backgroundSize: _bs,
+    backgroundPosition: _bp,
+    filter: _f,
+    ...frame
+  } = heroCard;
   return {
-    ...heroCard,
+    ...frame,
     backgroundImage:
       `linear-gradient(180deg, rgba(${scrimFrom}) 0%, rgba(${scrimTo}) 100%), url('${imageUrl}')`,
     backgroundSize: "cover",
     backgroundPosition: "center center",
+    backgroundRepeat: "no-repeat",
     filter: "none",
   };
 }

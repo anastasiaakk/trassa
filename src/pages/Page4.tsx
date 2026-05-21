@@ -1,7 +1,9 @@
 ﻿import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import CabinetChromeLayout, { type CabinetChromeContext } from "../components/CabinetChromeLayout";
-import { CABINET_HERO_CONTRACTOR, ROLE_ICON_CONTRACTOR } from "../assets/appIcons";
+import { ROLE_ICON_CONTRACTOR } from "../assets/appIcons";
+
+const CABINET_HERO_CONTRACTOR = new URL("../assets/cabinet-hero-contractor.png", import.meta.url).href;
 import HeroRoleIconButton from "../components/HeroRoleIconButton";
 import { buildCabinetHeroCardStyle, heroTopRowStyle } from "../utils/cabinetHero";
 import { ContractorCabinetAside } from "../components/ContractorCabinetAside";

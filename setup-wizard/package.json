@@ -1,6 +1,6 @@
 {
   "name": "trassa-setup-wizard",
-  "version": "0.2.17",
+  "version": "0.2.18",
   "private": true,
   "main": "main.cjs",
   "scripts": {
