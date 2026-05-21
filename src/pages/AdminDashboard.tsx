@@ -55,7 +55,7 @@ import { fetchAppUpdateManifest, publishAppUpdate } from "../api/appUpdateApi";
 import { TRASSA_SETUP_DOWNLOAD_URL } from "../config/desktopRelease";
 import styles from "./AdminPanel.module.css";
 
-const APP_VERSION = "0.2.15";
+const APP_VERSION = "0.2.16";
 
 type Props = {
   onLogout: () => void;

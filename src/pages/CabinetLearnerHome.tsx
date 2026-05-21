@@ -148,6 +148,7 @@ function LearnerCabinetDashboard({
         "')",
       backgroundSize: "cover",
       backgroundPosition: "center center",
+      filter: "none",
     };
   }, [layoutStyles.heroCard, isDark, variant]);
   const heroRoleIconSrc = variant === "school" ? ROLE_ICON_SCHOOL : ROLE_ICON_STUDENT;
@@ -438,13 +439,27 @@ function LearnerCabinetDashboard({
               <button type="button" style={layoutStyles.heroTag}>
                 {copy.heroTag}
               </button>
-              <button type="button" style={layoutStyles.heroButton}>
+              <button
+                type="button"
+                style={{
+                  ...layoutStyles.heroButton,
+                  width: 46,
+                  height: 46,
+                  minWidth: 46,
+                  minHeight: 46,
+                  padding: 0,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
                 <img
                   decoding="async"
                   src={heroRoleIconSrc}
                   alt=""
-                  width={22}
-                  height={22}
+                  width={28}
+                  height={28}
                   style={{ display: "block", objectFit: "contain" }}
                 />
               </button>
