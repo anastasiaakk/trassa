@@ -1,7 +1,7 @@
 ﻿import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import CabinetChromeLayout, { type CabinetChromeContext } from "../components/CabinetChromeLayout";
-import { CABINET_HERO_CONTRACTOR, ICON_HERO_HOME } from "../assets/appIcons";
+import { CABINET_HERO_CONTRACTOR, ROLE_ICON_CONTRACTOR } from "../assets/appIcons";
 import { ContractorCabinetAside } from "../components/ContractorCabinetAside";
 import { AUDIENCE_LABELS, getUpcomingStudentSchoolEventsForPanel } from "./Page5EventsView";
 import {
@@ -54,6 +54,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
         "')",
       backgroundSize: "cover",
       backgroundPosition: "center center",
+      filter: "none",
     }),
     [layoutStyles.heroCard, isDark]
   );
@@ -143,8 +144,29 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
               <button type="button" style={layoutStyles.heroTag}>
                 Письма, практика и обучение
               </button>
-              <button type="button" style={layoutStyles.heroButton}>
-                <img decoding="async" src={ICON_HERO_HOME} alt="" style={{ width: 22, height: 22 }} />
+              <button
+                type="button"
+                style={{
+                  ...layoutStyles.heroButton,
+                  width: 46,
+                  height: 46,
+                  minWidth: 46,
+                  minHeight: 46,
+                  padding: 0,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <img
+                  decoding="async"
+                  src={ROLE_ICON_CONTRACTOR}
+                  alt=""
+                  width={28}
+                  height={28}
+                  style={{ display: "block", objectFit: "contain" }}
+                />
               </button>
             </div>
             {contractorHeroTitle ? (
