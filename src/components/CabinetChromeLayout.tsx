@@ -43,11 +43,6 @@ import {
   restoreCabinetScrollPosition,
 } from "../utils/profileNavigation";
 import {
-  MESSENGER_PEERS_KEY,
-  MESSENGER_STORE_KEY,
-  saveMessengerStore,
-} from "../utils/messengerStorage";
-import {
   applyMessengerInvitePayload,
   decodeMessengerInvite,
   MSGR_INVITE_PARAM,
@@ -86,34 +81,6 @@ import {
 export { CABINET_CHROME_PRELOAD_IMAGES };
 
 export type CabinetSection = "dashboard" | "messenger";
-
-function injectMessengerTestIncoming(): void {
-  try {
-    let peerId = "p1";
-    const pr = localStorage.getItem(MESSENGER_PEERS_KEY);
-    if (pr) {
-      const peers = JSON.parse(pr) as Array<{ id: string }>;
-      if (Array.isArray(peers) && peers[0]?.id) peerId = peers[0].id;
-    }
-    const raw = localStorage.getItem(MESSENGER_STORE_KEY);
-    const data = (raw ? JSON.parse(raw) : {}) as Record<
-      string,
-      Array<{ id: string; threadId: string; author: string; text: string; createdAt: string }>
-    >;
-    const arr = data[peerId] ?? [];
-    const msg = {
-      id: `sim-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      threadId: peerId,
-      author: peerId,
-      text: "Привет! Это тестовое входящее — проверка уведомления на Т-боте.",
-      createdAt: new Date().toISOString(),
-    };
-    data[peerId] = [...arr, msg];
-    saveMessengerStore(data as Record<string, unknown>);
-  } catch {
-    /* ignore */
-  }
-}
 
 export type CabinetChromeStyles = {
   pageBg: string;
@@ -284,7 +251,6 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
     () => getCabinetSectionMeta(location.pathname, cabinetPath, cabinetSection),
     [location.pathname, cabinetPath, cabinetSection]
   );
-  const isContractorCabinet = cabinetPath === "/page4";
   /** Поиск в brand, toolbar отдельно — как у подрядчика (и студента на мобильном) */
   const isSearchFirstTopbar = cabinetPath === "/page4" || cabinetPath === "/cabinet-spo";
 

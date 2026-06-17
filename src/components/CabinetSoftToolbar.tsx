@@ -32,7 +32,7 @@ function CabinetSoftToolbar({
   messengerLabel = "Мессенджер",
   messengerActive = false,
   onNotifications,
-  notificationsUnread = false,
+  notificationsUnread: _notificationsUnread = false,
   notificationsLabel = "Уведомления",
   onOpenAi,
   avatarEmail,

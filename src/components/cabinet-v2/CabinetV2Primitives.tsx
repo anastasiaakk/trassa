@@ -2,7 +2,7 @@ import { memo, type CSSProperties, type ReactNode } from "react";
 import { cx } from "../../design-system/cabinetChromeClasses";
 import CabinetHomeIcon from "../CabinetHomeIcon";
 import HeroRoleIconButton from "../HeroRoleIconButton";
-import { heroTagBadgeStyle, heroTopRowStyle } from "../../utils/cabinetHero";
+import { heroTopRowStyle } from "../../utils/cabinetHero";
 
 /** Кнопка навигации в компактном aside v2. */
 export const CabinetV2AsideNav = memo(function CabinetV2AsideNav({

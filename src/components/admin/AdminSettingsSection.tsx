@@ -8,7 +8,7 @@ import { clearSharedCalendarEvents, resetMessengerLocalData } from "../../utils/
 import { loadMaintenanceState, saveMaintenanceState } from "../../utils/maintenanceMode";
 import { isPortalSyncEnabled, migrateLocalPortalStateToServer, pushPortalKvWithAck } from "../../utils/portalSync";
 import { getPortalDesign, setPortalDesign } from "../../design-system/portalDesign";
-import { getPage2BackgroundMode, setPage2BackgroundMode, type Page2BackgroundMode } from "../../design-system/page2BackgroundMode";
+import { setPage2BackgroundMode, type Page2BackgroundMode } from "../../design-system/page2BackgroundMode";
 import {
   applyMyDesignPreset,
   captureCurrentDesignPreset,

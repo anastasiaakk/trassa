@@ -163,7 +163,6 @@ export function buildContractorDeadlineFeed(input: {
 
   for (const row of progress) {
     if (!row.dueAt) continue;
-    const dueMs = new Date(row.dueAt).getTime();
     const days = daysUntil(row.dueAt, now);
     items.push({
       id: `form-${row.templateId}`,

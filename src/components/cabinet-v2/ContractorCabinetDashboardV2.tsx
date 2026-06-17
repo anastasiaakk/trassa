@@ -100,16 +100,6 @@ function ContractorCabinetDashboardV2({
     [emailNorm, assignedTemplates, formSubmissions]
   );
 
-  const deadlinesSoon = useMemo(
-    () =>
-      radorDeadlineRows.filter((row) => {
-        if (!row.dueAt || row.status === "submitted") return false;
-        const days = Math.ceil((new Date(row.dueAt).getTime() - Date.now()) / 86_400_000);
-        return days >= 0 && days <= 14;
-      }).length,
-    [radorDeadlineRows]
-  );
-
   const heroPrimaryAction = useMemo(() => {
     if (formsUnread > 0) {
       return {

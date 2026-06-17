@@ -88,7 +88,8 @@ const ContractorFormsView = memo(function ContractorFormsView({
   isDark = false,
   isV2: isV2Prop = false,
 }: Props) {
-  const isV2 = isV2Prop === true || usePortalDesign() === "v2";
+  const portalIsV2 = usePortalDesign() === "v2";
+  const isV2 = isV2Prop === true || portalIsV2;
   const emailNorm = useMemo(
     () => loadProfileSettings().email.trim().toLowerCase(),
     []

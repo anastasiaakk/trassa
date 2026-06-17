@@ -32,7 +32,8 @@ const ContractorStudentTeamsView = memo(function ContractorStudentTeamsView({
   cn,
   isV2: isV2Prop,
 }: Props) {
-  const isV2 = isV2Prop === true || usePortalDesign() === "v2";
+  const portalIsV2 = usePortalDesign() === "v2";
+  const isV2 = isV2Prop === true || portalIsV2;
   const [items, setItems] = useState(() => listAllBulletinsForContractors());
   const sync = useCallback(() => setItems(listAllBulletinsForContractors()), []);
 

@@ -22,7 +22,6 @@ import {
 } from "../utils/specializationsStorage";
 import { getApiBase } from "../api/authApi";
 import { downloadSpecializationsCsvLocal } from "../utils/specializationExport";
-import { usePortalDesign } from "../design-system/usePortalDesign";
 import styles from "./AdminPanel.module.css";
 import glass from "./AdminPanelGlass.module.css";
 
@@ -84,7 +83,6 @@ function CollapseSection({
 }
 
 export default function AdminSpecializationsPanel() {
-  const isV2 = usePortalDesign() === "v2";
   const authApiMode = isAuthApiEnabled();
   const [specs, setSpecs] = useState<Specialization[]>(() => loadSpecializations());
   const [summary, setSummary] = useState<SpecializationSummaryPayload | null>(null);

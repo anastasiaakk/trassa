@@ -1,7 +1,6 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { FormLayout, FormMonitoringRow, FormTemplate, FormTemplateSheet } from "../types/adminForms";
 import {
-  assignTemplateToContractors,
   importTemplateFromCsv,
   listAllMonitoring,
   loadAdminFormsStore,

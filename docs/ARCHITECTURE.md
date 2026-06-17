@@ -119,9 +119,11 @@ flowchart TB
 
 ## Известный технический долг
 
-- Крупные файлы: `AdminDashboard.tsx`, `Page5.tsx`, `AiChatBubble.tsx`
+- Крупные файлы: `Page5MessengerView.tsx`, `AdminTablesPanel.tsx`, `Page3.tsx`, `AiChatBubble.tsx`
 - Legacy-имена маршрутов `page3`–`page6`
 - Два пути auth: серверный JWT + `localAuth.ts` (offline)
-- Минимум автотестов
+- `exhaustive-deps` в ESLint — часть предупреждений, цель — снизить до 0
 
-Приоритет рефакторинга: разбивать по доменам (admin, cabinet, map), не «всё сразу».
+Приоритет рефакторинга: разбивать по доменам (messenger, admin tables, map), не «всё сразу».
+
+**Сделано:** `AdminDashboard.tsx` — чистый TSX-shell; панели в `components/admin/` с lazy-load; smoke + lint + server tests в CI.

@@ -148,7 +148,7 @@ function RussiaLeafletMapInner({
   }, [popupSubject]);
 
   const rebuildMarkers = useCallback(
-    (map: L.Map) => {
+    (_map: L.Map) => {
       const layer = markersLayerRef.current;
       if (!layer) return;
       layer.clearLayers();

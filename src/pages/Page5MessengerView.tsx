@@ -10,7 +10,6 @@ import {
   applyMessengerInvitePayload,
   ensureMessengerUidInProfile,
   parseMessengerInviteFromPastedText,
-  SESSION_ACTIVE_PEER,
   SESSION_TOAST,
   buildMessengerInviteUrl,
   encodeMessengerInvite,
@@ -19,116 +18,23 @@ import {
 import type { Page5ThemeStyles } from "./Page5EventsView";
 import { cx } from "../design-system/cabinetChromeClasses";
 import { usePortalDesign } from "../design-system/usePortalDesign";
+import { useNarrowMessenger } from "../hooks/useNarrowMessenger";
+import type {
+  MessengerAttachment,
+  MessengerMessage,
+  MessengerPeer,
+} from "../types/messenger";
 import {
-  MESSENGER_PEERS_KEY,
-  MESSENGER_STORE_KEY,
-  saveMessengerPeers,
-  saveMessengerStore,
-} from "../utils/messengerStorage";
+  MAX_MESSENGER_ATTACH_BYTES,
+  persistMessengerMessages,
+  persistMessengerPeers,
+  readFileAsDataUrl,
+  readMessengerStateFromStorage,
+} from "../utils/messengerThreadStore";
 
-const STORAGE_KEY = MESSENGER_STORE_KEY;
-const PEERS_STORAGE_KEY = MESSENGER_PEERS_KEY;
-const MAX_ATTACH_BYTES = 1_800_000;
+export type { MessengerAttachment, MessengerMessage, MessengerPeer } from "../types/messenger";
 
-export type MessengerPeer = {
-  id: string;
-  name: string;
-  role: string;
-};
-
-export type MessengerAttachment = {
-  id: string;
-  kind: "image" | "file";
-  name: string;
-  dataUrl?: string;
-};
-
-export type MessengerMessage = {
-  id: string;
-  threadId: string;
-  /** messengerUid отправителя (или id демо-собеседника); не использовать литерал "me" в новых сообщениях */
-  author: string;
-  text: string;
-  createdAt: string;
-  attachments?: MessengerAttachment[];
-};
-
-const DEFAULT_PEERS: MessengerPeer[] = [
-  { id: "p1", name: "Елена Козлова", role: "Координатор ТОУАД" },
-  { id: "p2", name: "Дмитрий Волков", role: "Представитель подрядчика" },
-  { id: "p3", name: "Анна Михайлова", role: "Студенческий клуб РАДОР" },
-  { id: "p4", name: "Сергей Никифоров", role: "Куратор документооборота" },
-];
-
-function loadPeers(): MessengerPeer[] {
-  try {
-    const raw = localStorage.getItem(PEERS_STORAGE_KEY);
-    if (raw) {
-      const arr = JSON.parse(raw) as MessengerPeer[];
-      if (Array.isArray(arr) && arr.length > 0) return arr;
-    }
-  } catch {
-    /* ignore */
-  }
-  return DEFAULT_PEERS.map((p) => ({ ...p }));
-}
-
-function savePeers(peers: MessengerPeer[]) {
-  try {
-    saveMessengerPeers(peers);
-  } catch {
-    /* ignore */
-  }
-}
-
-function defaultSeedText(peerIndex: number) {
-  if (peerIndex === 0) return "Добрый день! Напоминаю: свод по командам нужен до пятницы.";
-  if (peerIndex === 1) return "Материалы по объекту отправил в общую папку, посмотрите, пожалуйста.";
-  return "Здравствуйте! Готовы подключиться к встрече в четверг в 15:00.";
-}
-
-function loadThreadStore(peerIds: string[]): Record<string, MessengerMessage[]> {
-  let stored: Record<string, MessengerMessage[]> | null = null;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) stored = JSON.parse(raw) as Record<string, MessengerMessage[]>;
-  } catch {
-    /* ignore */
-  }
-  const t0 = Date.now();
-  const out: Record<string, MessengerMessage[]> = {};
-  peerIds.forEach((id, i) => {
-    const existing = stored?.[id];
-    if (Array.isArray(existing)) {
-      out[id] = existing;
-      return;
-    }
-    const def = DEFAULT_PEERS.find((p) => p.id === id);
-    if (def) {
-      const idx = DEFAULT_PEERS.findIndex((p) => p.id === id);
-      out[id] = [
-        {
-          id: `seed-${id}-1`,
-          threadId: id,
-          author: id,
-          text: defaultSeedText(idx),
-          createdAt: new Date(t0 - (idx + 1) * 3600000).toISOString(),
-        },
-      ];
-    } else {
-      out[id] = [];
-    }
-  });
-  return out;
-}
-
-function saveMessages(data: Record<string, MessengerMessage[]>) {
-  try {
-    saveMessengerStore(data as Record<string, unknown>);
-  } catch {
-    /* ignore */
-  }
-}
+const MAX_ATTACH_BYTES = MAX_MESSENGER_ATTACH_BYTES;
 
 type Props = {
   styles: Page5ThemeStyles;
@@ -149,47 +55,6 @@ function readInviteToastOnce(): { mode: "added" | "exists"; name: string } | nul
   } catch {
     return null;
   }
-}
-
-function useNarrowMessenger(breakpoint = 760) {
-  const [narrow, setNarrow] = useState(() =>
-    typeof window !== "undefined" ? window.innerWidth < breakpoint : false
-  );
-  useEffect(() => {
-    const onResize = () => setNarrow(window.innerWidth < breakpoint);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [breakpoint]);
-  return narrow;
-}
-
-function readFileAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(String(r.result));
-    r.onerror = () => reject(new Error("read"));
-    r.readAsDataURL(file);
-  });
-}
-
-/** Синхронное чтение списка и потоков после applyMessengerInvitePayload (снимает SESSION_ACTIVE_PEER). */
-function readMessengerStateFromStorage(): {
-  peers: MessengerPeer[];
-  byThread: Record<string, MessengerMessage[]>;
-  activeId: string;
-} {
-  const peers = loadPeers();
-  const byThread = loadThreadStore(peers.map((p) => p.id));
-  let forced: string | null = null;
-  try {
-    forced = sessionStorage.getItem(SESSION_ACTIVE_PEER);
-    if (forced) sessionStorage.removeItem(SESSION_ACTIVE_PEER);
-  } catch {
-    /* ignore */
-  }
-  const activeId =
-    forced && peers.some((p) => p.id === forced) ? forced : peers[0]?.id ?? "p1";
-  return { peers, byThread, activeId };
 }
 
 /** Один проход: localStorage + потоки + активный диалог (раньше loadPeers вызывался до 4 раз при монтировании). */
@@ -268,11 +133,11 @@ export const Page5MessengerView = memo(function Page5MessengerView({ styles, isD
   const listEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    savePeers(peers);
+    persistMessengerPeers(peers);
   }, [peers]);
 
   useEffect(() => {
-    saveMessages(byThread);
+    persistMessengerMessages(byThread);
     try {
       window.dispatchEvent(new CustomEvent("trassa-messenger-updated"));
     } catch {

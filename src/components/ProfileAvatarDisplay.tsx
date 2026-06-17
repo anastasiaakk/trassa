@@ -39,7 +39,7 @@ function ProfileAvatarDisplay({
   const presetId = parseProfileAvatarPresetId(stored);
   if (presetId) {
     return renderMedia(
-      `${imgClassName} profile-avatar-display__fill profile-avatar-display__preset profile-construction-preset__img`.trim(),
+      `${imgClassName} profile-avatar-display__fill ${presetClassName} profile-construction-preset__img`.trim(),
       getProfileAvatarImageSrc(presetId),
     );
   }

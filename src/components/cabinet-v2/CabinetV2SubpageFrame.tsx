@@ -10,7 +10,7 @@ type Props = {
   lede?: string;
 };
 
-function CabinetV2SubpageFrame({ ctx, children, showContextStrip, title, lede }: Props) {
+function CabinetV2SubpageFrame({ ctx: _ctx, children, showContextStrip, title, lede }: Props) {
   const stripVisible = showContextStrip ?? Boolean(title);
   return (
     <Page4V2MainRegion>

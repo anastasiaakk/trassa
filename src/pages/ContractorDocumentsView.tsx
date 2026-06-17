@@ -65,7 +65,8 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
   isDark = false,
   isV2: isV2Prop,
 }: Props) {
-  const isV2 = isV2Prop === true || usePortalDesign() === "v2";
+  const portalIsV2 = usePortalDesign() === "v2";
+  const isV2 = isV2Prop === true || portalIsV2;
   const [docs, setDocs] = useState(() => listAllDocumentsForContractors());
   const [activeId, setActiveId] = useState<string | null>(null);
   const [filled, setFilled] = useState("");

@@ -4,6 +4,7 @@
 
 ```bash
 npm run lint
+npm run test:server
 npm run build:web
 npm run build --prefix server
 npm run smoke:portal    # API (локально или TRASSA_SMOKE_BASE)

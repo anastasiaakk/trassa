@@ -40,7 +40,8 @@ const ContractorRecommendationsView = memo(function ContractorRecommendationsVie
   cn,
   isV2: isV2Prop,
 }: Props) {
-  const isV2 = isV2Prop === true || usePortalDesign() === "v2";
+  const portalIsV2 = usePortalDesign() === "v2";
+  const isV2 = isV2Prop === true || portalIsV2;
   const [items, setItems] = useState<ContractorRecommendation[]>([]);
   const [loading, setLoading] = useState(true);
 
