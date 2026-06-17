@@ -27,6 +27,24 @@
 | `src/utils/adminRouteState.ts` | Секции и URL state |
 | `src/utils/adminAuth.ts` | Сессия админа |
 
+### Мессенджер (кабинеты page5/page6)
+
+| Файл | Назначение |
+|------|------------|
+| `src/pages/Page5MessengerView.tsx` | Shell мессенджера |
+| `src/hooks/useMessengerState.ts` | Состояние, отправка, приглашения |
+| `src/components/messenger/*` | Sidebar, thread, bubbles, диалоги |
+| `src/utils/messengerThreadStore.ts` | localStorage peers/threads |
+| `src/types/messenger.ts` | Типы сообщений |
+
+### Таблицы админки
+
+| Файл | Назначение |
+|------|------------|
+| `src/pages/AdminTablesPanel.tsx` | Конструктор форм (lazy из админки) |
+| `src/components/admin/AdminTablesPanelIcons.tsx` | Иконки навигации |
+| `src/utils/adminTablesTemplateUtils.ts` | Нормализация шаблонов импорта |
+
 ## Правило для новых фич
 
 **Не добавляйте код в `AdminDashboard.tsx`.** Создавайте:
