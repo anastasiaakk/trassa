@@ -1,0 +1,202 @@
+html[data-portal-design="v2"] .admin-violations-panel__guard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.05);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-ui {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(var(--pv2-r-muted), 0.35);
+  position: relative;
+  transition: background 0.18s ease;
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-ui::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.18s ease;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-toggle input:checked + .admin-violations-panel__guard-ui {
+  background: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-toggle input:checked + .admin-violations-panel__guard-ui::after {
+  transform: translateX(18px);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-toggle input:disabled + .admin-violations-panel__guard-ui {
+  opacity: 0.55;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pv2-frost);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__guard-note {
+  margin: 0;
+  flex: 1 1 220px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__hint {
+  font-size: 0.88rem;
+  color: var(--pv2-muted, #5c6b8a);
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__sms-ok {
+  color: #1a7a42;
+  font-weight: 600;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__sms-off {
+  color: #9a5c18;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--pv2-border, rgba(0, 0, 0, 0.08));
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__table th,
+html[data-portal-design="v2"] .admin-violations-panel__table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--pv2-border, rgba(0, 0, 0, 0.06));
+  vertical-align: top;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__table th {
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__row--new {
+  background: rgba(196, 74, 34, 0.06);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__who {
+  font-weight: 600;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__meta {
+  font-size: 0.8rem;
+  color: var(--pv2-muted, #5c6b8a);
+  margin-top: 2px;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__empty {
+  text-align: center;
+  padding: 24px;
+  color: var(--pv2-muted, #5c6b8a);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__row--banned {
+  background: rgba(120, 30, 30, 0.06);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__badge-ban {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(180, 50, 40, 0.12);
+  color: #9a2818;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__actions {
+  text-align: right;
+  min-width: 11rem;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__actions-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__btn-delete,
+html[data-portal-design="v2"] .admin-violations-panel__btn-clear {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(160, 50, 40, 0.35);
+  background: rgba(180, 50, 40, 0.08);
+  color: #9a2818;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-ui, system-ui, sans-serif);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__btn-delete:hover,
+html[data-portal-design="v2"] .admin-violations-panel__btn-clear:hover {
+  background: rgba(180, 50, 40, 0.14);
+}
+
+html[data-portal-design="v2"] .admin-violations-panel__btn-delete:disabled,
+html[data-portal-design="v2"] .admin-violations-panel__btn-clear:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Без постоянной надписи на экране — только короткая вспышка при срабатывании защиты (см. portal-violation-warning.css) */
+html.portal-mobile-capture-guard .app-shell {
+  -webkit-touch-callout: none;
+}

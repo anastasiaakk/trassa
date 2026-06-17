@@ -1,0 +1,80 @@
+/**
+ * Мессенджер v2 — glass, контраст, фокус.
+ */
+html[data-portal-design="v2"] .messenger-v2 {
+  border: 1px solid var(--pv2-border-strong) !important;
+  overflow: hidden;
+  border-radius: var(--pv2-radius-xl) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .messenger-v2 {
+  background: var(--pv2-glass-l1-bg) !important;
+  border-color: var(--pv2-glass-l1-border) !important;
+  box-shadow: var(--pv2-glass-l1-shadow) !important;
+}
+
+html[data-portal-design="v2"] .messenger-v2 > aside {
+  background: rgba(var(--pv2-r-ink), 0.35) !important;
+  border-color: var(--pv2-border) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .messenger-v2 > aside {
+  background: var(--pv2-glass-l2-bg) !important;
+  border-color: var(--pv2-glass-l2-border) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .messenger-v2 > main,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .messenger-v2 > section {
+  background: rgba(var(--pv2-r-white), 0.6) !important;
+}
+
+html[data-portal-design="v2"] .messenger-v2 input,
+html[data-portal-design="v2"] .messenger-v2 textarea {
+  border: 1px solid var(--pv2-border) !important;
+  color: var(--pv2-text) !important;
+}
+
+html[data-portal-design="v2"] .messenger-v2 input::placeholder,
+html[data-portal-design="v2"] .messenger-v2 textarea::placeholder {
+  color: var(--pv2-text-subtle);
+  opacity: 1;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .messenger-v2 input,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .messenger-v2 textarea {
+  background: rgba(var(--pv2-r-white), 0.94) !important;
+}
+
+html[data-portal-design="v2"] .messenger-v2 button[type="button"]:not([aria-label="Закрыть"]) {
+  transition:
+    background var(--pv2-dur-fast),
+    box-shadow var(--pv2-dur-fast),
+    color var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .messenger-v2__overlay {
+  background: rgba(var(--pv2-r-ink), 0.72) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .messenger-v2__overlay {
+  background: rgba(var(--pv2-r-ink), 0.42) !important;
+}
+
+html[data-portal-design="v2"] .messenger-v2__dialog {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong) !important;
+  backdrop-filter: blur(var(--pv2-blur-md));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md));
+  box-shadow: var(--pv2-shadow-md) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .messenger-v2__dialog {
+  background: linear-gradient(180deg, rgba(var(--pv2-r-white), 0.96), rgba(var(--pv2-r-white), 0.92)) !important;
+  color: var(--pv2-deep) !important;
+}
+
+html[data-portal-design="v2"] .messenger-v2__dialog button[type="button"]:hover {
+  background: rgba(var(--pv2-r-primary), 0.12) !important;
+}

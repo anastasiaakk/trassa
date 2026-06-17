@@ -7,15 +7,14 @@ import sys
 from pathlib import Path
 
 import paramiko
+from trassa_ssh import connect_trassa_ssh
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVER_DIR = ROOT / "server"
 REMOTE_DIR = "/root/trassa-server"
-HOST = os.environ.get("TRASSA_SSH_HOST", "194.226.166.10").strip()
-USER = os.environ.get("TRASSA_SSH_USER", "root").strip()
-PASSWORD = os.environ.get("TRASSA_SSH_PASSWORD", "").strip()
 DOMAIN = os.environ.get("TRASSA_API_DOMAIN", "trassa-api.duckdns.org").strip()
-SKIP = {"node_modules", ".git", "data"}
+PORTAL_DOMAIN = os.environ.get("TRASSA_PORTAL_DOMAIN", "trassa.duckdns.org").strip()
+SKIP = {"node_modules", ".git", "data", ".env"}
 
 
 def run(ssh: paramiko.SSHClient, cmd: str, timeout: int = 600) -> None:
@@ -49,17 +48,18 @@ def upload_tree(sftp: paramiko.SFTPClient, local: Path, remote: str) -> None:
 
 
 def main() -> int:
-    if not PASSWORD:
+    if not os.environ.get("TRASSA_SSH_PASSWORD", "").strip():
         print("Set TRASSA_SSH_PASSWORD", file=sys.stderr)
         return 1
     if not SERVER_DIR.is_dir():
         print(f"Missing {SERVER_DIR}", file=sys.stderr)
         return 1
 
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    print(f"Connecting {USER}@{HOST}...")
-    ssh.connect(HOST, username=USER, password=PASSWORD, timeout=30, allow_agent=False, look_for_keys=False)
+    try:
+        ssh = connect_trassa_ssh()
+    except RuntimeError as e:
+        print(str(e), file=sys.stderr)
+        return 1
 
     run(ssh, f"mkdir -p {REMOTE_DIR}")
     sftp = ssh.open_sftp()
@@ -67,9 +67,21 @@ def main() -> int:
     sftp.close()
 
     run(ssh, f"cd {REMOTE_DIR} && npm ci && npm run build", timeout=900)
+    run(
+        ssh,
+        "grep -q '^TRUST_PROXY=' /etc/trassa/api.env 2>/dev/null && "
+        "sed -i 's|^TRUST_PROXY=.*|TRUST_PROXY=1|' /etc/trassa/api.env || "
+        "echo 'TRUST_PROXY=1' >> /etc/trassa/api.env",
+    )
     run(ssh, "systemctl restart trassa-api")
     run(ssh, "sleep 2 && curl -sf http://127.0.0.1:4000/api/health")
-    run(ssh, f"curl -sf https://{DOMAIN}/api/health")
+    # Основная проверка через портал-домен: он стабильнее при VPN/SSL-прокси.
+    run(ssh, f"curl -sf https://{PORTAL_DOMAIN}/api/health")
+    try:
+        # API-домен проверяем как дополнительный (не блокируем деплой, если у клиента VPN/TLS-intercept).
+        run(ssh, f"curl -sf https://{DOMAIN}/api/health")
+    except RuntimeError:
+        print(f"WARN: https://{DOMAIN}/api/health not reachable from this network", file=sys.stderr)
     try:
         run(ssh, f"curl -sf https://{DOMAIN}/api/portal/version")
     except RuntimeError:

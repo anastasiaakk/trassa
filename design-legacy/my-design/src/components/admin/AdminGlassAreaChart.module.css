@@ -1,0 +1,79 @@
+.chartBlock {
+  margin-top: 18px;
+  padding: 18px 18px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(103, 232, 249, 0.18);
+  background: linear-gradient(
+    165deg,
+    rgba(8, 28, 48, 0.72) 0%,
+    rgba(6, 20, 36, 0.55) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 32px rgba(6, 18, 32, 0.35);
+}
+
+.chartHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+.chartTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.chartMeta {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(103, 232, 249, 0.65);
+}
+
+.chartSvgWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2.35 / 1;
+  min-height: 160px;
+  max-height: 220px;
+}
+
+.chartSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.chartEmpty {
+  margin: 0;
+  padding: 28px 12px;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: rgba(103, 232, 249, 0.55);
+}
+
+/* Как внутренние блоки карты на /services */
+.chartBlockMap {
+  border: 1px solid rgba(10, 37, 64, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 4px 14px rgba(10, 37, 64, 0.08);
+}
+
+.chartBlockMap .chartTitle {
+  color: #0a2540;
+  font-weight: 700;
+}
+
+.chartBlockMap .chartMeta,
+.chartBlockMap .chartEmpty {
+  color: #4a5f78;
+  font-weight: 500;
+}

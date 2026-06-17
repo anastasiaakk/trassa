@@ -1,12 +1,11 @@
 /**
- * Ответы ассистента: сначала опциональный бэкенд (обход CORS), иначе локальный «умный» режим с учётом истории.
+ * Т-бот: приоритет — OpenAI через API ТрассА (/api/tbot/chat), затем VITE_AI_CHAT_URL, затем локальный режим.
  *
- * Опционально в .env:
- *   VITE_AI_CHAT_URL=https://ваш-сервер.com/api/chat
- *   VITE_AI_CHAT_SYSTEM=короткий системный промпт (роль ассистента), если API принимает role: system
- * Тело POST: { "messages": [{ "role": "system"|"user"|"assistant", "content": "..." }] }
- * Ответ JSON: { "reply": "текст" } или { "choices": [{ "message": { "content": "..." } }] }
+ * Сервер: OPENAI_API_KEY в .env API.
+ * Опционально клиент: VITE_AI_CHAT_URL для стороннего прокси.
  */
+
+import { tbotChat } from "../api/tbotApi";
 
 export type ChatTurn = { role: "user" | "ai"; text: string };
 
@@ -32,9 +31,18 @@ function reflectSnippet(userText: string): string {
   ]);
 }
 
-/** Подсказка для .env `VITE_AI_CHAT_SYSTEM`, если хотите тот же тон при запросе к своему API. */
+/** Подсказка для .env `VITE_AI_CHAT_SYSTEM` при кастомном VITE_AI_CHAT_URL. */
 export const SUGGESTED_SYSTEM_PROMPT =
-  "Ты — Т-бот, дружелюбный ИИ-помощник кабинета ТрассА. Умеешь знакомиться: интересуйся человеком, называй себя Т-бот, будь тёплым и эмпатичным, признавай чувства собеседника. Можешь поддержать разговор и подсказать по интерфейсу кабинета. Отвечай по-русски, лаконично, если не просят развернуть.";
+  "Ты — Т-бот, ИИ-помощник портала ТрассА. Помогаешь по кабинету (мероприятия, мессенджер, таблицы, профиль). Отвечай по-русски, по делу, с пошаговыми подсказками. Без навязчивого small talk.";
+
+async function tryTrassaTbotServer(history: ChatTurn[]): Promise<string | null> {
+  const r = await tbotChat(history);
+  if (r.ok && r.reply.trim()) return r.reply.trim();
+  if (!r.ok && r.error && !/не настроен|OPENAI_API_KEY/i.test(r.error)) {
+    return `Сейчас ИИ недоступен: ${r.error}. Попробуйте через минуту.`;
+  }
+  return null;
+}
 
 async function tryBackend(messages: ChatTurn[]): Promise<string | null> {
   const url = import.meta.env.VITE_AI_CHAT_URL as string | undefined;
@@ -253,6 +261,9 @@ export function localSmartReply(userText: string, historyIncludingLatestUser: Ch
 }
 
 export async function getAssistantReply(history: ChatTurn[]): Promise<string> {
+  const server = await tryTrassaTbotServer(history);
+  if (server) return server;
+
   const backend = await tryBackend(history);
   if (backend && backend.trim()) return backend.trim();
 

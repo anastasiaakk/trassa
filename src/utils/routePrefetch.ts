@@ -11,13 +11,13 @@ export function prefetchRoleSelectRoute(): void {
   void import("../pages/Page3");
 }
 
-/** После первого кадра — типичные следующие экраны без блокировки main thread. */
+/** После первого кадра — лёгкий прогрев (Page2 ~800KB+ — только по намерению, см. prefetchServicesRoute). */
 export function scheduleIdlePrefetchCommonRoutes(): void {
   const run = () => {
-    prefetchServicesRoute();
     prefetchRoleSelectRoute();
-    /** В Electron (file://) чанки грузятся с диска — подгружаем тяжёлые маршруты раньше, чем requestIdleCallback. */
+    /** Desktop: чанки с диска — можно прогреть тяжёлые маршруты заранее. */
     if (typeof window !== "undefined" && window.location.protocol === "file:") {
+      prefetchServicesRoute();
       void import("../pages/Page5");
       void import("../pages/Page4");
     }

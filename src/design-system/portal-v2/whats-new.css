@@ -1,0 +1,74 @@
+﻿/**
+ * Баннер «Новый интерфейс» (один раз после обновления).
+ */
+html[data-portal-design="v2"] .portal-whats-new {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 48px 10px 20px;
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-deep);
+  box-shadow: 0 4px 20px rgba(var(--pv2-r-primary), 0.35);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+html[data-portal-design="v2"] .portal-whats-new__text {
+  margin: 0;
+  text-align: center;
+}
+
+html[data-portal-design="v2"] .portal-whats-new__link {
+  color: var(--pv2-deep);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+html[data-portal-design="v2"] .portal-whats-new__ok {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+html[data-portal-design="v2"] .portal-whats-new__close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: rgba(var(--pv2-r-ink), 0.12);
+  color: var(--pv2-deep);
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+html[data-portal-design="v2"] .portal-whats-new__close:hover {
+  background: rgba(var(--pv2-r-ink), 0.2);
+}
+
+html[data-portal-design="v2"] .portal-whats-new__close:focus-visible {
+  outline: 2px solid var(--pv2-deep);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  html[data-portal-design="v2"] .portal-whats-new {
+    padding: 10px 40px 10px 12px;
+    font-size: 12px;
+  }
+}

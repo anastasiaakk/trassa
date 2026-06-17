@@ -1,0 +1,133 @@
+/**
+ * Вход администратора на карте (Page2) — как .page2-v2__map-panel.
+ */
+html[data-portal-design="v2"] body.route-page2 .cabinetPageEmbed.admin-login-v2 {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: min(68vh, 560px);
+  padding: clamp(14px, 2vw, 22px);
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] body.route-page2 .admin-login-v2 .glassLoginShell {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .glassLoginCard {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.5rem, 3vw, 2.1rem) clamp(1.35rem, 3vw, 1.85rem);
+  border-radius: var(--pv2-radius-2xl) !important;
+  border: 1px solid rgba(var(--pv2-r-primary), 0.32) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow:
+    0 12px 40px rgba(var(--pv2-r-primary), 0.12),
+    inset 0 1px 0 rgba(var(--pv2-r-white), 0.55) !important;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .glassLoginCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    165deg,
+    rgba(var(--pv2-r-primary), 0.16) 0%,
+    rgba(var(--pv2-r-primary), 0.12) 55%,
+    rgba(var(--pv2-r-primary), 0.09) 100%
+  );
+  backdrop-filter: blur(var(--pv2-blur-lg)) saturate(var(--pv2-glass-saturate));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-lg)) saturate(var(--pv2-glass-saturate));
+  pointer-events: none;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .glassLoginCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .cabinetKicker {
+  margin: 0 0 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .loginTitle {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 3vw, 1.65rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--pv2-ink) !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  text-shadow: none;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .loginLead {
+  margin: 0 0 18px;
+  color: var(--pv2-muted) !important;
+  line-height: 1.5;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .label {
+  color: var(--pv2-ink) !important;
+  font-weight: 600;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 input[type="email"],
+html[data-portal-design="v2"] .admin-login-v2 input[type="password"] {
+  border: 1px solid rgba(var(--pv2-r-primary), 0.18) !important;
+  background: rgba(var(--pv2-r-white), 0.92) !important;
+  color: var(--pv2-ink) !important;
+  box-shadow: 0 2px 8px rgba(var(--pv2-r-ink), 0.05);
+}
+
+html[data-portal-design="v2"] .admin-login-v2 input:focus-visible {
+  outline: 2px solid var(--pv2-primary);
+  outline-offset: 0;
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(var(--pv2-r-primary), 0.2);
+}
+
+html[data-portal-design="v2"] .admin-login-v2 button[type="submit"] {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+  border: none !important;
+  box-shadow: 0 8px 24px rgba(var(--pv2-r-primary), 0.28) !important;
+  font-weight: 700;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .btnNeoGhost {
+  border: 1px solid rgba(var(--pv2-r-primary), 0.22) !important;
+  color: var(--pv2-ink) !important;
+  background: rgba(var(--pv2-r-white), 0.88) !important;
+  font-weight: 600;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .btnNeoGhost:hover {
+  background: rgba(var(--pv2-r-white), 0.98) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.38) !important;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .error {
+  color: #c62828;
+}

@@ -1,0 +1,272 @@
+/**
+ * Базовые glass-компоненты v2 (карточки, кнопки, поля, чипы, stat).
+ */
+html[data-portal-design="v2"] .pv2-glass {
+  position: relative;
+  border-radius: var(--pv2-radius-lg);
+  border: 1px solid var(--pv2-border);
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass);
+  backdrop-filter: blur(var(--pv2-blur-md));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md));
+  box-shadow: var(--pv2-shadow-sm);
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .pv2-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--pv2-r-white), 0.14) 0%,
+    rgba(var(--pv2-r-white), 0.02) 42%,
+    rgba(var(--pv2-r-white), 0) 60%
+  );
+}
+
+html[data-portal-design="v2"] .pv2-glass-strong {
+  background: var(--pv2-bg-glass-strong);
+  border-color: var(--pv2-border-strong);
+}
+
+html[data-portal-design="v2"] .pv2-glass-topline::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pv2-gradient-brand-h);
+  opacity: 0.92;
+}
+
+html[data-portal-design="v2"] .pv2-text-gradient {
+  background: var(--pv2-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-portal-design="v2"] .pv2-swatch-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pv2-space-3);
+}
+
+html[data-portal-design="v2"] .pv2-swatch {
+  flex: 1 1 100px;
+  min-width: 88px;
+  padding: var(--pv2-space-4);
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border-strong);
+  font-size: var(--pv2-font-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-portal-design="v2"] .pv2-swatch-deep {
+  background: var(--pv2-deep);
+  color: var(--pv2-frost);
+}
+
+/* .pv2-swatch-teal — историческое имя; цвет = --pv2-primary */
+html[data-portal-design="v2"] .pv2-swatch-teal,
+html[data-portal-design="v2"] .pv2-swatch-primary {
+  background: var(--pv2-primary);
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .pv2-swatch-cyan {
+  background: var(--pv2-white);
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .pv2-swatch-frost {
+  background: var(--pv2-surface);
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .pv2-swatch-muted {
+  background: var(--pv2-muted);
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .pv2-swatch-gradient {
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .pv2-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pv2-space-2);
+  min-height: 44px;
+  padding: 0 var(--pv2-space-5);
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: var(--pv2-font-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform var(--pv2-dur-fast) var(--pv2-ease-out),
+    box-shadow var(--pv2-dur-fast) var(--pv2-ease-out),
+    background var(--pv2-dur-fast) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .pv2-btn-primary {
+  color: var(--pv2-on-brand);
+  background: var(--pv2-gradient-brand);
+  box-shadow: 0 8px 28px rgba(var(--pv2-r-primary), 0.35), 0 2px 8px rgba(var(--pv2-r-ink), 0.12);
+}
+
+html[data-portal-design="v2"] .pv2-scene--light .pv2-btn-primary,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .pv2-btn-primary {
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .pv2-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--pv2-shadow-glow);
+}
+
+html[data-portal-design="v2"] .pv2-btn-ghost {
+  color: var(--pv2-text);
+  background: var(--pv2-bg-glass);
+  border-color: var(--pv2-border);
+  backdrop-filter: blur(var(--pv2-blur-sm));
+}
+
+html[data-portal-design="v2"] .pv2-scene--light .pv2-btn-ghost,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .pv2-btn-ghost {
+  color: var(--pv2-ink);
+  background: rgba(var(--pv2-r-white), 0.9);
+  border-color: rgba(var(--pv2-r-primary), 0.2);
+}
+
+html[data-portal-design="v2"] .pv2-btn-ghost:hover {
+  background: var(--pv2-bg-glass-hover);
+}
+
+html[data-portal-design="v2"] .pv2-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--pv2-space-4);
+  border-radius: var(--pv2-radius-sm);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.92);
+  color: var(--pv2-text);
+  font: inherit;
+  font-size: var(--pv2-font-base);
+  outline: none;
+  transition: border-color var(--pv2-dur-fast), box-shadow var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .pv2-input:focus {
+  border-color: var(--pv2-primary);
+  box-shadow: 0 0 0 3px rgba(var(--pv2-r-primary), 0.22);
+}
+
+html[data-portal-design="v2"] .pv2-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid var(--pv2-border);
+  background: var(--pv2-bg-glass);
+  font-size: var(--pv2-font-xs);
+  font-weight: 600;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .pv2-chip-active {
+  color: var(--pv2-on-brand);
+  border-color: transparent;
+  background: var(--pv2-gradient-brand);
+  box-shadow: 0 4px 16px rgba(var(--pv2-r-primary), 0.28);
+}
+
+html[data-portal-design="v2"] .pv2-stat {
+  padding: var(--pv2-space-5);
+  border-radius: var(--pv2-radius-md);
+}
+
+html[data-portal-design="v2"] .pv2-stat-value {
+  display: block;
+  font-size: var(--pv2-font-2xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  background: var(--pv2-gradient-brand-v);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 20px var(--pv2-accent-glow));
+}
+
+html[data-portal-design="v2"] .pv2-stat-label {
+  display: block;
+  margin-top: var(--pv2-space-2);
+  font-size: var(--pv2-font-xs);
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .pv2-title {
+  margin: 0;
+  font-size: var(--pv2-font-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight, -0.03em);
+}
+
+html[data-portal-design="v2"] .pv2-subtitle {
+  margin: var(--pv2-space-2) 0 0;
+  font-size: var(--pv2-font-base);
+  color: var(--pv2-text-muted);
+  line-height: 1.5;
+}
+
+html[data-portal-design="v2"] .pv2-nav-pill {
+  display: inline-flex;
+  gap: var(--pv2-space-1);
+  padding: var(--pv2-space-1);
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid var(--pv2-border);
+  background: linear-gradient(180deg, rgba(var(--pv2-r-ink), 0.75), rgba(var(--pv2-r-ink), 0.85));
+  backdrop-filter: blur(var(--pv2-blur-sm));
+}
+
+html[data-portal-design="v2"] .pv2-toggle {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-ink), 0.6);
+  cursor: pointer;
+}
+
+html[data-portal-design="v2"] .pv2-toggle[data-on="true"] {
+  background: var(--pv2-gradient-brand);
+  border-color: transparent;
+  box-shadow: 0 0 20px var(--pv2-accent-glow);
+}
+
+html[data-portal-design="v2"] .pv2-toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--pv2-white);
+  box-shadow: 0 2px 8px rgba(var(--pv2-r-ink), 0.25);
+  transition: transform var(--pv2-dur-fast) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .pv2-toggle[data-on="true"] .pv2-toggle-thumb {
+  transform: translateX(20px);
+}

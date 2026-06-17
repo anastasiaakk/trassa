@@ -30,6 +30,7 @@ type Props = {
   preset: Preset;
   isDark: boolean;
   wrapperStyle?: CSSProperties;
+  wrapperClassName?: string;
   disabled?: boolean;
   /** Показ подсказки только после удержания курсора (мс). 0 — как раньше, сразу. */
   showDelayMs?: number;
@@ -41,6 +42,7 @@ export function HoverTooltip({
   preset,
   isDark,
   wrapperStyle,
+  wrapperClassName,
   disabled,
   showDelayMs = 0,
 }: Props) {
@@ -181,6 +183,7 @@ export function HoverTooltip({
     <>
       <span
         ref={wrapRef}
+        className={wrapperClassName}
         style={{
           display: "inline-flex",
           alignItems: "center",

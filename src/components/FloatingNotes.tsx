@@ -1,5 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getHoverTooltipPreset, HoverTooltip } from "./HoverTooltip";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { usePortalDesign } from "../design-system/usePortalDesign";
 
 const NOTES_BODY_KEY = "trassa-floating-notes-body";
 const NOTES_FAB_POS_KEY = "trassa-floating-notes-fab-pos";
@@ -73,6 +75,7 @@ function savePanelPos(left: number, top: number) {
 type Props = { isDark: boolean };
 
 export const FloatingNotes = memo(function FloatingNotes({ isDark }: Props) {
+  const isV2 = usePortalDesign() === "v2";
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ left: number; top: number }>(() => {
     if (typeof window === "undefined") return { left: 24, top: 120 };
@@ -270,6 +273,7 @@ export const FloatingNotes = memo(function FloatingNotes({ isDark }: Props) {
         <div
           role="dialog"
           aria-label="Заметки"
+          className={cx(isV2 && "floating-widget-v2__panel")}
           style={{
             position: "fixed",
             zIndex: 10038,
@@ -292,6 +296,7 @@ export const FloatingNotes = memo(function FloatingNotes({ isDark }: Props) {
           }}
         >
           <div
+            className={cx(isV2 && "floating-widget-v2__header", isV2 && "floating-widget-v2__header--notes")}
             onPointerDown={onPanelHeaderPointerDown}
             style={{
               padding: "12px 14px",
@@ -370,6 +375,7 @@ export const FloatingNotes = memo(function FloatingNotes({ isDark }: Props) {
         <button
           type="button"
           aria-label="Заметки — перетащите или нажмите"
+          className={cx(isV2 && "floating-widget-v2__fab-notes")}
           onPointerDown={onFabPointerDown}
           style={{
             width: "100%",

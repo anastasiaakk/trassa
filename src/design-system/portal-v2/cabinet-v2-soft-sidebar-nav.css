@@ -1,0 +1,17 @@
+/**
+ * Фокус без «синей рамки» — не меняет вид вкладок при клике.
+ */
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn:focus,
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn--active:focus,
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn--active:focus-visible {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-white) !important;
+  border-color: transparent !important;
+  box-shadow: 0 8px 22px rgba(var(--pv2-r-primary), 0.28) !important;
+}

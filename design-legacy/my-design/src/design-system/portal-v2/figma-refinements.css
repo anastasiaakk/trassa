@@ -1,0 +1,81 @@
+/**
+ * Усиление glass по мотивам Figma SaaS / glassmorphism UI kits.
+ * Палитра ТрассА v2 (blue glass).
+ */
+
+/* Mesh-фон на кабинетах (как в community glass dashboards) */
+html[data-portal-design="v2"] body.route-cabinet,
+html[data-portal-design="v2"] .cabinet-chrome--v2 {
+  background:
+    radial-gradient(ellipse 90% 60% at 100% -15%, rgba(103, 232, 249, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 0% 100%, rgba(0, 212, 165, 0.14) 0%, transparent 50%),
+    var(--pv2-gradient-deep) !important;
+  background-color: var(--pv2-deep) !important;
+}
+
+/* Карточки: двойная кромка + сильнее blur (Figma glass layer) */
+html[data-portal-design="v2"] .cabinet-chrome__header,
+html[data-portal-design="v2"] .cabinet-chrome__aside,
+html[data-portal-design="v2"] .cabinet-bento-metric,
+html[data-portal-design="v2"] .page5-v2__section-card,
+html[data-portal-design="v2"] .page5-v2__hero-panel,
+html[data-portal-design="v2"] .pv2-glass {
+  box-shadow:
+    var(--pv2-shadow-sm),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08) !important;
+  backdrop-filter: blur(var(--pv2-blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) saturate(140%);
+}
+
+html[data-portal-design="v2"] .page5-v2__section-card {
+  transition:
+    transform var(--pv2-dur-fast) var(--pv2-ease-out),
+    box-shadow var(--pv2-dur-fast);
+}
+
+@media (hover: hover) {
+  html[data-portal-design="v2"] .page5-v2__section-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      var(--pv2-shadow-md),
+      0 12px 40px rgba(0, 212, 165, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  }
+}
+
+html[data-portal-design="v2"] .cabinet-bento-metric {
+  position: relative;
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .cabinet-bento-metric::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pv2-gradient-brand-h);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* Dock — «плавающая» пилюля как в SaaS kit */
+html[data-portal-design="v2"] .cabinet-quick-dock__inner {
+  backdrop-filter: blur(var(--pv2-blur-lg)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-lg)) saturate(150%);
+  box-shadow:
+    var(--pv2-shadow-md),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 20px 50px rgba(4, 14, 32, 0.35) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] body.route-cabinet,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome--v2 {
+  background:
+    radial-gradient(ellipse 95% 70% at 92% -8%, rgba(103, 232, 249, 0.32) 0%, transparent 52%),
+    radial-gradient(ellipse 75% 55% at 6% 95%, rgba(0, 212, 165, 0.1) 0%, transparent 48%),
+    linear-gradient(180deg, #f7f9ff 0%, #edf3ff 100%) !important;
+  background-color: #edf3ff !important;
+}

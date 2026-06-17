@@ -1,6 +1,11 @@
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CabinetChromeLayout, { type CabinetChromeContext } from "../components/CabinetChromeLayout";
+import { SpoRequestsPage } from "./CabinetSpoRequests";
+import { SpoPortfolioPage } from "./CabinetSpoPortfolio";
+import { SchoolMessagesPage } from "./CabinetSchoolMessages";
+import { SchoolMaterialsPage } from "./CabinetSchoolMaterials";
+import { SchoolCalendarPage } from "./CabinetSchoolCalendar";
 import CabinetHomeIcon from "../components/CabinetHomeIcon";
 import {
   AUDIENCE_LABELS,
@@ -15,12 +20,70 @@ import {
 import ProforientationTestSection from "../components/ProforientationTestSection";
 import { ROLE_ICON_SCHOOL, ROLE_ICON_STUDENT } from "../assets/appIcons";
 import HeroRoleIconButton from "../components/HeroRoleIconButton";
-import { buildCabinetHeroCardStyle, heroTopRowStyle } from "../utils/cabinetHero";
+import LearnerCabinetDashboardV2 from "../components/cabinet-v2/LearnerCabinetDashboardV2";
+import { formatKpiCount, kpiDeltaBadge, kpiTrendFromCount } from "../utils/kpiCardHelpers";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { buildCabinetHeroCardStyle, heroTagBadgeStyle, heroTopRowStyle } from "../utils/cabinetHero";
 
 const CABINET_HERO_SCHOOL = new URL("../assets/cabinet-hero-school.png", import.meta.url).href;
 const CABINET_HERO_STUDENT = new URL("../assets/cabinet-hero-student.png", import.meta.url).href;
 
 export type LearnerCabinetVariant = "school" | "spo";
+
+const BENTO_METRICS = {
+  school: [
+    {
+      value: "3",
+      label: "Блока в треке обучения",
+      trend: "up" as const,
+      insight: "Материалы, календарь и объявления в кабинете школьника.",
+    },
+    {
+      value: "—",
+      label: "Прогресс по материалам",
+      trend: "neutral" as const,
+      insight: "Откройте раздел «Материалы и задания» для учёбы.",
+    },
+    {
+      value: "2",
+      label: "Раздела навигации",
+      trend: "neutral" as const,
+      insight: "Переключение между главной и профориентацией.",
+    },
+    {
+      value: "24/7",
+      label: "Доступ к порталу",
+      trend: "neutral" as const,
+      insight: "Портал доступен в любое время с любого устройства.",
+    },
+  ],
+  spo: [
+    {
+      value: "2",
+      label: "Раздела заявок и портфолио",
+      trend: "neutral" as const,
+      insight: "Заявки и портфолио — в боковой панели кабинета.",
+    },
+    {
+      value: "—",
+      label: "Активность в кабинете",
+      trend: "neutral" as const,
+      insight: "Следите за материалами и календарём мероприятий.",
+    },
+    {
+      value: "3",
+      label: "Блока в боковой панели",
+      trend: "neutral" as const,
+      insight: "Навигация по разделам студенческого кабинета.",
+    },
+    {
+      value: "24/7",
+      label: "Доступ к порталу",
+      trend: "neutral" as const,
+      insight: "Портал доступен в любое время с любого устройства.",
+    },
+  ],
+} as const;
 
 const DASHBOARD_COPY: Record<
   LearnerCabinetVariant,
@@ -130,7 +193,7 @@ function LearnerCabinetDashboard({
   ctx: CabinetChromeContext;
   variant: LearnerCabinetVariant;
 }) {
-  const { styles, layoutStyles, profilePlaque, isDark } = ctx;
+  const { styles, layoutStyles, profilePlaque, isDark, cn, isV2 } = ctx;
   const CHIP_WRAP_RADIUS = 999;
   const CHIP_HEIGHT = 38;
   const CHIP_RADIUS = 999;
@@ -138,7 +201,8 @@ function LearnerCabinetDashboard({
 
   const heroCardStyle = useMemo(() => {
     const heroUrl = variant === "school" ? CABINET_HERO_SCHOOL : CABINET_HERO_STUDENT;
-    return buildCabinetHeroCardStyle(layoutStyles.heroCard, heroUrl, isDark);
+    const bgPos = variant === "school" ? "center 40%" : "center 38%";
+    return buildCabinetHeroCardStyle(layoutStyles.heroCard, heroUrl, isDark, bgPos);
   }, [layoutStyles.heroCard, isDark, variant]);
   const heroRoleIconSrc = variant === "school" ? ROLE_ICON_SCHOOL : ROLE_ICON_STUDENT;
   const navigate = useNavigate();
@@ -166,10 +230,10 @@ function LearnerCabinetDashboard({
   }, []);
 
   useEffect(() => {
-    if (variant === "school") {
-      setSchoolTab("home");
-    }
-  }, [variant]);
+    if (variant !== "school") return;
+    const tab = (location.state as { schoolTab?: "home" | "materials" } | null)?.schoolTab;
+    if (tab === "materials" || tab === "home") setSchoolTab(tab);
+  }, [variant, location.state]);
 
   const heroDisplayName = [profilePlaque.firstName, profilePlaque.lastName].filter(Boolean).join(" ").trim();
   const upcomingEvents = useMemo(
@@ -181,21 +245,75 @@ function LearnerCabinetDashboard({
   const isPortfolioPage =
     variant === "spo" && location.pathname.startsWith("/cabinet-spo/portfolio");
   const isSchoolMaterialsOnly = variant === "school" && schoolTab === "materials";
-  const isSchoolInstituteDark = variant === "school" && isDark;
+  const bentoMetrics = useMemo(() => {
+    const events = upcomingEvents.length;
+    return BENTO_METRICS[variant].map((m, index) => {
+      if (index !== 0) {
+        return { id: `kpi-${index}`, ...m };
+      }
+      const label = variant === "school" ? "Ближайших событий" : "Событий в расписании";
+      return {
+        id: "events",
+        ...m,
+        label,
+        value: formatKpiCount(events),
+        trend: kpiTrendFromCount(events),
+        trendLabel: kpiDeltaBadge(events),
+        insight:
+          events > 0
+            ? "Актуальные даты из общего календаря портала."
+            : "В расписании пока нет ближайших мероприятий.",
+        insightActionLabel: "Календарь",
+        onInsightClick:
+          events > 0
+            ? () => navigate(variant === "school" ? "/page5/events" : "/page5/events")
+            : undefined,
+      };
+    });
+  }, [variant, upcomingEvents.length, navigate]);
+
+  const isSchoolInstituteDark = variant === "school" && isDark && !isV2;
   const instituteCardDarkBg =
     "linear-gradient(145deg, rgba(36, 59, 116, 0.88) 0%, rgba(31, 52, 102, 0.86) 52%, rgba(26, 42, 82, 0.84) 100%)";
   const institutePanelDarkBg =
     "linear-gradient(152deg, rgba(26, 42, 82, 0.82) 0%, rgba(31, 52, 102, 0.78) 48%, rgba(20, 34, 70, 0.84) 100%)";
 
+  const isV2Dashboard =
+    isV2 &&
+    location.pathname === copy.cabinetPath &&
+    !isSchoolMaterialsOnly &&
+    !isPortfolioPage &&
+    !isRequestsPage;
+
+  if (isV2Dashboard) {
+    return (
+      <>
+        <LearnerCabinetDashboardV2
+          ctx={ctx}
+          variant={variant}
+          copy={copy}
+          schoolTab={schoolTab}
+          setSchoolTab={setSchoolTab}
+          heroDisplayName={heroDisplayName}
+          heroCardStyle={heroCardStyle}
+          heroRoleIconSrc={heroRoleIconSrc}
+          upcomingEvents={upcomingEvents}
+        />
+      </>
+    );
+  }
+
   return (
-    <main style={layoutStyles.main}>
-      <aside style={layoutStyles.aside}>
+    <>
+      <main className={cn.main} style={layoutStyles.main}>
+      <aside className={cn.aside} style={layoutStyles.aside}>
         <button
           type="button"
-          className="softtouch-plaque"
+          className={cx("softtouch-plaque", variant === "school" && schoolTab === "home" && cn.navActive)}
           onClick={() => {
             if (variant === "school") {
               setSchoolTab("home");
+              navigate("/cabinet-school", { state: { schoolTab: "home" } });
             }
           }}
           style={{
@@ -245,6 +363,7 @@ function LearnerCabinetDashboard({
           </span>
         </button>
         <div
+          className={cn.sideCard}
           style={{
             ...layoutStyles.sideCard,
             background: isSchoolInstituteDark ? institutePanelDarkBg : layoutStyles.sideCard.background,
@@ -260,11 +379,14 @@ function LearnerCabinetDashboard({
             <button
               key={b.title}
               type="button"
-              className="softtouch-plaque"
+              className={cx(
+                "softtouch-plaque",
+                variant === "school" && b.title === "Материалы и задания" && schoolTab === "materials" && cn.navActive
+              )}
               onClick={() => {
                 if (variant === "school" && b.title === "Материалы и задания") {
                   setSchoolTab("materials");
-                  return;
+                  navigate("/cabinet-school", { state: { schoolTab: "materials" } });
                 }
               }}
               style={{
@@ -319,8 +441,13 @@ function LearnerCabinetDashboard({
       </aside>
       <section style={layoutStyles.section}>
         {isSchoolMaterialsOnly ? (
-          <div className="ref-utility-card ref-radius-a" style={{ ...layoutStyles.recentPanel, padding: 24, minHeight: 276 }}>
-            <div style={layoutStyles.recentTitle}>Материалы и задания</div>
+          <div
+            className={cx("ref-utility-card", "ref-radius-a", cn.recentPanel)}
+            style={{ ...layoutStyles.recentPanel, padding: 24, minHeight: 276 }}
+          >
+            <div className={cn.recentTitle} style={layoutStyles.recentTitle}>
+              Материалы и задания
+            </div>
             <div style={{ fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 4 }}>
               Учебные блоки и задания для подготовки к отраслевым мероприятиям.
             </div>
@@ -408,7 +535,12 @@ function LearnerCabinetDashboard({
           ))}
         </div>
         <div
-          className="dashboard-glass-frame ref-stage ref-surface-soft"
+          className={cx(
+            "dashboard-glass-frame",
+            "ref-stage",
+            "ref-surface-soft",
+            isV2 && "cabinet-bento-shell"
+          )}
           style={{
             padding: 22,
             background: isSchoolInstituteDark
@@ -422,12 +554,20 @@ function LearnerCabinetDashboard({
             gap: 22,
           }}
         >
+          {isV2 && !isSchoolMaterialsOnly ? (
+            <div className="cabinet-bento-metrics" aria-label="Краткая сводка">
+              {bentoMetrics.map((m) => (
+                <div key={m.label} className="cabinet-bento-metric">
+                  <div className="cabinet-bento-metric__value">{m.value}</div>
+                  <div className="cabinet-bento-metric__label">{m.label}</div>
+                </div>
+              ))}
+            </div>
+          ) : null}
           <div className="dashboard-hero-grid">
-            <div className="ref-radius-a" style={{ ...heroCardStyle, minHeight: 404 }}>
+            <div className={cx("ref-radius-a", "cabinet-hero-plaque", cn.hero)} style={heroCardStyle}>
             <div style={heroTopRowStyle}>
-              <button type="button" style={{ ...layoutStyles.heroTag, flexShrink: 1, minWidth: 0 }}>
-                {copy.heroTag}
-              </button>
+              <div style={heroTagBadgeStyle(layoutStyles.heroTag)}>{copy.heroTag}</div>
               <HeroRoleIconButton iconSrc={heroRoleIconSrc} buttonBaseStyle={layoutStyles.heroButton} />
             </div>
             {heroDisplayName ? (
@@ -438,7 +578,7 @@ function LearnerCabinetDashboard({
           </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 14 }}>
               <div
-                className="ref-utility-card ref-radius-b ref-overlap-up"
+                className={cx("ref-utility-card", "ref-radius-b", "ref-overlap-up", cn.infoCard)}
                 style={{
                   ...layoutStyles.infoCard,
                   gridColumn: "1 / -1",
@@ -563,7 +703,7 @@ function LearnerCabinetDashboard({
             </div>
           </div>
           <div
-            className="ref-utility-card ref-radius-a"
+            className={cx("ref-utility-card", "ref-radius-a", cn.recentPanel)}
             style={{
               ...layoutStyles.recentPanel,
               padding: 24,
@@ -573,7 +713,9 @@ function LearnerCabinetDashboard({
           >
           {variant === "school" && schoolTab === "materials" ? (
             <>
-              <div style={layoutStyles.recentTitle}>Материалы и задания</div>
+              <div className={cn.recentTitle} style={layoutStyles.recentTitle}>
+                Материалы и задания
+              </div>
               <div style={{ fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 4 }}>
                 Учебные блоки и задания для подготовки к отраслевым мероприятиям.
               </div>
@@ -617,7 +759,9 @@ function LearnerCabinetDashboard({
             </>
           ) : isPortfolioPage ? (
             <>
-              <div style={layoutStyles.recentTitle}>Портфолио достижений</div>
+              <div className={cn.recentTitle} style={layoutStyles.recentTitle}>
+                Портфолио достижений
+              </div>
               <div style={{ fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 4 }}>
                 Отмечайте ключевые проекты и мероприятия для резюме и отбора на практику.
               </div>
@@ -656,7 +800,9 @@ function LearnerCabinetDashboard({
             </>
           ) : (
             <>
-              <div style={layoutStyles.recentTitle}>Ближайшие мероприятия</div>
+              <div className={cn.recentTitle} style={layoutStyles.recentTitle}>
+                Ближайшие мероприятия
+              </div>
               <div style={{ fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 4 }}>
                 {copy.eventsHint}
               </div>
@@ -715,14 +861,37 @@ function LearnerCabinetDashboard({
         )}
       </section>
     </main>
+    </>
   );
+}
+
+function resolveLearnerCabinetSubpage(
+  variant: LearnerCabinetVariant,
+  pathname: string,
+  ctx: CabinetChromeContext
+): ReactNode | null {
+  if (variant === "spo") {
+    if (pathname.startsWith("/cabinet-spo/requests")) return <SpoRequestsPage ctx={ctx} />;
+    if (pathname.startsWith("/cabinet-spo/portfolio")) return <SpoPortfolioPage ctx={ctx} />;
+  }
+  if (variant === "school") {
+    if (pathname.startsWith("/cabinet-school/messages")) return <SchoolMessagesPage ctx={ctx} />;
+    if (pathname.startsWith("/cabinet-school/materials")) return <SchoolMaterialsPage ctx={ctx} />;
+    if (pathname.startsWith("/cabinet-school/calendar")) return <SchoolCalendarPage ctx={ctx} />;
+  }
+  return null;
 }
 
 function CabinetLearnerHome({ variant }: { variant: LearnerCabinetVariant }) {
   const copy = DASHBOARD_COPY[variant];
+  const location = useLocation();
   const renderDashboard = useCallback(
-    (ctx: CabinetChromeContext) => <LearnerCabinetDashboard ctx={ctx} variant={variant} />,
-    [variant]
+    (ctx: CabinetChromeContext) => {
+      const subpage = resolveLearnerCabinetSubpage(variant, location.pathname, ctx);
+      if (subpage) return subpage;
+      return <LearnerCabinetDashboard ctx={ctx} variant={variant} />;
+    },
+    [variant, location.pathname]
   );
 
   return (

@@ -1,7 +1,18 @@
-﻿import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loadCabinetTheme, loadProfileSettings, saveCabinetTheme } from "../profileSettingsStorage";
+import {
+  CABINET_THEME_CHANGED,
+  loadCabinetTheme,
+  loadProfileSettings,
+  saveCabinetTheme,
+} from "../profileSettingsStorage";
 import { AiChatBubble } from "../components/AiChatBubble";
+import CabinetQuickDock from "../components/CabinetQuickDock";
+import CabinetSoftSidebar from "../components/CabinetSoftSidebar";
+import CabinetSoftToolbar from "../components/CabinetSoftToolbar";
+import CabinetV2SearchField from "../components/CabinetV2SearchField";
+import AssociationCabinetDashboardV2 from "../components/cabinet-v2/AssociationCabinetDashboardV2";
+import { formatKpiCount, kpiDeltaBadge, kpiTrendFromCount } from "../utils/kpiCardHelpers";
 import { FloatingNotes } from "../components/FloatingNotes";
 import { getHoverTooltipPreset, HoverTooltip } from "../components/HoverTooltip";
 import {
@@ -15,19 +26,24 @@ import {
   saveSharedCalendarEvents,
   SHARED_CALENDAR_EVENTS_KEY,
 } from "../utils/sharedCalendarEvents";
-import { ensureMessengerUidInProfile } from "../utils/messengerInvite";
+import { injectImagePreloads } from "../utils/imagePreload";
+import {
+  hasMessengerInboxUnread,
+  markMessengerInboxSeen,
+  readMessengerSeenAt,
+} from "../utils/messengerUnread";
+import { TBOT_NOTIFY_DOT_EVENT } from "../utils/messengerTbotNotify";
+import { navigateToProfileSettings } from "../utils/profileNavigation";
 import {
   MESSENGER_PEERS_KEY,
   MESSENGER_STORE_KEY,
   saveMessengerStore,
 } from "../utils/messengerStorage";
-import { isMessengerHiddenForMe } from "../utils/messengerHiddenForMe";
 import {
   applyMessengerInvitePayload,
   decodeMessengerInvite,
   MSGR_INVITE_PARAM,
 } from "../utils/messengerInvite";
-import { injectImagePreloads } from "../utils/imagePreload";
 import {
   ADMIN_CABINET_SEARCH,
   clearAdminReturnMark,
@@ -43,11 +59,26 @@ import {
   ICON_THEME,
 } from "../assets/appIcons";
 import { Page5MessengerView } from "./Page5MessengerView";
+import {
+  buildCabinetChromeClassNames,
+  buildCabinetV2SceneClasses,
+  CABINET_V2_SHELL,
+  cx,
+} from "../design-system/cabinetChromeClasses";
+import { buildAssociationRailGroups, getAssociationSectionMeta } from "../utils/associationRailItems";
+import { buildAssociationDockItems } from "../utils/cabinetDockItems";
+import { useCabinetMobileNav } from "../hooks/useCabinetMobileNav";
+import { useAssociationRailBadges } from "../hooks/useAssociationRailBadges";
+import { getCabinetTitle } from "../utils/cabinetRailItems";
+import { syncCabinetThemeDocument } from "../design-system/syncCabinetThemeDocument";
+import { usePortalDesign } from "../design-system/usePortalDesign";
 import { buildAssociationPageTheme } from "../theme/cabinetPalettes";
+import { buildCabinetChromeThemeV2 } from "../theme/cabinetPalettesV2";
 import { ProforientationResultsTable } from "../components/ProforientationEmployerPanels";
 import AssociationDocumentsView from "./AssociationDocumentsView";
 import AssociationIncomingDocumentsView from "./AssociationIncomingDocumentsView";
 import AssociationStudentTeamsView from "./AssociationStudentTeamsView";
+import RadorFormsHub from "./RadorFormsHub";
 import type { CSSProperties } from "react";
 
 export type AssociationVariant = "rador" | "ado";
@@ -70,52 +101,9 @@ function getAssociationCopy(variant: AssociationVariant) {
   };
 }
 
-const projectMetrics = [
-  { title: "Запросы", value: "1" },
-  { title: "Документы", value: "67" },
-  { title: "Требуется человек", value: "704" },
-  { title: "Подрядчиков", value: "67" },
-];
-
 type CabinetSection = "dashboard" | "events" | "messenger";
 
-const MSGR_SEEN_KEY = "trassa-msgr-seen";
-
-function readMessengerSeenAt(): number {
-  if (typeof window === "undefined") return Date.now();
-  try {
-    const n = Number(localStorage.getItem(MSGR_SEEN_KEY));
-    if (Number.isFinite(n) && n > 0) return n;
-  } catch {
-    /* ignore */
-  }
-  return Date.now();
-}
-
-function scanMessengerInboxUnread(seenAt: number): boolean {
-  const myUid = ensureMessengerUidInProfile();
-  try {
-    const raw = localStorage.getItem("trassa-messenger-v1");
-    if (!raw) return false;
-    const data = JSON.parse(raw) as Record<
-      string,
-      Array<{ author: string; createdAt: string; id?: string }>
-    >;
-    for (const tid of Object.keys(data)) {
-      for (const m of data[tid] ?? []) {
-        if (m.author !== myUid && new Date(m.createdAt).getTime() > seenAt) {
-          if (m.id && isMessengerHiddenForMe(tid, m.id)) continue;
-          return true;
-        }
-      }
-    }
-  } catch {
-    /* ignore */
-  }
-  return false;
-}
-
-/** Локальная симуляция входящего (нет сервера). Для проверки бейджа: сверните мессенджер, нажмите «Тест: входящее». */
+/** Локальная симуляция входящего (нет сервера). Для проверки: сверните мессенджер — точка на Т-боте. */
 function injectMessengerTestIncoming(): void {
   try {
     let peerId = "p1";
@@ -157,6 +145,8 @@ const PAGE5_PRELOAD_IMAGES = [
 export function AssociationPage({ variant }: { variant: AssociationVariant }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const isV2 = usePortalDesign() === "v2";
+  const useMobileNav = useCabinetMobileNav();
   const [theme, setTheme] = useState<"light" | "dark">(() => loadCabinetTheme());
   const [profilePlaque, setProfilePlaque] = useState(() => loadProfileSettings());
   const [search, setSearch] = useState("");
@@ -166,10 +156,12 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
   );
   const [messengerSeenAt, setMessengerSeenAt] = useState(() => readMessengerSeenAt());
   const [messengerHasUnread, setMessengerHasUnread] = useState(() =>
-    typeof window !== "undefined" ? scanMessengerInboxUnread(readMessengerSeenAt()) : false
+    typeof window !== "undefined" ? hasMessengerInboxUnread(readMessengerSeenAt()) : false
   );
+  const [tbotNotifyDot, setTbotNotifyDot] = useState(false);
   /** Сброс монтирования мессенджера после применения приглашения по ссылке */
   const [messengerMountKey, setMessengerMountKey] = useState(0);
+  const associationRailBadges = useAssociationRailBadges();
 
   const associationCopy = useMemo(() => getAssociationCopy(variant), [variant]);
 
@@ -179,6 +171,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
   const isIncomingDocumentsRoute = location.pathname === `${basePath}/documents/incoming`;
   const isDocumentsSectionRoute = isAssociationDocumentsMain || isIncomingDocumentsRoute;
   const isTeamsRoute = location.pathname === `${basePath}/teams`;
+  const isFormsRoute = location.pathname === `${basePath}/forms`;
 
   const leaveProforientationPath = useCallback(() => {
     const nested = [
@@ -197,12 +190,21 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
       setMessengerHasUnread(false);
       return;
     }
-    setMessengerHasUnread(scanMessengerInboxUnread(messengerSeenAt));
+    setMessengerHasUnread(hasMessengerInboxUnread(messengerSeenAt));
   }, [cabinetSection, messengerSeenAt]);
 
   useEffect(() => {
     recalcMessengerBadge();
   }, [recalcMessengerBadge]);
+
+  useEffect(() => {
+    const onTbotDot = (event: Event) => {
+      const active = Boolean((event as CustomEvent<{ active?: boolean }>).detail?.active);
+      setTbotNotifyDot(active);
+    };
+    window.addEventListener(TBOT_NOTIFY_DOT_EVENT, onTbotDot);
+    return () => window.removeEventListener(TBOT_NOTIFY_DOT_EVENT, onTbotDot);
+  }, []);
 
   useEffect(() => {
     const onUpd = () => recalcMessengerBadge();
@@ -213,11 +215,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
   useEffect(() => {
     if (cabinetSection !== "messenger") return;
     const t = Date.now();
-    try {
-      localStorage.setItem(MSGR_SEEN_KEY, String(t));
-    } catch {
-      /* ignore */
-    }
+    markMessengerInboxSeen(t);
     setMessengerSeenAt(t);
     setMessengerHasUnread(false);
   }, [cabinetSection]);
@@ -273,8 +271,8 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
         description:
           "Запросы и ответы ТОУАД, свод обращений и работа с корпоративными шаблонами в одном контуре.",
         icon: "🚧",
-        accent: "#4f80f3",
-        accentSoft: "rgba(79, 128, 243, 0.22)",
+        accent: "#2b64fd",
+        accentSoft: "rgba(43, 100, 253, 0.22)",
         tag: "Рабочий контур",
       },
       {
@@ -282,17 +280,26 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
         description:
           "Календарь отрасли: очные и онлайн-активности, встречи и контрольные даты для участников.",
         icon: "📰",
-        accent: "#2dd4bf",
-        accentSoft: "rgba(45, 212, 191, 0.2)",
+        accent: "#6f95ff",
+        accentSoft: "rgba(111, 149, 255, 0.22)",
         tag: "Афиша",
+      },
+      {
+        title: "Таблицы подрядчиков",
+        description:
+          "Процент заполнения шаблонов и итоговые срезы на дату срока сдачи.",
+        icon: "📊",
+        accent: "#204fd2",
+        accentSoft: "rgba(32, 79, 210, 0.2)",
+        tag: "Мониторинг",
       },
       {
         title: "Документы",
         description:
           "Публикация материалов, обмен файлами и единое хранилище сводной документации.",
         icon: "📃",
-        accent: "#f59e0b",
-        accentSoft: "rgba(245, 158, 11, 0.22)",
+        accent: "#7c89a6",
+        accentSoft: "rgba(124, 137, 166, 0.2)",
         tag: associationCopy.archiveTag,
       },
     ],
@@ -313,6 +320,15 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }, []);
 
+  const handleSetTheme = useCallback((next: "light" | "dark") => {
+    setTheme(next);
+  }, []);
+
+  const handleToolbarMessenger = useCallback(() => {
+    leaveProforientationPath();
+    setCabinetSection((prev) => (prev === "messenger" ? "dashboard" : "messenger"));
+  }, [leaveProforientationPath]);
+
   const goToRoleSelection = useCallback(() => {
     clearAdminReturnMark();
     navigate("/page3");
@@ -323,116 +339,19 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
   }, [navigate]);
 
   const goToProfile = useCallback(() => {
-    navigate("/profile", { state: { from: location.pathname } });
+    navigateToProfileSettings(navigate, location.pathname);
   }, [navigate, location.pathname]);
 
-  const styles = useMemo(() => buildAssociationPageTheme(variant, isDark), [variant, isDark]);
+  const cn = useMemo(() => buildCabinetChromeClassNames(isV2), [isV2]);
+  const styles = useMemo(
+    () => (isV2 ? buildCabinetChromeThemeV2(basePath, isDark) : buildAssociationPageTheme(variant, isDark)),
+    [variant, isDark, isV2, basePath]
+  );
 
-  /** Неоморфные плашки разделов главной (РАДОР / АДО) */
-  const neoDashboardCards = useMemo(() => {
-    const cardRaised = (): CSSProperties => ({
-      position: "relative",
-      borderRadius: 34,
-      padding: "18px 20px 18px",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      minHeight: 334,
-      border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid rgba(255,255,255,0.76)",
-      background: isDark
-        ? "linear-gradient(145deg, rgba(36, 59, 116, 0.88) 0%, rgba(31, 52, 102, 0.86) 52%, rgba(26, 42, 82, 0.84) 100%)"
-        : "radial-gradient(118% 94% at 14% 98%, rgba(36, 59, 116, 0.26) 0%, rgba(36, 59, 116, 0.16) 24%, rgba(36, 59, 116, 0.08) 44%, rgba(36,59,116,0) 68%), radial-gradient(88% 76% at 88% 6%, rgba(26, 42, 82, 0.2) 0%, rgba(26,42,82,0) 52%), linear-gradient(155deg, rgba(236, 240, 248, 0.99) 0%, rgba(224, 231, 247, 0.98) 54%, rgba(211, 221, 242, 0.98) 100%)",
-      boxShadow: isDark
-        ? "0 18px 34px rgba(6,10,24,0.44), inset 0 1px 0 rgba(255,255,255,0.16)"
-        : "0 22px 36px rgba(92,101,136,0.2), inset 0 1px 0 rgba(255,255,255,0.92)",
-      backdropFilter: "blur(20px) saturate(106%)",
-      WebkitBackdropFilter: "blur(20px) saturate(106%)",
-    });
-
-    const accentBar = (accent: string, accentSoft: string): CSSProperties => ({
-      position: "absolute",
-      left: -44,
-      bottom: -62,
-      width: 190,
-      height: 190,
-      borderRadius: 999,
-      background: isDark
-        ? `radial-gradient(circle, ${accent}40 0%, ${accent}20 44%, rgba(0,0,0,0) 76%)`
-        : `radial-gradient(circle, rgba(36, 59, 116, 0.24) 0%, rgba(36, 59, 116, 0.14) 34%, rgba(36, 59, 116, 0.06) 56%, rgba(0,0,0,0) 84%)`,
-      filter: "blur(5px)",
-      opacity: isDark ? 0.64 : 0.7,
-      pointerEvents: "none",
-    });
-
-    const iconWell = (accent: string): CSSProperties => ({
-      width: 24,
-      height: 24,
-      borderRadius: 999,
-      display: "grid",
-      placeItems: "center",
-      fontSize: 12,
-      lineHeight: 1,
-      flexShrink: 0,
-      background: isDark
-        ? `linear-gradient(150deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.24) 100%)`
-        : `linear-gradient(150deg, rgba(255,255,255,0.86) 0%, ${accent}1a 100%)`,
-      boxShadow: isDark
-        ? "inset 4px 4px 9px rgba(0,0,0,0.3), inset -1px -1px 5px rgba(255,255,255,0.1)"
-        : "inset 2px 2px 6px rgba(0,0,0,0.08), inset -1px -1px 6px rgba(255,255,255,0.66)",
-      border: `1px solid ${isDark ? `${accent}52` : "rgba(255,255,255,0.72)"}`,
-      color: isDark ? "#eef2ff" : "rgba(96, 105, 133, 0.88)",
-    });
-
-    const tagChip: CSSProperties = {
-      padding: 0,
-      borderRadius: 0,
-      fontSize: 11,
-      fontWeight: 500,
-      letterSpacing: "0.02em",
-      textTransform: "none",
-      color: isDark ? "rgba(226, 233, 248, 0.8)" : "rgba(95, 102, 122, 0.72)",
-      background: "transparent",
-      boxShadow: "none",
-      border: "none",
-    };
-
-    const openBtn: CSSProperties = {
-      border: isDark ? "1px solid rgba(255,255,255,0.34)" : "1px solid rgba(255,255,255,0.9)",
-      borderRadius: 24,
-      padding: "18px 24px",
-      fontWeight: 600,
-      fontSize: 15,
-      cursor: "pointer",
-      fontFamily: "inherit",
-      color: "#f8fbff",
-      background: isDark
-        ? "linear-gradient(160deg, rgba(141, 153, 204, 0.84) 0%, rgba(122, 136, 189, 0.88) 55%, rgba(108, 122, 176, 0.9) 100%)"
-        : "linear-gradient(160deg, rgba(129, 141, 186, 0.95) 0%, rgba(117, 129, 176, 0.96) 50%, rgba(105, 118, 167, 0.97) 100%)",
-      boxShadow: isDark
-        ? "0 10px 20px rgba(8, 14, 34, 0.38), inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(18, 26, 52, 0.45)"
-        : "0 12px 24px rgba(74, 84, 126, 0.28), inset 0 1px 0 rgba(255,255,255,0.94), inset 0 -1px 0 rgba(85, 97, 145, 0.34)",
-      backdropFilter: "blur(10px) saturate(104%)",
-      WebkitBackdropFilter: "blur(10px) saturate(104%)",
-      minWidth: 180,
-      width: "100%",
-      textAlign: "center",
-      letterSpacing: "0",
-      lineHeight: 1,
-    };
-
-    const metaDot = (accent: string): CSSProperties => ({
-      width: 11,
-      height: 11,
-      borderRadius: "50%",
-      background: `radial-gradient(circle at 30% 28%, ${accent}ff, ${accent}99)`,
-      boxShadow: isDark
-        ? `0 0 10px ${accent}66, inset 0 1px 0 rgba(255,255,255,0.35)`
-        : `0 2px 8px ${accent}55, inset 0 -1px 2px rgba(0,0,0,0.12)`,
-    });
-
-    return { cardRaised, accentBar, iconWell, tagChip, openBtn, metaDot };
-  }, [isDark, styles]);
+  const legacyCardAccentStyle = useCallback(
+    (accent: string): CSSProperties => ({ "--p5l-card-accent": accent }) as CSSProperties,
+    []
+  );
 
   const proforientationLayoutStyles = useMemo(
     () =>
@@ -457,7 +376,18 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
 
   useEffect(() => {
     saveCabinetTheme(theme);
-  }, [theme]);
+    syncCabinetThemeDocument(isV2 ? theme : undefined);
+  }, [theme, isV2]);
+
+  useEffect(() => {
+    const syncTheme = () => setTheme(loadCabinetTheme());
+    window.addEventListener(CABINET_THEME_CHANGED, syncTheme);
+    window.addEventListener("storage", syncTheme);
+    return () => {
+      window.removeEventListener(CABINET_THEME_CHANGED, syncTheme);
+      window.removeEventListener("storage", syncTheme);
+    };
+  }, []);
 
   useEffect(() => {
     const syncProfile = () => setProfilePlaque(loadProfileSettings());
@@ -490,128 +420,318 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
 
   const plaqueName = profilePlaque.firstName.trim() || "Пользователь";
 
-  const mainRegion = {
-    flex: 1,
-    minHeight: 0,
-    width: "100%",
-    display: "flex",
-    flexDirection: "column" as const,
-    boxSizing: "border-box" as const,
-  };
+  const openEventsSection = useCallback(() => {
+    leaveProforientationPath();
+    setCabinetSection("events");
+  }, [leaveProforientationPath]);
+
+  const dockItems = useMemo(
+    () =>
+      isV2
+        ? buildAssociationDockItems({
+            basePath,
+            pathname: location.pathname,
+            cabinetSection,
+            messengerHasUnread,
+            navigate,
+            setCabinetSection,
+            onOpenEvents: openEventsSection,
+          })
+        : [],
+    [
+      isV2,
+      basePath,
+      location.pathname,
+      cabinetSection,
+      messengerHasUnread,
+      navigate,
+      openEventsSection,
+    ]
+  );
+
+  const railGroups = useMemo(
+    () =>
+      isV2
+        ? buildAssociationRailGroups({
+            basePath,
+            pathname: location.pathname,
+            cabinetSection,
+            navigate,
+            setCabinetSection,
+            onOpenEvents: openEventsSection,
+            badgeOverrides: associationRailBadges,
+          })
+        : [],
+    [
+      isV2,
+      basePath,
+      location.pathname,
+      cabinetSection,
+      navigate,
+      openEventsSection,
+      setCabinetSection,
+      associationRailBadges,
+    ]
+  );
+
+  const associationRoleLabel = variant === "ado" ? "Ассоциация АДО" : "Ассоциация РАДОР";
+
+  const cabinetTitle = useMemo(() => getCabinetTitle(basePath), [basePath]);
+  const cabinetMeta = useMemo(
+    () => getAssociationSectionMeta(location.pathname, basePath, cabinetSection),
+    [location.pathname, basePath, cabinetSection]
+  );
+
+  const isV2DashboardHome =
+    isV2 &&
+    location.pathname === basePath &&
+    cabinetSection === "dashboard" &&
+    !isProforientationRoute &&
+    !isDocumentsSectionRoute &&
+    !isTeamsRoute &&
+    !isFormsRoute;
+
+  const associationKpiMetrics = useMemo(() => {
+    const events = upcomingPanelEvents.length;
+    const calendarTotal = calendarEvents.length;
+    const sections = pageCards.length;
+    return [
+      {
+        id: "events",
+        label: "Событий в календаре",
+        value: formatKpiCount(events),
+        trend: kpiTrendFromCount(events),
+        trendLabel: kpiDeltaBadge(events),
+        insight:
+          events > 0
+            ? "Ближайшие даты из общего календаря ассоциации."
+            : "Добавьте мероприятия в календарь на главной.",
+        insightActionLabel: "Открыть календарь",
+        onInsightClick: openEventsSection,
+      },
+      {
+        id: "calendar",
+        label: "Записей в календаре",
+        value: formatKpiCount(calendarTotal),
+        trend: kpiTrendFromCount(calendarTotal),
+        trendLabel: kpiDeltaBadge(calendarTotal),
+        insight: "Все события, включая прошедшие и будущие.",
+      },
+      {
+        id: "sections",
+        label: "Разделов на главной",
+        value: formatKpiCount(sections),
+        trend: "neutral" as const,
+        insight: "Дорожные команды, документы, формы и профориентация.",
+      },
+      {
+        id: "messenger",
+        label: "Мессенджер",
+        value: messengerHasUnread ? "Новое" : "Ок",
+        trend: messengerHasUnread ? ("up" as const) : ("neutral" as const),
+        trendLabel: messengerHasUnread ? "!" : undefined,
+        insight: messengerHasUnread
+          ? "Есть непрочитанные сообщения от участников."
+          : "Переписка с подрядчиками и партнёрами.",
+        insightActionLabel: "Открыть мессенджер",
+        onInsightClick: () => setCabinetSection("messenger"),
+      },
+    ];
+  }, [
+    upcomingPanelEvents.length,
+    calendarEvents.length,
+    pageCards.length,
+    messengerHasUnread,
+    openEventsSection,
+  ]);
+
+  const legacyThemeVars = useMemo(
+    (): CSSProperties =>
+      ({
+        "--p5l-text": styles.text,
+        "--p5l-muted": styles.muted,
+        "--p5l-surface": styles.surfaceBg,
+        "--p5l-section": styles.sectionBg,
+        "--p5l-card": styles.cardBg,
+        "--p5l-button-bg": styles.buttonBg,
+        "--p5l-card-shadow": styles.cardShadow,
+        "--p5l-inset-shadow": styles.insetShadow,
+      }) as CSSProperties,
+    [styles]
+  );
 
   return (
     <div
-      style={{
-        minHeight: "100vh",
-        background: styles.pageBg,
-        color: styles.text,
-        fontFamily: "\"Montserrat\", \"Segoe UI\", Roboto, Arial, sans-serif",
-        padding: "24px",
-        display: "flex",
-        flexDirection: "column",
-        boxSizing: "border-box",
-      }}
+      className={cx(
+        isV2 && cn.chrome,
+        isV2 && "page5-chrome cabinet-chrome--v2",
+        isV2 && buildCabinetV2SceneClasses(theme === "dark"),
+        isV2 && "page5-v2__root",
+        isV2 && useMobileNav && dockItems.length > 0 && "page5-chrome--with-dock",
+        isV2 && useMobileNav && "cabinet-chrome--mobile-nav"
+      )}
+      data-cabinet-theme={isV2 ? theme : undefined}
+      style={
+        isV2
+          ? undefined
+          : {
+              minHeight: "100vh",
+              background: styles.pageBg,
+              color: styles.text,
+              fontFamily: "var(--font-ui)",
+              padding: "24px",
+              display: "flex",
+              flexDirection: "column",
+              boxSizing: "border-box",
+            }
+      }
     >
+      {isV2 ? (
+        <div className={cx(CABINET_V2_SHELL.layout, useMobileNav && "cabinet-v2-layout--mobile-nav")}>
+          {!useMobileNav ? (
+            <CabinetSoftSidebar groups={railGroups} roleLabel={associationRoleLabel} />
+          ) : null}
+          <div className={CABINET_V2_SHELL.body}>
+            <header className={cx(cn.header, CABINET_V2_SHELL.topbar)}>
+              <div className="cabinet-v2-topbar__brand">
+                <h1 className="cabinet-v2-topbar__title">{cabinetTitle}</h1>
+                <p className="cabinet-v2-topbar__meta">{cabinetMeta}</p>
+              </div>
+              <div className="cabinet-v2-topbar__actions">
+                {shouldShowReturnToAdminDashboard() ? (
+                  <button
+                    type="button"
+                    onClick={goToAdminCabinet}
+                    className="page5-v2__admin-back-btn"
+                  >
+                    ← Админ
+                  </button>
+                ) : null}
+                <CabinetV2SearchField
+                  value={search}
+                  onChange={(event) => handleSearchChange(event.target.value)}
+                />
+                <CabinetSoftToolbar
+                  theme={theme}
+                  onThemeToggle={handleSetTheme}
+                  onMessenger={handleToolbarMessenger}
+                  messengerUnread={messengerHasUnread && cabinetSection !== "messenger"}
+                  tbotUnread={tbotNotifyDot && cabinetSection !== "messenger"}
+                  messengerActive={cabinetSection === "messenger"}
+                  messengerLabel={
+                    cabinetSection === "messenger"
+                      ? "Свернуть мессенджер"
+                      : messengerHasUnread
+                        ? "Мессенджер — есть непрочитанные"
+                        : "Мессенджер"
+                  }
+                  avatarEmail={profilePlaque.email.trim().toLowerCase() || undefined}
+                  onProfile={goToProfile}
+                  onLogout={goToRoleSelection}
+                />
+              </div>
+            </header>
+            <div className={cx(CABINET_V2_SHELL.stage, "cabinet-v2-dashboard-stage")}>
+              {isV2DashboardHome ? (
+                <>
+                  <AssociationCabinetDashboardV2
+                    basePath={basePath}
+                    badgeTitle={associationCopy.badgeTitle}
+                    introParagraph={associationCopy.introParagraph}
+                    filteredCards={filteredCards}
+                    upcomingEvents={upcomingPanelEvents}
+                    calendarEvents={calendarEvents}
+                    onCalendarEventsChange={setCalendarEvents}
+                    cn={cn}
+                    isDark={isDark}
+                    isProforientationRoute={isProforientationRoute}
+                    leaveProforientationPath={leaveProforientationPath}
+                    setCabinetSection={setCabinetSection}
+                    sidebarTooltipPreset={sidebarTooltipPreset}
+                    normalizedSearch={normalizedSearch}
+                  />
+                </>
+              ) : cabinetSection === "events" ? (
+                <main className="page5-v2__main-region">
+                  <Page5EventsView styles={styles} isDark={isDark} events={calendarEvents} onEventsChange={setCalendarEvents} />
+                </main>
+              ) : cabinetSection === "messenger" ? (
+                <main className={cx(cn.messenger, "page5-v2__main-region")}>
+                  <Page5MessengerView key={messengerMountKey} styles={styles} isDark={isDark} cabinetPath={location.pathname} />
+                </main>
+              ) : isIncomingDocumentsRoute ? (
+                <main className="page5-v2__main-region">
+                  <AssociationIncomingDocumentsView styles={styles} association={variant === "ado" ? "ado" : "rador"} layoutStyles={proforientationLayoutStyles} basePath={basePath} isV2 />
+                </main>
+              ) : isAssociationDocumentsMain ? (
+                <main className="page5-v2__main-region">
+                  <AssociationDocumentsView styles={styles} association={variant === "ado" ? "ado" : "rador"} layoutStyles={proforientationLayoutStyles} incomingDocumentsPath={`${basePath}/documents/incoming`} isDark={isDark} isV2 />
+                </main>
+              ) : isTeamsRoute ? (
+                <main className="page5-v2__main-region page5-v2__main-region--flush-top">
+                  <AssociationStudentTeamsView styles={styles} association={variant === "ado" ? "ado" : "rador"} layoutStyles={proforientationLayoutStyles} isV2 />
+                </main>
+              ) : isFormsRoute ? (
+                <main className="page5-v2__main-region">
+                  <RadorFormsHub layoutStyles={proforientationLayoutStyles} />
+                </main>
+              ) : isProforientationRoute ? (
+                <main className="page5-v2__main-region page5-v2__main-region--flush-top">
+                  <ProforientationResultsTable styles={styles} layoutStyles={proforientationLayoutStyles} />
+                </main>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : (
       <div
-        style={{
-          maxWidth: 1400,
-          margin: "0 auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: 28,
-          flex: 1,
-          minHeight: 0,
-          width: "100%",
-        }}
+        className="page5-legacy__shell"
+        style={legacyThemeVars}
+        data-cabinet-theme={theme}
       >
-        <header
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr auto 1fr",
-            alignItems: "center",
-            gap: 20,
-            padding: "24px 28px",
-            borderRadius: 32,
-            background: styles.surfaceBg,
-            boxShadow: styles.cardShadow,
-            flexShrink: 0,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+        <header className={cx(cn.header, "page5-legacy__header")}>
+          <div className="page5-legacy__header-left">
             {shouldShowReturnToAdminDashboard() ? (
               <button
                 type="button"
                 onClick={goToAdminCabinet}
-                style={{
-                  border: "1px solid rgba(36, 59, 116, 0.35)",
-                  background: styles.sectionBg,
-                  color: styles.text,
-                  borderRadius: 22,
-                  padding: "8px 14px",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                  boxShadow: styles.insetShadow,
-                  whiteSpace: "nowrap",
-                }}
+                className="page5-legacy__admin-back-btn"
               >
                 ← Кабинет администратора
               </button>
             ) : null}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "8px 12px",
-                borderRadius: 22,
-                background: styles.sectionBg,
-                boxShadow: styles.insetShadow,
-                minWidth: 200,
-                height: 38,
-              }}
-            >
+            <div className={cx(cn.search, "page5-legacy__search")}>
               <img
                 decoding="async"
                 src={ICON_SEARCH}
                 alt="search icon"
-                style={{ width: 18, height: 18 }}
+                className="page5-legacy__search-icon"
               />
               <input
+                className={cx(cn.searchInput, "page5-legacy__search-input")}
                 value={search}
                 onChange={(event) => handleSearchChange(event.target.value)}
                 placeholder="Поиск…"
-                style={{
-                  width: 140,
-                  border: "none",
-                  outline: "none",
-                  background: "transparent",
-                  color: styles.text,
-                  fontSize: 14,
-                  lineHeight: "18px",
-                  height: "100%",
-                }}
               />
             </div>
           </div>
 
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div className="page5-legacy__logo-wrap">
             <img
               decoding="async"
               fetchPriority="high"
               src={APP_LOGO_SRC}
               alt="Логотип"
-              style={{ width: 160, height: 26, objectFit: "contain" }}
+              className="page5-legacy__logo"
             />
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 16 }}>
+          <div className="page5-legacy__header-right">
             <HoverTooltip
               preset={sidebarTooltipPreset}
               isDark={isDark}
               content={
-                <span style={{ whiteSpace: "nowrap" }}>
+                <span className="page5-legacy__tooltip-nowrap">
                   {cabinetSection === "messenger"
                     ? "Свернуть мессенджер"
                     : messengerHasUnread
@@ -620,7 +740,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 </span>
               }
             >
-              <div style={{ position: "relative", display: "inline-flex" }}>
+              <div className="page5-legacy__msgr-wrap">
                 <button
                   type="button"
                   onClick={() => {
@@ -628,20 +748,10 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                     setCabinetSection((prev) => (prev === "messenger" ? "dashboard" : "messenger"));
                   }}
                   aria-label="Мессенджер"
-                  style={{
-                    border: "none",
-                    background: cabinetSection === "messenger" ? (isDark ? "rgba(79, 128, 243, 0.35)" : "rgba(36, 59, 116, 0.92)") : styles.buttonBg,
-                    padding: 12,
-                    borderRadius: "50%",
-                    cursor: "pointer",
-                    boxShadow:
-                      cabinetSection === "messenger"
-                        ? `${styles.insetShadow}, 0 0 0 2px rgba(79, 128, 243, 0.65)`
-                        : styles.insetShadow,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  className={cx(
+                    "page5-legacy__msgr-btn",
+                    cabinetSection === "messenger" && "page5-legacy__msgr-btn--active"
+                  )}
                 >
                   <svg width={22} height={22} viewBox="0 0 24 24" fill="none" aria-hidden>
                     <path
@@ -654,22 +764,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                   </svg>
                 </button>
                 {messengerHasUnread && cabinetSection !== "messenger" ? (
-                  <span
-                    aria-hidden
-                    style={{
-                      position: "absolute",
-                      top: 2,
-                      right: 2,
-                      width: 10,
-                      height: 10,
-                      borderRadius: "50%",
-                      background: "#f87171",
-                      boxShadow: isDark
-                        ? "0 0 0 2px #1c2b45, 0 2px 6px rgba(0,0,0,0.4)"
-                        : "0 0 0 2px #f8fafc, 0 2px 6px rgba(15,23,42,0.2)",
-                      pointerEvents: "none",
-                    }}
-                  />
+                  <span className="page5-legacy__msgr-unread-dot tbot-notify-dot" aria-hidden />
                 ) : null}
               </div>
             </HoverTooltip>
@@ -678,66 +773,28 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 type="button"
                 onClick={() => injectMessengerTestIncoming()}
                 title="Симуляция входящего сообщения. Сверните мессенджер — на иконке появится точка."
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  color: styles.muted,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  textUnderlineOffset: 2,
-                  padding: "4px 0",
-                  fontFamily: "inherit",
-                }}
+                className="page5-legacy__test-btn"
               >
                 Тест: входящее
               </button>
             ) : null}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "8px 10px",
-                borderRadius: 22,
-                background: isDark
-                  ? "linear-gradient(145deg, #1e3a5f 0%, #14263b 52%, #0f1f38 100%)"
-                  : "linear-gradient(145deg, #3d5a9e 0%, #2d4366 50%, #243b74 100%)",
-                boxShadow: isDark
-                  ? "inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(79, 128, 243, 0.22)"
-                  : "inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 22px rgba(36, 59, 116, 0.28), 0 0 0 1px rgba(255,255,255,0.2)",
-              }}
-            >
+            <div className={cx(cn.profileBar, "page5-legacy__profile-bar")}>
               <HoverTooltip
                 preset={sidebarTooltipPreset}
                 isDark={isDark}
-                content={<span style={{ whiteSpace: "nowrap" }}>Светлая или тёмная тема оформления</span>}
+                content={<span className="page5-legacy__tooltip-nowrap">Светлая или тёмная тема оформления</span>}
               >
                 <button
                   type="button"
                   onClick={handleToggleTheme}
                   aria-label="Переключить тему"
-                  style={{
-                    border: "none",
-                    background: isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.12)",
-                    padding: 8,
-                    borderRadius: 12,
-                    cursor: "pointer",
-                    boxShadow: isDark
-                      ? "inset 0 1px 0 rgba(255,255,255,0.18)"
-                      : "inset 0 1px 0 rgba(255,255,255,0.2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
+                  className="page5-legacy__icon-btn"
                 >
                   <img
                     decoding="async"
                     src={ICON_THEME}
                     alt=""
-                    style={{ width: 22, height: 22, display: "block" }}
+                    className="page5-legacy__icon-22"
                   />
                 </button>
               </HoverTooltip>
@@ -745,37 +802,17 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 type="button"
                 onClick={goToProfile}
                 aria-label="Профиль"
-                style={{
-                  flex: 1,
-                  minWidth: 0,
-                  border: "none",
-                  background: "transparent",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "2px 4px",
-                  fontFamily: "inherit",
-                }}
+                className="page5-legacy__profile-trigger"
               >
                 <img
                   decoding="async"
                   fetchPriority="high"
                   src={ICON_AVATAR}
                   alt=""
-                  width={30}
-                  height={30}
-                  style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
+                  className="page5-legacy__avatar-30"
                 />
                 <span
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: "#f8fafc",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
+                  className="page5-legacy__profile-name"
                 >
                   {plaqueName}
                 </span>
@@ -783,92 +820,47 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                   decoding="async"
                   src={ICON_PROFILE_CHEVRON}
                   alt=""
-                  width={16}
-                  height={16}
-                  style={{ flexShrink: 0, display: "block" }}
+                  className="page5-legacy__icon-16"
                 />
               </button>
               <HoverTooltip
                 preset={sidebarTooltipPreset}
                 isDark={isDark}
-                content={<span style={{ whiteSpace: "nowrap" }}>Выйти / сменить роль</span>}
+                content={<span className="page5-legacy__tooltip-nowrap">Выйти / сменить роль</span>}
               >
                 <button
                   type="button"
                   onClick={goToRoleSelection}
                   aria-label="Выйти"
-                  style={{
-                    border: "none",
-                    background: isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.12)",
-                    padding: 8,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    borderRadius: 12,
-                    boxShadow: isDark
-                      ? "inset 0 1px 0 rgba(255,255,255,0.18)"
-                      : "inset 0 1px 0 rgba(255,255,255,0.12)",
-                  }}
+                  className="page5-legacy__icon-btn"
                 >
-                  <img decoding="async" src={ICON_LOGOUT} alt="" width={22} height={22} />
+                  <img decoding="async" src={ICON_LOGOUT} alt="" className="page5-legacy__icon-22" />
                 </button>
               </HoverTooltip>
             </div>
           </div>
         </header>
 
+        {!isV2 ? (
         <nav
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 10,
-            padding: "4px 0 0",
-          }}
+          className="page5-legacy__nav"
           aria-label="Разделы кабинета"
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              alignItems: "center",
-              gap: 12,
-            }}
-          >
+          <div className="page5-legacy__nav-row">
             <button
               type="button"
               onClick={() => {
                 navigate(basePath);
                 setCabinetSection("dashboard");
               }}
-              style={{
-                border: "none",
-                cursor: "pointer",
-                borderRadius: 22,
-                padding: "14px 26px",
-                fontWeight: 700,
-                fontSize: 15,
-                fontFamily: "inherit",
-                ...(!isProforientationRoute &&
-                !isDocumentsSectionRoute &&
-                !isTeamsRoute &&
-                cabinetSection === "dashboard"
-                  ? {
-                      background:
-                        "linear-gradient(138deg, rgba(36, 59, 116, 0.94) 0%, rgba(26, 42, 82, 0.92) 100%)",
-                      boxShadow:
-                        "0 12px 24px rgba(20, 32, 62, 0.28), inset 0 1px 0 rgba(255,255,255,0.24)",
-                      color: "#f8fafc",
-                    }
-                  : {
-                      background: styles.sectionBg,
-                      boxShadow: styles.cardShadow,
-                      color: styles.text,
-                    }),
-              }}
+              className={cx(
+                "page5-legacy__nav-btn",
+                !isProforientationRoute &&
+                  !isDocumentsSectionRoute &&
+                  !isTeamsRoute &&
+                  cabinetSection === "dashboard" &&
+                  "page5-legacy__nav-btn--active"
+              )}
             >
               Главная
             </button>
@@ -878,36 +870,19 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                 leaveProforientationPath();
                 setCabinetSection("events");
               }}
-              style={{
-                border: "none",
-                cursor: "pointer",
-                borderRadius: 22,
-                padding: "14px 26px",
-                fontWeight: 700,
-                fontSize: 15,
-                fontFamily: "inherit",
-                ...(cabinetSection === "events"
-                  ? {
-                      background:
-                        "linear-gradient(138deg, rgba(36, 59, 116, 0.94) 0%, rgba(26, 42, 82, 0.92) 100%)",
-                      boxShadow:
-                        "0 12px 24px rgba(20, 32, 62, 0.28), inset 0 1px 0 rgba(255,255,255,0.24)",
-                      color: "#f8fafc",
-                    }
-                  : {
-                      background: styles.sectionBg,
-                      boxShadow: styles.cardShadow,
-                      color: styles.text,
-                    }),
-              }}
+              className={cx(
+                "page5-legacy__nav-btn",
+                cabinetSection === "events" && "page5-legacy__nav-btn--active"
+              )}
             >
               Мероприятия
             </button>
           </div>
         </nav>
+        ) : null}
 
-        {cabinetSection === "events" ? (
-          <main style={mainRegion}>
+        {!isV2 && cabinetSection === "events" ? (
+          <main className="page5-legacy__main-region">
             <Page5EventsView
               styles={styles}
               isDark={isDark}
@@ -916,7 +891,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
             />
           </main>
         ) : cabinetSection === "messenger" ? (
-          <main style={mainRegion}>
+          <main className="page5-legacy__main-region">
             <Page5MessengerView
               key={messengerMountKey}
               styles={styles}
@@ -925,15 +900,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
             />
           </main>
         ) : isIncomingDocumentsRoute ? (
-          <main
-            style={{
-              ...mainRegion,
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-              minHeight: 0,
-            }}
-          >
+          <main className="page5-legacy__main-region page5-legacy__main-region--stack">
             <AssociationIncomingDocumentsView
               styles={styles}
               association={variant === "ado" ? "ado" : "rador"}
@@ -942,15 +909,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
             />
           </main>
         ) : isAssociationDocumentsMain ? (
-          <main
-            style={{
-              ...mainRegion,
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-              minHeight: 0,
-            }}
-          >
+          <main className="page5-legacy__main-region page5-legacy__main-region--stack">
             <AssociationDocumentsView
               styles={styles}
               association={variant === "ado" ? "ado" : "rador"}
@@ -960,125 +919,45 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
             />
           </main>
         ) : isTeamsRoute ? (
-          <main
-            style={{
-              ...mainRegion,
-              marginTop: -14,
-              paddingTop: 0,
-            }}
-          >
+          <main className="page5-legacy__main-region page5-legacy__main-region--flush-top">
             <AssociationStudentTeamsView
               styles={styles}
               association={variant === "ado" ? "ado" : "rador"}
               layoutStyles={proforientationLayoutStyles}
             />
           </main>
+        ) : isFormsRoute ? (
+          <main className="page5-legacy__main-region">
+            <RadorFormsHub layoutStyles={proforientationLayoutStyles} />
+          </main>
         ) : isProforientationRoute ? (
-          <main
-            style={{
-              ...mainRegion,
-              marginTop: -14,
-              paddingTop: 0,
-            }}
-          >
+          <main className="page5-legacy__main-region page5-legacy__main-region--flush-top">
             <ProforientationResultsTable styles={styles} layoutStyles={proforientationLayoutStyles} />
           </main>
         ) : (
         <>
-        <main
-          style={{
-            ...mainRegion,
-            display: "grid",
-            gridTemplateColumns: "1.7fr 0.95fr",
-            gap: 28,
-            alignContent: "start",
-          }}
-        >
-          <section
-            style={{
-              borderRadius: 32,
-              background: styles.sectionBg,
-              padding: 32,
-              boxShadow: styles.cardShadow,
-              display: "flex",
-              flexDirection: "column",
-              gap: 28,
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "stretch", gap: 24, flexWrap: "wrap" }}>
-              <div style={{ maxWidth: 560, flex: "1 1 460px" }}>
-                <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", marginBottom: 14, color: styles.muted }}>
-                  {associationCopy.badgeTitle}
-                </div>
-                <h1 style={{ margin: 0, fontSize: 42, lineHeight: 1.05, fontWeight: 700, color: styles.text }}>
+        <main className="page5-legacy__main-grid">
+          <section className="page5-legacy__hero-panel">
+            <div className="page5-legacy__hero-top">
+              <div className="page5-legacy__hero-copy">
+                <div className="page5-legacy__hero-kicker">{associationCopy.badgeTitle}</div>
+                <h1 className="page5-legacy__hero-title">
                   Запросы, свод информации и связь со всеми участниками
                 </h1>
-                <p style={{ marginTop: 18, maxWidth: 680, fontSize: 16, lineHeight: 1.75, color: styles.muted }}>
-                  {associationCopy.introParagraph}
-                </p>
+                <p className="page5-legacy__hero-lead">{associationCopy.introParagraph}</p>
               </div>
 
-              <div
-                style={{
-                  minWidth: 560,
-                  flex: "2 1 760px",
-                  padding: 24,
-                  borderRadius: 32,
-                  background: styles.cardBg,
-                  color: styles.text,
-                  boxShadow: styles.insetShadow,
-                  display: "grid",
-                  gap: 16,
-                  alignContent: "start",
-                }}
-              >
-                <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 12, color: styles.muted }}>
-                  Статус кабинета
-                </div>
-                <div style={{ fontSize: 14, lineHeight: 1.7, color: styles.muted }}>
+              <div className="page5-legacy__status-panel">
+                <div className="page5-legacy__status-kicker">Статус кабинета</div>
+                <div className="page5-legacy__status-copy">
                   Прозрачный обзор работы подрядчиков, статистика ответов и статус документов.
                 </div>
-                <div
-                  style={{
-                    borderRadius: 24,
-                    padding: 22,
-                    background: styles.sectionBg,
-                    boxShadow: styles.cardShadow,
-                    border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(255,255,255,0.88)",
-                  }}
-                >
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 18, alignItems: "stretch" }}>
-                    {projectMetrics.map((metric) => (
-                      <div
-                        key={metric.title}
-                        style={{
-                          minHeight: 108,
-                          display: "grid",
-                          gridTemplateRows: "42px 1fr",
-                          alignContent: "start",
-                          justifyItems: "center",
-                          gap: 8,
-                          textAlign: "center",
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontSize: 10,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.7px",
-                            color: styles.muted,
-                            lineHeight: 1.2,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            width: "100%",
-                          }}
-                        >
-                          {metric.title}
-                        </div>
-                        <div style={{ fontSize: 42, fontWeight: 700, color: styles.text, lineHeight: 1, alignSelf: "start", width: "100%" }}>
-                          {metric.value}
-                        </div>
+                <div className="page5-legacy__metrics-wrap">
+                  <div className="page5-legacy__metrics">
+                    {associationKpiMetrics.map((metric) => (
+                      <div key={metric.id} className="page5-legacy__metric">
+                        <div className="page5-legacy__metric-label">{metric.label}</div>
+                        <div className="page5-legacy__metric-value">{metric.value}</div>
                       </div>
                     ))}
                   </div>
@@ -1086,79 +965,27 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
               </div>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                gap: 26,
-              }}
-            >
+            <div className="page5-legacy__cards-grid">
               {filteredCards.map((card) => (
                 <div
                   key={card.title}
-                  style={{
-                    ...neoDashboardCards.cardRaised(),
-                  }}
+                  className="page5-legacy__section-card"
+                  style={legacyCardAccentStyle(card.accent)}
                 >
-                  <div
-                    style={neoDashboardCards.accentBar(card.accent, card.accentSoft)}
-                    aria-hidden
-                  />
-                  <div style={{ position: "relative", zIndex: 1 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: 14,
-                        marginBottom: 14,
-                      }}
-                    >
-                      <span style={neoDashboardCards.tagChip}>{card.tag}</span>
-                      <div style={neoDashboardCards.iconWell(card.accent)}>{card.icon}</div>
+                  <div className="page5-legacy__card-accent" aria-hidden />
+                  <div className="page5-legacy__card-body">
+                    <div className="page5-legacy__card-head">
+                      <span className="page5-legacy__card-tag">{card.tag}</span>
+                      <div className="page5-legacy__card-icon-well">{card.icon}</div>
                     </div>
-                    <div
-                      style={{
-                        fontSize: "clamp(19px, 1.35vw, 25px)",
-                        fontWeight: 700,
-                        lineHeight: 1.18,
-                        marginBottom: 8,
-                        color: isDark ? "#f8fbff" : "rgba(42, 50, 73, 0.94)",
-                        letterSpacing: "-0.02em",
-                        textShadow: isDark
-                          ? "0 1px 0 rgba(12,18,34,0.26)"
-                          : "0 1px 0 rgba(255,255,255,0.32)",
-                      }}
-                    >
-                      {card.title}
-                    </div>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize: 13,
-                        lineHeight: 1.5,
-                        color: isDark ? "rgba(231, 237, 250, 0.88)" : "rgba(68, 78, 105, 0.88)",
-                      }}
-                    >
-                      {card.description}
-                    </p>
+                    <div className="page5-legacy__card-title">{card.title}</div>
+                    <p className="page5-legacy__card-desc">{card.description}</p>
                   </div>
 
-                  <div
-                    style={{
-                      position: "relative",
-                      zIndex: 1,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-start",
-                      gap: 14,
-                      marginTop: 22,
-                      flexWrap: "wrap",
-                    }}
-                  >
+                  <div className="page5-legacy__card-footer">
                     <button
                       type="button"
-                      className="softtouch-plaque"
+                      className="softtouch-plaque page5-legacy__card-open"
                       onClick={() => {
                         leaveProforientationPath();
                         if (card.title === "Мероприятия") {
@@ -1167,9 +994,10 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                           navigate(`${basePath}/teams`);
                         } else if (card.title === "Документы") {
                           navigate(`${basePath}/documents`);
+                        } else if (card.title === "Таблицы подрядчиков") {
+                          navigate(`${basePath}/forms`);
                         }
                       }}
-                      style={neoDashboardCards.openBtn}
                     >
                       Открыть
                     </button>
@@ -1180,74 +1008,35 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
 
             <button
               type="button"
+              className={cx(
+                "page5-legacy__proforientation-btn",
+                isProforientationRoute && "page5-legacy__proforientation-btn--active"
+              )}
               onClick={() => navigate(`${basePath}/proforientation`)}
-              style={{
-                width: "100%",
-                marginTop: 8,
-                border: isProforientationRoute ? "2px solid #243b74" : "none",
-                borderRadius: 28,
-                padding: "18px 22px",
-                cursor: "pointer",
-                fontFamily: "inherit",
-                textAlign: "left",
-                background: isProforientationRoute ? styles.cardBg : styles.sectionBg,
-                boxShadow: isProforientationRoute ? styles.insetShadow : styles.cardShadow,
-                boxSizing: "border-box",
-              }}
             >
-              <div
-                style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: styles.muted, marginBottom: 4 }}
-              >
-                ПРОФОРИЕНТАЦИЯ
-              </div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: styles.text }}>Результаты теста</div>
-              <div style={{ fontSize: 13, color: styles.muted, marginTop: 6, lineHeight: 1.4 }}>
+              <div className="page5-legacy__proforientation-kicker">ПРОФОРИЕНТАЦИЯ</div>
+              <div className="page5-legacy__proforientation-title">Результаты теста</div>
+              <div className="page5-legacy__proforientation-desc">
                 Школьники и студенты — открыть отчёт →
               </div>
             </button>
           </section>
 
-          <aside style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-            <div style={{ padding: 28, borderRadius: 32, background: styles.sectionBg, boxShadow: styles.cardShadow }}>
-              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 14, color: styles.text }}>
-                Приволжский федеральный округ
+          <aside className="page5-legacy__aside">
+            <div className="page5-legacy__aside-card">
+              <div className="page5-legacy__aside-title">Приволжский федеральный округ</div>
+              <div className="page5-legacy__aside-meta">Ответил на 3 из 4 запросов</div>
+              <div className="page5-legacy__progress-track">
+                <div className="page5-legacy__progress-fill" />
               </div>
-              <div style={{ fontSize: 14, color: styles.muted, marginBottom: 16 }}>
-                Ответил на 3 из 4 запросов
-              </div>
-              <div style={{ height: 10, borderRadius: 999, background: isDark ? "#102140" : "#eaf1ff" }}>
-                <div style={{ width: "84%", height: "100%", borderRadius: 999, background: "#4f80f3" }} />
-              </div>
-              <div style={{ fontSize: 12, letterSpacing: "1px", textTransform: "uppercase", color: styles.muted, marginTop: 12 }}>
-                84% исполнения
-              </div>
+              <div className="page5-legacy__aside-kpi">84% исполнения</div>
             </div>
 
-            <div
-              style={{
-                padding: 28,
-                borderRadius: 36,
-                background: styles.cardBg,
-                boxShadow: styles.cardShadow,
-                border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(255,255,255,0.8)",
-              }}
-            >
-              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: styles.text }}>
-                Ближайшие мероприятия
-              </div>
-              <div style={{ display: "grid", gap: 14 }}>
+            <div className="page5-legacy__events-panel">
+              <div className="page5-legacy__events-title">Ближайшие мероприятия</div>
+              <div className="page5-legacy__events-list">
                 {upcomingPanelEvents.length === 0 ? (
-                  <div
-                    style={{
-                      padding: 18,
-                      borderRadius: 24,
-                      background: styles.sectionBg,
-                      color: styles.muted,
-                      boxShadow: styles.insetShadow,
-                      fontSize: 13,
-                      lineHeight: 1.5,
-                    }}
-                  >
+                  <div className="page5-legacy__events-empty">
                     Созданных мероприятий пока нет. Добавьте их во вкладке «Мероприятия» — они появятся здесь.
                   </div>
                 ) : (
@@ -1258,43 +1047,21 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                       year: "numeric",
                     });
                     return (
-                      <div
-                        key={ev.id}
-                        style={{
-                          display: "flex",
-                          gap: 10,
-                          alignItems: "flex-start",
-                          padding: 18,
-                          borderRadius: 24,
-                          background: styles.sectionBg,
-                          color: styles.text,
-                          boxShadow: styles.insetShadow,
-                        }}
-                      >
+                      <div key={ev.id} className="page5-legacy__event-row">
                         <button
                           type="button"
                           onClick={() => {
                             leaveProforientationPath();
                             setCabinetSection("events");
                           }}
-                          style={{
-                            flex: 1,
-                            minWidth: 0,
-                            border: "none",
-                            background: "transparent",
-                            cursor: "pointer",
-                            textAlign: "left",
-                            fontFamily: "inherit",
-                            color: "inherit",
-                            padding: 0,
-                          }}
+                          className="page5-legacy__event-link"
                         >
-                          <div style={{ fontSize: 16, fontWeight: 700 }}>{ev.title}</div>
-                          <div style={{ fontSize: 12, marginTop: 6, color: styles.muted, fontWeight: 600 }}>
+                          <div className="page5-legacy__event-title">{ev.title}</div>
+                          <div className="page5-legacy__event-meta">
                             {dateLabel} · {ev.time} · {AUDIENCE_LABELS[ev.audience]}
                           </div>
                           {ev.description ? (
-                            <div style={{ fontSize: 13, marginTop: 8, color: styles.muted, lineHeight: 1.45 }}>
+                            <div className="page5-legacy__event-desc">
                               {ev.description.length > 120 ? `${ev.description.slice(0, 120)}…` : ev.description}
                             </div>
                           ) : null}
@@ -1302,7 +1069,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                         <HoverTooltip
                           preset={sidebarTooltipPreset}
                           isDark={isDark}
-                          content={<span style={{ whiteSpace: "nowrap" }}>Отменить мероприятие</span>}
+                          content={<span className="page5-legacy__tooltip-nowrap">Отменить мероприятие</span>}
                         >
                           <button
                             type="button"
@@ -1314,22 +1081,7 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
                                 )
                               )
                             }
-                            style={{
-                              flexShrink: 0,
-                              border: "none",
-                              cursor: "pointer",
-                              borderRadius: 12,
-                              padding: "6px 10px",
-                              fontSize: 18,
-                              lineHeight: 1,
-                              fontWeight: 400,
-                              color: styles.muted,
-                              background: isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
-                              fontFamily: "system-ui, Segoe UI, Roboto, sans-serif",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
+                            className="page5-legacy__event-cancel"
                           >
                             ×
                           </button>
@@ -1345,7 +1097,11 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
         </>
         )}
       </div>
+      )}
       <FloatingNotes isDark={isDark} />
+      {isV2 && useMobileNav && dockItems.length > 0 ? (
+        <CabinetQuickDock items={dockItems} />
+      ) : null}
       <AiChatBubble isDark={isDark} />
     </div>
   );

@@ -1,6 +1,9 @@
 import { FormEvent, useCallback, useState } from "react";
-import { getBuiltinAdminHints, loginAdmin } from "../utils/adminAuth";
+import { loginAdmin } from "../utils/adminAuth";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { usePortalDesign } from "../design-system/usePortalDesign";
 import styles from "./AdminPanel.module.css";
+import glass from "./AdminPanelGlass.module.css";
 
 type Props = {
   onSuccess: () => void;
@@ -18,8 +21,6 @@ export default function AdminLoginPanel({
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const hints = getBuiltinAdminHints();
 
   const onSubmit = useCallback(
     async (e: FormEvent) => {
@@ -42,39 +43,37 @@ export default function AdminLoginPanel({
     [email, onSuccess, password]
   );
 
+  const glassEmbed = useParentPageBackground;
+  const isV2 = usePortalDesign() === "v2";
+
   return (
     <div
-      className={`${styles.cabinetPage} ${styles.themeLogin} ${useParentPageBackground ? styles.cabinetPageEmbed : ""}`}
+      className={cx(
+        styles.cabinetPage,
+        glassEmbed ? glass.themeGlass : styles.themeLogin,
+        useParentPageBackground && styles.cabinetPageEmbed,
+        useParentPageBackground && glass.themeGlassMap,
+        isV2 && glassEmbed && "admin-login-v2"
+      )}
     >
       <div
         className={`${styles.cabinetBg} ${useParentPageBackground ? styles.cabinetBgTransparent : ""}`}
         aria-hidden
       />
 
-      <div className={styles.loginShell}>
-        <div className={`${styles.neoCard} ${styles.loginCard}`}>
+      <div className={glassEmbed ? glass.glassLoginShell : styles.loginShell}>
+        <div
+          className={
+            glassEmbed
+              ? glass.glassLoginCard
+              : `${styles.neoCard} ${styles.loginCard}`
+          }
+        >
           <p className={styles.cabinetKicker}>Администраторам</p>
           <h2 className={styles.loginTitle}>Вход в личный кабинет</h2>
           <p className={styles.loginLead}>
             Добро пожаловать. Сессия действует до закрытия вкладки.
           </p>
-
-          <div className={styles.hintNeo}>
-            <span className={styles.hintNeoLabel}>Тестовые учётные записи</span>
-            <ul className={styles.hintList}>
-              {hints.map((h) => (
-                <li key={h.email}>
-                  <strong>{h.name}</strong>
-                  <span className={styles.hintCreds}>
-                    {h.email} · {h.password}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <span className={styles.hintNeoFoot}>
-              После входа рекомендуется сменить пароль в настройках кабинета.
-            </span>
-          </div>
 
           <form className={styles.form} onSubmit={onSubmit}>
             <label className={styles.label}>
@@ -85,7 +84,7 @@ export default function AdminLoginPanel({
                 autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ksenia@trassa.local"
+                placeholder="например@mail.ru"
                 required
               />
             </label>

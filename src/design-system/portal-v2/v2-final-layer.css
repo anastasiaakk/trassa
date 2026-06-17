@@ -1,0 +1,108 @@
+/**
+ * Финальный слой v2 — снимает конфликты legacy-enforce / legacy-modules.
+ * Импортируется последним.
+ */
+
+/* Page1: светлая сцена (не тёмный enforce) */
+html[data-portal-design="v2"] body.route-page1,
+html[data-portal-design="v2"] body.route-page1 .app-shell__bgFill {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+  color: var(--pv2-ink);
+}
+
+/*
+ * Кабинеты и профиль — убираем legacy neo-«рамку» из App.css:
+ * #root padding 14px + тёмный rim html/body + скругление .app-shell.
+ * (На page1/page2/page3 это уже снято; для route-cabinet — нет.)
+ */
+html[data-portal-design="v2"].route-cabinet,
+html[data-portal-design="v2"] body.route-cabinet,
+html[data-portal-design="v2"].route-profile,
+html[data-portal-design="v2"] body.route-profile {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"].route-cabinet,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] body.route-cabinet,
+html[data-portal-design="v2"][data-cabinet-theme="dark"].route-profile,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] body.route-profile {
+  background: var(--pv2-scene-dark) !important;
+  background-color: var(--pv2-bg-base) !important;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] body.route-cabinet #root,
+html[data-portal-design="v2"] body.route-profile #root {
+  padding: 0 !important;
+  box-shadow: none !important;
+  border: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+html[data-portal-design="v2"] body.route-cabinet .app-shell,
+html[data-portal-design="v2"] body.route-profile .app-shell {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: auto;
+  overflow: visible;
+}
+
+html[data-portal-design="v2"] body.route-cabinet .app-shell__main,
+html[data-portal-design="v2"] body.route-profile .app-shell__main {
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+html[data-portal-design="v2"] body.route-cabinet .app-shell__bgFill,
+html[data-portal-design="v2"] body.route-profile .app-shell__bgFill {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] body.route-cabinet .app-shell__bgFill,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] body.route-profile .app-shell__bgFill {
+  background: var(--pv2-scene-dark) !important;
+  background-color: var(--pv2-bg-base) !important;
+}
+
+/* Page2 overview v2 — стили в page2-glass-v2.css */
+
+/* Entry splash: светлый glass (перебивает public-v2.css) */
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__glass-panel {
+  background: var(--pv2-glass-l1-bg) !important;
+  border: 1px solid var(--pv2-glass-l1-border) !important;
+  box-shadow: var(--pv2-glass-l1-shadow) !important;
+}
+
+/* Page2 ambient — видео/линии v2: page2-ambient-v2.css */
+
+/* Skip focus для клавиатуры на карте */
+html[data-portal-design="v2"] .page2-v2-scene a:focus-visible,
+html[data-portal-design="v2"] .page2-v2-scene button:focus-visible {
+  outline: 2px solid var(--pv2-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-portal-design="v2"] .page2-v2__map-panel,
+  html[data-portal-design="v2"] .page2-v2__subject-panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  html[data-portal-design="v2"] .page2-v2__map-panel,
+  html[data-portal-design="v2"] .page2-v2__subject-panel,
+  html[data-portal-design="v2"] body.route-page2 [class*="headerInner"] {
+    border-width: 2px;
+  }
+}

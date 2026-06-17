@@ -1,0 +1,176 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.intro {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.groupTitle {
+  margin: 0 0 8px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.colorInput {
+  width: 44px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.textInput {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+  font-size: 0.8125rem;
+  font-family: ui-monospace, monospace;
+}
+
+.previewWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.previewTitle {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.previewScene {
+  padding: 20px;
+  border-radius: 16px;
+  background: var(--pv2-white);
+  border: 1px solid rgba(var(--pv2-r-primary), 0.12);
+}
+
+.previewRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.previewBtns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Единая высота и центрирование подписи (как у Chip) */
+.previewScene[data-portal-design="v2"] :global(.pv2-btn),
+.previewScene[data-portal-design="v2"] :global(.pv2-table__pill) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 16px;
+  line-height: 1.2;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.previewScene[data-portal-design="v2"] :global(.pv2-table__pill) {
+  padding: 8px 14px;
+}
+
+.aiBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aiHistory {
+  max-height: 200px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.aiMsg {
+  margin: 0 0 10px;
+  white-space: pre-wrap;
+}
+
+.aiMsgUser {
+  opacity: 0.9;
+}
+
+.aiMsgBot {
+  opacity: 0.75;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.msgOk {
+  margin: 0;
+  font-size: 0.8125rem;
+  opacity: 0.85;
+}
+
+.msgErr {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #ffb4b4;
+}

@@ -1,5 +1,6 @@
 export const PROFILE_SETTINGS_KEY = "trassa-profile-settings-v1";
 export const CABINET_THEME_KEY = "trassa-cabinet-theme";
+export const PAGE4_FINTECH_DARK_MIGRATED_KEY = "trassa-page4-fintech-dark-v1";
 
 export type ProfileSettingsData = {
   firstName: string;
@@ -13,6 +14,8 @@ export type ProfileSettingsData = {
   phone: string;
   notifyEmail: boolean;
   notifyPush: boolean;
+  /** Спецификация (подгруппа) — студент и подрядчик; задаётся при регистрации или в кабинете студента */
+  specializationId: string;
 };
 
 const defaults: ProfileSettingsData = {
@@ -25,6 +28,7 @@ const defaults: ProfileSettingsData = {
   phone: "",
   notifyEmail: true,
   notifyPush: false,
+  specializationId: "",
 };
 
 export function loadProfileSettings(): ProfileSettingsData {
@@ -43,16 +47,52 @@ export function saveProfileSettings(data: ProfileSettingsData) {
 
 export type CabinetTheme = "light" | "dark";
 
-export function loadCabinetTheme(): CabinetTheme {
+export const CABINET_UNIFIED_LIGHT_KEY = "trassa-cabinet-unified-light-v1";
+
+export function migrateContractorToFintechDark(): boolean {
+  try {
+    if (localStorage.getItem(PAGE4_FINTECH_DARK_MIGRATED_KEY)) return false;
+    localStorage.setItem(PAGE4_FINTECH_DARK_MIGRATED_KEY, "1");
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/** Сбрасывает автоматическую тёмную тему подрядчика (legacy) на общую светлую. */
+export function reconcileUnifiedCabinetLight(): boolean {
+  try {
+    if (localStorage.getItem(CABINET_UNIFIED_LIGHT_KEY)) return false;
+    localStorage.setItem(CABINET_UNIFIED_LIGHT_KEY, "1");
+    const hadPage4AutoDark = localStorage.getItem(PAGE4_FINTECH_DARK_MIGRATED_KEY);
+    if (hadPage4AutoDark && localStorage.getItem(CABINET_THEME_KEY) === "dark") {
+      localStorage.setItem(CABINET_THEME_KEY, "light");
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/** Единая светлая тема по умолчанию для всех кабинетов */
+export function defaultCabinetThemeForPath(_cabinetPath?: string): CabinetTheme {
+  return "light";
+}
+
+export function loadCabinetTheme(cabinetPath?: string): CabinetTheme {
   try {
     const s = localStorage.getItem(CABINET_THEME_KEY);
     if (s === "dark" || s === "light") return s;
   } catch {
     /* ignore */
   }
-  return "light";
+  return defaultCabinetThemeForPath(cabinetPath);
 }
+
+export const CABINET_THEME_CHANGED = "trassa-cabinet-theme-changed";
 
 export function saveCabinetTheme(theme: CabinetTheme) {
   localStorage.setItem(CABINET_THEME_KEY, theme);
+  window.dispatchEvent(new Event(CABINET_THEME_CHANGED));
 }

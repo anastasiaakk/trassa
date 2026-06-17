@@ -1,8 +1,10 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { fetchTbotStatus } from "../api/tbotApi";
 import { getAssistantReply } from "../utils/aiAssistantReply";
 import {
   buildMessengerNotifyText,
   collectAllIncomingMessageIds,
+  dispatchTbotNotifyDot,
   findNewIncomingNotAnnounced,
   loadAnnouncedIdsFromSession,
   playMessengerIncomingSound,
@@ -10,6 +12,7 @@ import {
   TBOT_MSGR_ANNOUNCED_IDS_KEY,
   tryOsPushNotify,
 } from "../utils/messengerTbotNotify";
+import { hasMessengerInboxUnread } from "../utils/messengerUnread";
 import {
   loadTBotAppearance,
   saveTBotAppearance,
@@ -19,6 +22,9 @@ import {
 import { getTBotMoodLabel, TBotMascot, type TBotMood } from "./TBotMascot";
 import { BattleshipMiniGame } from "./BattleshipMiniGame";
 import { getHoverTooltipPreset, HoverTooltip } from "./HoverTooltip";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { usePortalDesign } from "../design-system/usePortalDesign";
+import { CABINET_AI_CHAT_OPEN } from "./CabinetSoftToolbar";
 
 const STORAGE_KEY = "trassa-ai-bubble-pos";
 const PANEL_POS_KEY = "trassa-ai-panel-pos";
@@ -106,6 +112,7 @@ function formatMsgTime(ts: number) {
 }
 
 export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
+  const isV2 = usePortalDesign() === "v2";
   const [pos, setPos] = useState<{ left: number; top: number }>(() => {
     if (typeof window === "undefined") return { left: 100, top: 100 };
     const saved = loadPos();
@@ -122,6 +129,23 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
   });
 
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const onOpenRequest = () => setOpen(true);
+    window.addEventListener(CABINET_AI_CHAT_OPEN, onOpenRequest);
+    return () => window.removeEventListener(CABINET_AI_CHAT_OPEN, onOpenRequest);
+  }, []);
+
+  useEffect(() => {
+    if (!open || typeof window === "undefined" || window.innerWidth > 520) return;
+    const panelW = Math.min(PANEL_W, window.innerWidth - 20);
+    const panelH = Math.min(PANEL_H, window.innerHeight - 72);
+    setPanelPos({
+      left: Math.max(MARGIN, (window.innerWidth - panelW) / 2),
+      top: Math.max(MARGIN + 36, (window.innerHeight - panelH) / 2),
+    });
+  }, [open]);
+
   const [dragging, setDragging] = useState(false);
   const now = Date.now();
   const [messages, setMessages] = useState<Msg[]>([
@@ -130,9 +154,10 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
       role: "ai",
       ts: now,
       text:
-        "Бип-буп! Я Т-бот — помогу по кабинету ТрассА и просто пообщаюсь по-человечески: могу познакомиться поближе, поддержать и послушать. Расскажите, как ваш день и что на душе — или спросите, что умею.",
+        "Привет! Я Т-бот — ИИ-помощник ТрассА. Подскажу по кабинету: мероприятия, мессенджер, таблицы, профиль, документы. Спросите «где найти…» или «как заполнить…» — отвечу по шагам.",
     },
   ]);
+  const [tbotAiLabel, setTbotAiLabel] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
   const [tbotMood, setTbotMood] = useState<TBotMood>("neutral");
@@ -157,6 +182,31 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
   useEffect(() => {
     openRef.current = open;
   }, [open]);
+
+  useEffect(() => {
+    void fetchTbotStatus().then((s) => {
+      if (!s.ok) {
+        setTbotAiLabel(null);
+        return;
+      }
+      const label =
+        s.providerLabel ??
+        (s.provider === "gigachat"
+          ? "GigaChat"
+          : s.provider === "openrouter"
+            ? "OpenRouter"
+            : s.provider === "gemini"
+              ? "Gemini"
+              : s.provider === "deepseek"
+                ? "DeepSeek"
+                : "OpenAI");
+      setTbotAiLabel(
+        s.configured
+          ? `${label} · ${s.model}`
+          : "нужен OPENROUTER_API_KEY (openrouter.ai, бесплатно) или другой ключ на сервере"
+      );
+    });
+  }, []);
 
   const patchAppearance = useCallback((patch: Partial<TBotAppearance>) => {
     setAppearance((prev) => {
@@ -283,6 +333,26 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
   const displayMood: TBotMood = pending ? "thinking" : tbotMood;
 
   const [showAiUnreadDot, setShowAiUnreadDot] = useState(false);
+  const [messengerUnread, setMessengerUnread] = useState(() =>
+    typeof window !== "undefined" ? hasMessengerInboxUnread() : false
+  );
+
+  useEffect(() => {
+    const syncMessengerUnread = () => {
+      setMessengerUnread(hasMessengerInboxUnread());
+    };
+    window.addEventListener("trassa-messenger-updated", syncMessengerUnread);
+    syncMessengerUnread();
+    return () => window.removeEventListener("trassa-messenger-updated", syncMessengerUnread);
+  }, []);
+
+  const showNotifyDot = showAiUnreadDot || messengerUnread;
+
+  useEffect(() => {
+    dispatchTbotNotifyDot(showNotifyDot);
+  }, [showNotifyDot]);
+
+  useEffect(() => () => dispatchTbotNotifyDot(false), []);
 
   useEffect(() => {
     const lai = lastAiMessageId(messages);
@@ -581,6 +651,7 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
         <div
           role="dialog"
           aria-label="Чат с Т-ботом"
+          className={cx(isV2 && "floating-widget-v2__panel")}
           style={{
             position: "fixed",
             zIndex: 10040,
@@ -603,6 +674,7 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
         >
           <div
             role="presentation"
+            className={cx(isV2 && "floating-widget-v2__header")}
             onPointerDown={onPanelHeaderPointerDown}
             style={{
               padding: "14px 16px",
@@ -649,6 +721,7 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
                 <div style={{ fontWeight: 800, fontSize: 16, letterSpacing: "-0.02em" }}>Т-бот</div>
                 <div style={{ fontSize: 11, color: muted, fontWeight: 600, marginTop: 2 }}>
                   {getTBotMoodLabel(displayMood)}
+                  {tbotAiLabel ? ` · ${tbotAiLabel}` : ""}
                 </div>
               </div>
             </div>
@@ -1186,7 +1259,7 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
         content={
           <span style={{ maxWidth: 260, display: "block", lineHeight: 1.45 }}>
             Перетащите Т-бота. Клик — открыть или закрыть чат.
-            {showAiUnreadDot ? " Есть непрочитанный ответ." : ""}
+            {showNotifyDot ? " Есть непрочитанное: ответ Т-бота или сообщение в мессенджере." : ""}
             {tipToast ? " Слева от иконки — подсказка о новых сообщениях или ответе Т-бота." : ""}
           </span>
         }
@@ -1198,11 +1271,13 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
           height: BUBBLE,
           zIndex: 10041,
         }}
+        wrapperClassName={isV2 ? "floating-widget-v2__fab-tbot-root" : undefined}
       >
         <div style={{ position: "relative", width: "100%", height: "100%" }}>
           <button
             type="button"
             aria-label="Т-бот — перетащите или нажмите, чтобы открыть чат"
+            className={cx(isV2 && "floating-widget-v2__fab-tbot")}
             onPointerDown={onBubblePointerDown}
             style={{
               width: "100%",
@@ -1220,24 +1295,7 @@ export const AiChatBubble = memo(function AiChatBubble({ isDark }: Props) {
           >
             <TBotMascot mood={displayMood} size={40} withFloat={!dragging} appearance={appearance} />
           </button>
-          {showAiUnreadDot ? (
-            <span
-              aria-hidden
-              style={{
-                position: "absolute",
-                top: 5,
-                right: 5,
-                width: 10,
-                height: 10,
-                borderRadius: "50%",
-                background: "#f87171",
-                boxShadow: isDark
-                  ? "0 0 0 2px #0f172a, 0 2px 6px rgba(0,0,0,0.45)"
-                  : "0 0 0 2px #ffffff, 0 2px 6px rgba(15,23,42,0.25)",
-                pointerEvents: "none",
-              }}
-            />
-          ) : null}
+          {showNotifyDot ? <span className="tbot-notify-dot" aria-hidden /> : null}
         </div>
       </HoverTooltip>
     </>

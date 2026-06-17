@@ -1,19 +1,15 @@
 import type { CSSProperties } from "react";
-import { HERO_ROLE_IMG_PX, heroRoleButtonStyle } from "../utils/cabinetHero";
+import { HERO_ROLE_IMG_PX, heroRoleIconBadgeStyle } from "../utils/cabinetHero";
 
 type Props = {
   iconSrc: string;
   buttonBaseStyle: CSSProperties;
 };
 
-/** Белый круг с иконкой роли — одинаково в кабинетах подрядчика, школы и СПО. */
+/** Белый круг с иконкой роли на плашке героя (декоративный, без действия). */
 export default function HeroRoleIconButton({ iconSrc, buttonBaseStyle }: Props) {
   return (
-    <button
-      type="button"
-      aria-hidden
-      style={heroRoleButtonStyle(buttonBaseStyle)}
-    >
+    <div aria-hidden style={heroRoleIconBadgeStyle(buttonBaseStyle)}>
       <img
         decoding="async"
         src={iconSrc}
@@ -29,6 +25,6 @@ export default function HeroRoleIconButton({ iconSrc, buttonBaseStyle }: Props) 
           maxHeight: "86%",
         }}
       />
-    </button>
+    </div>
   );
 }

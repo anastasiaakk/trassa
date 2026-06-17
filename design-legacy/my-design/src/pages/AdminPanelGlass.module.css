@@ -1,0 +1,1483 @@
+/* Админ-панель — glass + палитра ТрассА (#0A2540, #00D4A5, #67E8F9) */
+
+.themeGlass {
+  --ag-navy: #0a2540;
+  --ag-navy-deep: #061828;
+  --ag-navy-mid: #0f2f4d;
+  --ag-radius-lg: 28px;
+  --ag-radius-md: 18px;
+  --ag-radius-sm: 14px;
+  font-family: var(--font-ui);
+}
+
+/* Тёмная glass-админка (не встроенная на карту) */
+.themeGlass:not(.themeGlassMap) {
+  --ag-teal: #00d4a5;
+  --ag-teal-dim: rgba(0, 212, 165, 0.55);
+  --ag-cyan: #67e8f9;
+  --ag-cyan-soft: rgba(103, 232, 249, 0.35);
+  --ag-text: rgba(255, 255, 255, 0.96);
+  --ag-text-soft: rgba(255, 255, 255, 0.78);
+  --ag-muted: rgba(103, 232, 249, 0.82);
+  --ag-muted-dim: rgba(103, 232, 249, 0.55);
+  --ag-glass: rgba(10, 37, 64, 0.52);
+  --ag-glass-card: rgba(8, 28, 48, 0.62);
+  --ag-border: rgba(103, 232, 249, 0.22);
+  --ag-border-soft: rgba(255, 255, 255, 0.1);
+  --ag-glow: 0 0 28px rgba(0, 212, 165, 0.18);
+  color: var(--ag-text);
+}
+
+.themeGlass.cabinetPage {
+  isolation: isolate;
+  /* .cabinetPage { overflow-x: hidden } иначе даёт overflow-y: auto и режет тени */
+  overflow: visible;
+}
+
+.themeGlass .cabinetBg {
+  background: transparent !important;
+}
+
+/* Лёгкая вуаль поверх видео (встроенный режим на карте) */
+.cabinetPageEmbed.themeGlass::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 20%, rgba(103, 232, 249, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 75%, rgba(0, 212, 165, 0.1) 0%, transparent 50%),
+    linear-gradient(165deg, rgba(6, 24, 40, 0.55) 0%, rgba(10, 37, 64, 0.42) 100%);
+}
+
+.cabinetPageEmbed.themeGlass .glassShell {
+  position: relative;
+  z-index: 2;
+}
+
+.glassShell {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 1.75rem) clamp(1rem, 3vw, 2rem) clamp(3.5rem, 7vw, 5rem);
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.cabinetPageEmbed .glassShell {
+  max-width: min(1060px, 100%);
+  padding: 1.25rem 14px clamp(3.5rem, 8vw, 5.5rem);
+  box-sizing: border-box;
+}
+
+.cabinetPageEmbed.themeGlass {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+}
+
+.cabinetPageEmbed .glassLayout {
+  overflow: visible;
+  padding-bottom: 0.5rem;
+}
+
+.glassLayout > .glassSidebar,
+.glassLayout > .glassPanel {
+  overflow: visible;
+  margin-bottom: 1.5rem;
+}
+
+.cabinetPageEmbed .glassSidebar,
+.cabinetPageEmbed .glassPanel {
+  overflow: visible;
+}
+
+/* blur на ::before — иначе backdrop-filter режет тени потомков */
+.glassPanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.cabinetPageEmbed .glassPanel {
+  display: block;
+  max-height: none;
+  height: auto;
+  padding-top: 1rem;
+  padding-bottom: 1.15rem;
+}
+
+.glassPanelScroll {
+  display: block;
+  overflow: visible;
+  padding-bottom: 0.75rem;
+}
+
+.cabinetPageEmbed .glassPanelScroll {
+  margin-top: 0;
+  padding-top: 0;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+  padding-bottom: 0.75rem;
+}
+
+.glassLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 196px) minmax(0, 1fr);
+  gap: clamp(12px, 1.5vw, 16px);
+  align-items: start;
+  overflow: visible;
+}
+
+@media (max-width: 820px) {
+  .glassLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— Sidebar —— */
+.glassSidebar {
+  position: relative;
+  padding: 16px 12px;
+  border-radius: var(--ag-radius-lg);
+  border: 1px solid var(--ag-border);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    var(--ag-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: visible;
+  isolation: isolate;
+}
+
+.glassSidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    165deg,
+    rgba(10, 37, 64, 0.72) 0%,
+    rgba(6, 24, 40, 0.58) 100%
+  );
+  backdrop-filter: blur(22px) saturate(1.2);
+  -webkit-backdrop-filter: blur(22px) saturate(1.2);
+  pointer-events: none;
+}
+
+.glassSidebar > .glassNav {
+  position: relative;
+  z-index: 1;
+}
+
+.glassNav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.glassNavBtn {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: var(--ag-radius-sm);
+  padding: 11px 14px;
+  background: transparent;
+  color: var(--ag-text-soft);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.themeGlass:not(.themeGlassMap) .glassNavBtn:hover {
+  color: #ffffff;
+  background: rgba(103, 232, 249, 0.08);
+  border-color: rgba(103, 232, 249, 0.15);
+}
+
+.themeGlass.themeGlassMap .glassNavBtn:hover {
+  color: #0a2540;
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(103, 232, 249, 0.4);
+}
+
+.glassNavBtnActive {
+  color: var(--ag-navy);
+  border-color: rgba(0, 212, 165, 0.45);
+  background: linear-gradient(135deg, #00d4a5 0%, #67e8f9 92%);
+  box-shadow:
+    0 4px 20px rgba(0, 212, 165, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.glassNavBtnActive:hover {
+  color: var(--ag-navy);
+}
+
+/* —— Main panel —— */
+.glassPanel {
+  padding: clamp(1.35rem, 2.8vw, 2rem) clamp(1.35rem, 3.2vw, 2.25rem);
+  border-radius: var(--ag-radius-lg);
+  border: 1px solid var(--ag-border);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    0 24px 56px rgba(6, 18, 32, 0.45),
+    var(--ag-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.glassPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    155deg,
+    rgba(12, 40, 68, 0.68) 0%,
+    rgba(8, 28, 48, 0.55) 48%,
+    rgba(6, 22, 38, 0.62) 100%
+  );
+  backdrop-filter: blur(24px) saturate(1.15);
+  -webkit-backdrop-filter: blur(24px) saturate(1.15);
+  pointer-events: none;
+}
+
+.glassPanel > .glassPanelHead,
+.glassPanel > .glassPanelScroll {
+  position: relative;
+  z-index: 1;
+}
+
+.glassPanelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 0.625rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--ag-border-soft);
+}
+
+.glassPanelIntro {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.glassPanelGreeting {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ag-text, #0a2540);
+  letter-spacing: var(--tracking-tight, -0.02em);
+}
+
+.glassPanelTitle {
+  margin: 2px 0 0;
+  font-family: var(--font-ui);
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ag-cyan, var(--ag-teal));
+  letter-spacing: var(--tracking-ui, -0.011em);
+}
+
+.glassPanelEmail {
+  margin: 6px 0 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ag-muted-dim);
+  letter-spacing: 0.02em;
+}
+
+.glassGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .glassGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.glassHint {
+  margin: 12px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ag-muted-dim);
+}
+
+/* —— Form controls —— */
+.glassTextarea,
+.glassSelect,
+.themeGlass:not(.themeGlassMap) .input,
+.themeGlass:not(.themeGlassMap) .textarea,
+.themeGlass:not(.themeGlassMap) .inputNeo {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--ag-radius-sm);
+  border: 1px solid var(--ag-border);
+  background: rgba(6, 24, 40, 0.55);
+  color: var(--ag-text);
+  font-family: inherit;
+  font-size: 0.875rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.themeGlass.themeGlassMap .input,
+.themeGlass.themeGlassMap .textarea,
+.themeGlass.themeGlassMap .inputNeo,
+.themeGlass.themeGlassMap .glassTextarea,
+.themeGlass.themeGlassMap .glassSelect {
+  color: #0a2540;
+}
+
+.glassTextarea {
+  min-height: 92px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.glassSelect {
+  margin-top: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2367E8F9' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.glassSelect option {
+  background: var(--ag-navy);
+  color: var(--ag-text);
+}
+
+.themeGlass:not(.themeGlassMap) .glassTextarea::placeholder,
+.themeGlass:not(.themeGlassMap) .input::placeholder,
+.themeGlass:not(.themeGlassMap) .textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.themeGlass.themeGlassMap .glassTextarea::placeholder,
+.themeGlass.themeGlassMap .input::placeholder,
+.themeGlass.themeGlassMap .textarea::placeholder {
+  color: rgba(61, 80, 104, 0.55);
+}
+
+.glassTextarea:focus,
+.glassSelect:focus,
+.themeGlass:not(.themeGlassMap) .input:focus,
+.themeGlass:not(.themeGlassMap) .textarea:focus,
+.themeGlass:not(.themeGlassMap) .inputNeo:focus {
+  outline: none;
+  border-color: var(--ag-teal);
+  box-shadow:
+    0 0 0 3px rgba(0, 212, 165, 0.2),
+    0 0 20px rgba(103, 232, 249, 0.12);
+}
+
+/* —— Buttons —— */
+.glassPanelHeadActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.glassBtnLogout,
+.glassBtnTheme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--ag-border);
+  border-radius: 14px;
+  background: rgba(6, 24, 40, 0.45);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.glassBtnLogout:hover,
+.glassBtnTheme:hover {
+  background: rgba(103, 232, 249, 0.12);
+  border-color: rgba(0, 212, 165, 0.45);
+  box-shadow: 0 0 16px rgba(0, 212, 165, 0.15);
+}
+
+.glassBtnLogout:focus-visible,
+.glassBtnTheme:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.35);
+}
+
+.glassBtnThemeActive {
+  border-color: rgba(0, 212, 165, 0.55);
+  background: rgba(0, 212, 165, 0.14);
+  box-shadow: 0 0 14px rgba(0, 212, 165, 0.2);
+}
+
+.glassBtnLogoutIcon,
+.glassBtnThemeIcon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.88;
+}
+
+.glassBtnLogout:hover .glassBtnLogoutIcon,
+.glassBtnTheme:hover .glassBtnThemeIcon {
+  opacity: 1;
+}
+
+.glassBtnPrimary {
+  border: 1px solid rgba(103, 232, 249, 0.22);
+  border-radius: 999px;
+  padding: 11px 22px;
+  background: linear-gradient(135deg, var(--ag-navy) 0%, #124656 100%);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(10, 37, 64, 0.35);
+}
+
+.glassBtnPrimary:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 8px 26px rgba(10, 37, 64, 0.42);
+}
+
+.glassBtnPrimary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.glassBtnGhost {
+  border: 1px solid var(--ag-border);
+  border-radius: 999px;
+  padding: 11px 20px;
+  background: transparent;
+  color: var(--ag-cyan);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.glassBtnGhost:hover {
+  background: rgba(103, 232, 249, 0.1);
+  box-shadow: 0 0 14px rgba(103, 232, 249, 0.12);
+}
+
+/* —— Stats (главная) —— */
+.glassStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 12px;
+  margin-bottom: 0.75rem;
+}
+
+.glassIncidentsBlock {
+  margin-top: 18px;
+}
+
+.glassCharts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.glassStatCard {
+  position: relative;
+  padding: 18px 18px 16px;
+  border-radius: var(--ag-radius-md);
+  border: 1px solid var(--ag-border-soft);
+  background: var(--ag-glass-card);
+  overflow: hidden;
+}
+
+.glassStatCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ag-teal), var(--ag-cyan));
+  opacity: 0.85;
+}
+
+.glassStatValue {
+  display: block;
+  font-size: 1.625rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ag-teal);
+  line-height: 1.15;
+  text-shadow: 0 0 24px rgba(0, 212, 165, 0.35);
+}
+
+.glassStatLabel {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ag-muted-dim);
+  line-height: 1.35;
+}
+
+/* —— Login —— */
+.glassLoginShell {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 1.25rem 12px 2.5rem;
+  box-sizing: border-box;
+}
+
+.glassLoginCard {
+  padding: clamp(1.5rem, 3vw, 2.1rem) clamp(1.35rem, 3vw, 1.85rem);
+  border-radius: var(--ag-radius-lg);
+  border: 1px solid var(--ag-border);
+  background: linear-gradient(
+    155deg,
+    rgba(12, 40, 68, 0.75) 0%,
+    rgba(6, 22, 38, 0.65) 100%
+  );
+  backdrop-filter: blur(24px) saturate(1.15);
+  -webkit-backdrop-filter: blur(24px) saturate(1.15);
+  box-shadow:
+    0 24px 56px rgba(6, 18, 32, 0.5),
+    var(--ag-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: visible;
+}
+
+.themeGlass:not(.themeGlassMap) .glassLoginCard .loginTitle {
+  margin: 0 0 8px;
+  font-family: var(--font-ui);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: var(--tracking-tight, -0.02em);
+}
+
+.themeGlass:not(.themeGlassMap) .glassLoginCard .cabinetKicker {
+  margin: 0 0 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ag-teal);
+}
+
+.themeGlass:not(.themeGlassMap) .glassLoginCard .loginLead {
+  margin: 0 0 18px;
+  font-size: 0.875rem;
+  color: var(--ag-muted-dim);
+  line-height: 1.5;
+}
+
+.themeGlass:not(.themeGlassMap) .glassLoginCard .label {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.8125rem;
+}
+
+.themeGlass:not(.themeGlassMap) .glassLoginCard .hintNeo {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: var(--ag-radius-sm);
+  border: 1px solid var(--ag-border-soft);
+  background: rgba(6, 24, 40, 0.4);
+  box-shadow: none;
+}
+
+.themeGlass:not(.themeGlassMap) .glassLoginCard .hintNeoLabel {
+  color: var(--ag-cyan);
+}
+
+.themeGlass:not(.themeGlassMap) .glassLoginCard .hintNeoFoot,
+.themeGlass:not(.themeGlassMap) .glassLoginCard .hintCreds {
+  color: var(--ag-muted-dim);
+}
+
+.themeGlass:not(.themeGlassMap) .glassLoginCard .hintList strong {
+  color: var(--ag-text);
+}
+
+/* —— Переопределение светлых стилей AdminPanel —— */
+.themeGlass .glassPanelScroll > *:first-child {
+  margin-top: 0;
+}
+
+.themeGlass .glassPanelScroll .section {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.themeGlass .glassPanelScroll .glassStats + .section,
+.themeGlass .glassPanelScroll .section + .section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ag-border-soft);
+}
+
+.themeGlass .glassPanelScroll .section .section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ag-border-soft);
+}
+
+.themeGlass .section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ag-border-soft);
+}
+
+.themeGlass:not(.themeGlassMap) .sectionTitle,
+.themeGlass:not(.themeGlassMap) .dashboardSectionHeading,
+.themeGlass:not(.themeGlassMap) .collapseTitle {
+  color: var(--ag-text);
+  font-weight: 600;
+}
+
+.themeGlass.themeGlassMap .sectionTitle,
+.themeGlass.themeGlassMap .dashboardSectionHeading,
+.themeGlass.themeGlassMap .collapseTitle,
+.themeGlass.themeGlassMap .collapseTrigger,
+.themeGlass.themeGlassMap .label,
+.themeGlass.themeGlassMap .glassHint {
+  color: #0a2540;
+}
+
+.themeGlass:not(.themeGlassMap) .subtitle,
+.themeGlass:not(.themeGlassMap) .subtitleNeo {
+  margin-bottom: 14px;
+  color: var(--ag-muted-dim);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.themeGlass:not(.themeGlassMap) .hint {
+  padding: 12px 14px;
+  border-radius: var(--ag-radius-sm);
+  border: 1px solid var(--ag-border-soft);
+  background: rgba(6, 24, 40, 0.4);
+  color: var(--ag-muted-dim);
+  box-shadow: none;
+}
+
+.themeGlass.themeGlassMap .hint {
+  padding: 12px 14px;
+  border-radius: var(--ag-radius-sm);
+  border: 1px solid rgba(10, 37, 64, 0.1);
+  background: rgba(255, 255, 255, 0.65);
+  color: #3d5068;
+  box-shadow: none;
+}
+
+.themeGlass:not(.themeGlassMap) .label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.themeGlass .tableWrap {
+  border: 1px solid var(--ag-border-soft);
+  border-radius: var(--ag-radius-md);
+  background: rgba(6, 24, 40, 0.35);
+  overflow: visible;
+  padding-bottom: 10px;
+  margin-bottom: 8px;
+}
+
+.themeGlass .collapseBody .tableWrap {
+  margin-bottom: 8px;
+}
+
+.themeGlass:not(.themeGlassMap) .table th {
+  background: rgba(0, 212, 165, 0.12);
+  color: var(--ag-cyan);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-color: var(--ag-border-soft);
+}
+
+.themeGlass:not(.themeGlassMap) .table td {
+  color: var(--ag-text-soft);
+  border-color: var(--ag-border-soft);
+}
+
+.themeGlass:not(.themeGlassMap) .table tr:hover td {
+  background: rgba(103, 232, 249, 0.06);
+}
+
+.themeGlass .btnNeoPrimary,
+.themeGlass .btnPrimary {
+  border-radius: 999px;
+  border: 1px solid rgba(103, 232, 249, 0.22) !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, var(--ag-navy) 0%, #124656 100%) !important;
+  box-shadow: 0 6px 20px rgba(10, 37, 64, 0.32) !important;
+}
+
+.themeGlass .btnNeoPrimary:hover:not(:disabled),
+.themeGlass .btnPrimary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 24px rgba(10, 37, 64, 0.42) !important;
+}
+
+/* Длинные основные кнопки в формах */
+.themeGlass .rowBtns {
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.themeGlass .rowBtns .btnNeoPrimary,
+.themeGlass .rowBtns .btnNeoPrimaryNeutral,
+.themeGlass .rowBtns .btnPrimary {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.themeGlass .rowBtns .btnNeoGhost,
+.themeGlass .rowBtns .btnGhost {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.themeGlass .form > .btnNeoPrimary,
+.themeGlass .form > .btnPrimary {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+}
+
+.themeGlass:not(.themeGlassMap) .btnNeoGhost,
+.themeGlass:not(.themeGlassMap) .btnGhost {
+  border-radius: 999px;
+  border: 1px solid var(--ag-border) !important;
+  background: rgba(6, 24, 40, 0.35) !important;
+  color: var(--ag-cyan) !important;
+  box-shadow: none !important;
+}
+
+.themeGlass:not(.themeGlassMap) .btnNeoGhost:hover:not(:disabled),
+.themeGlass:not(.themeGlassMap) .btnGhost:hover:not(:disabled) {
+  background: rgba(103, 232, 249, 0.12) !important;
+  color: #ffffff !important;
+}
+
+.themeGlass .btnNeoPrimaryNeutral {
+  border-radius: 999px;
+  color: var(--ag-navy) !important;
+  background: linear-gradient(135deg, rgba(0, 212, 165, 0.85), rgba(103, 232, 249, 0.9)) !important;
+  box-shadow: 0 4px 16px rgba(0, 212, 165, 0.22) !important;
+}
+
+.themeGlass .btnNeoDanger {
+  border: 1px solid rgba(255, 140, 140, 0.35);
+  border-radius: 999px;
+  background: rgba(120, 30, 40, 0.35);
+  color: #ffc9c9;
+  box-shadow: none;
+}
+
+.themeGlass:not(.themeGlassMap) .btnSmall {
+  border-radius: 10px;
+  border: 1px solid var(--ag-border);
+  background: rgba(103, 232, 249, 0.1);
+  color: var(--ag-cyan);
+  box-shadow: none;
+}
+
+.themeGlass:not(.themeGlassMap) .btnSmall:hover {
+  background: rgba(0, 212, 165, 0.2);
+  color: #ffffff;
+}
+
+.themeGlass:not(.themeGlassMap) .specSelectBtn {
+  border-color: rgba(103, 232, 249, 0.45);
+  background: rgba(10, 37, 64, 0.35);
+  color: rgba(103, 232, 249, 0.65);
+}
+
+.themeGlass:not(.themeGlassMap) .specSelectBtn:hover {
+  border-color: var(--ag-cyan);
+  color: var(--ag-cyan);
+}
+
+.themeGlass:not(.themeGlassMap) .specSelectBtnActive {
+  border-color: var(--ag-teal);
+  background: rgba(0, 212, 165, 0.22);
+  color: var(--ag-teal);
+  box-shadow: 0 0 0 3px rgba(0, 212, 165, 0.2);
+}
+
+.themeGlass:not(.themeGlassMap) .specIconBtn {
+  border-color: rgba(103, 232, 249, 0.35);
+  background: rgba(10, 37, 64, 0.35);
+  color: var(--ag-cyan);
+}
+
+.themeGlass:not(.themeGlassMap) .specIconBtn:hover {
+  border-color: var(--ag-cyan);
+  background: rgba(103, 232, 249, 0.12);
+}
+
+.themeGlass:not(.themeGlassMap) .specIconBtnOff {
+  border-color: rgba(103, 232, 249, 0.2);
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(10, 37, 64, 0.5);
+}
+
+.themeGlass:not(.themeGlassMap) .specIconBtnOff:hover {
+  border-color: var(--ag-teal);
+  color: var(--ag-teal);
+  background: rgba(0, 212, 165, 0.15);
+}
+
+.themeGlass:not(.themeGlassMap) .specIconBtnDanger {
+  border-color: rgba(255, 120, 120, 0.35);
+  background: rgba(100, 28, 36, 0.4);
+  color: #ffb8b8;
+}
+
+.themeGlass:not(.themeGlassMap) .specIconBtnDanger:hover {
+  border-color: #ff8a8a;
+  background: rgba(120, 28, 36, 0.55);
+}
+
+.themeGlass:not(.themeGlassMap) .tableRowSelected td {
+  background: rgba(0, 212, 165, 0.1);
+}
+
+.themeGlass:not(.themeGlassMap) .tableRowSelected td:first-child {
+  box-shadow: inset 3px 0 0 var(--ag-teal);
+}
+
+.themeGlass .btnSmallDanger {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 120, 120, 0.35);
+  background: rgba(100, 28, 36, 0.4);
+  color: #ffb8b8;
+  box-shadow: none;
+}
+
+.themeGlass:not(.themeGlassMap) .collapseTrigger {
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--ag-radius-md);
+  border: 1px solid var(--ag-border-soft);
+  background: rgba(6, 24, 40, 0.4);
+  color: var(--ag-text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.themeGlass:not(.themeGlassMap) .collapseTrigger:hover {
+  background: rgba(103, 232, 249, 0.1);
+  border-color: var(--ag-border);
+}
+
+.themeGlass:not(.themeGlassMap) .collapseChevron {
+  color: var(--ag-teal);
+  opacity: 1;
+}
+
+.themeGlass .collapseTitle {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.themeGlass:not(.themeGlassMap) .collapseMeta {
+  flex: 0 0 auto;
+  max-width: none;
+  margin-left: 0;
+  padding-left: 10px;
+  text-align: left;
+  color: var(--ag-muted-dim);
+  white-space: nowrap;
+}
+
+.themeGlass.themeGlassMap .collapseMeta {
+  color: #4a5f78;
+}
+
+.themeGlass .collapseBody {
+  margin-top: 10px;
+}
+
+/* Сообщения статуса (glassMsg в JSX) — только цвет текста */
+.glassMsg {
+  margin: 8px 0 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.themeGlass:not(.themeGlassMap) .glassMsg {
+  color: #9fd4bc;
+}
+
+.themeGlass.themeGlassMap .glassMsg {
+  color: #2a6b52;
+}
+
+.themeGlass:not(.themeGlassMap) .error {
+  color: #ff9a9a;
+}
+
+.themeGlass.themeGlassMap .error {
+  color: #c62828;
+}
+
+/* Быстрые ссылки (класс quickLinks в JSX — CSS Modules не матчит .links из другого файла) */
+.quickLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.themeGlass .quickLinks a {
+  display: inline-block;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(103, 232, 249, 0.22);
+  background: linear-gradient(135deg, var(--ag-navy) 0%, #124656 100%) !important;
+  color: #ffffff !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  box-shadow: 0 4px 14px rgba(10, 37, 64, 0.22);
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.themeGlass .quickLinks a:hover,
+.themeGlass .quickLinks a:focus-visible {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #0d2f4d 0%, #155a6a 100%) !important;
+  filter: brightness(1.06);
+  box-shadow: 0 6px 18px rgba(10, 37, 64, 0.32);
+  transform: translateY(-1px);
+  text-decoration: none !important;
+  opacity: 1;
+}
+
+.themeGlass .neoCard,
+.themeGlass .cabinetCard {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+/* —— Встроенная админка на /services: полупрозрачный стиль как mapPanel —— */
+.themeGlass.themeGlassMap,
+.cabinetPageEmbed.themeGlassMap {
+  --ag-teal: #00d4a5;
+  --ag-teal-dim: rgba(0, 212, 165, 0.65);
+  --ag-cyan: #67e8f9;
+  --ag-cyan-soft: rgba(103, 232, 249, 0.35);
+  --ag-text: #0a2540;
+  --ag-text-soft: #1a3352;
+  --ag-muted: #3d5068;
+  --ag-muted-dim: #4a5f78;
+  --ag-glass: rgba(255, 255, 255, 0.55);
+  --ag-glass-card: rgba(255, 255, 255, 0.78);
+  --ag-border: rgba(10, 37, 64, 0.16);
+  --ag-border-soft: rgba(10, 37, 64, 0.12);
+  --ag-glow: 0 10px 32px rgba(10, 37, 64, 0.1);
+  --ag-radius-lg: 24px;
+  /* AdminPanel.module.css использует --cab-* на .cabinetPage */
+  --cab-text: #0a2540;
+  --cab-muted: #3d5068;
+  --cab-accent: #00d4a5;
+  --cab-accent2: #67e8f9;
+  color: #0a2540;
+}
+
+.cabinetPageEmbed.themeGlassMap::before {
+  content: none;
+}
+
+.themeGlassMap .glassSidebar::before,
+.themeGlassMap .glassPanel::before {
+  background: linear-gradient(
+    165deg,
+    rgba(236, 245, 249, 0.92) 0%,
+    rgba(224, 238, 245, 0.9) 55%,
+    rgba(214, 232, 241, 0.88) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+}
+
+.themeGlassMap .glassSidebar,
+.themeGlassMap .glassPanel {
+  border: 1px solid rgba(10, 37, 64, 0.14);
+  border-radius: 24px;
+  box-shadow:
+    0 10px 32px rgba(10, 37, 64, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.themeGlass.themeGlassMap .glassPanelGreeting {
+  color: #0a2540;
+}
+
+.themeGlass.themeGlassMap .glassPanelTitle {
+  color: var(--ag-teal);
+}
+
+.themeGlass.themeGlassMap .glassPanelEmail {
+  color: #4a5f78;
+}
+
+.themeGlassMap .glassPanelHead {
+  border-bottom-color: rgba(10, 37, 64, 0.12);
+}
+
+.themeGlassMap .glassNavBtn {
+  color: #1a3352;
+  font-weight: 600;
+}
+
+.themeGlassMap .glassNavBtn:hover {
+  color: #0a2540;
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(103, 232, 249, 0.4);
+}
+
+.themeGlassMap .glassNavBtnActive {
+  color: #0a2540;
+  font-weight: 700;
+}
+
+.themeGlassMap .glassBtnLogout,
+.themeGlassMap .glassBtnTheme {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(10, 37, 64, 0.14);
+  box-shadow: 0 4px 14px rgba(10, 37, 64, 0.08);
+}
+
+.themeGlassMap .glassBtnLogout:hover,
+.themeGlassMap .glassBtnTheme:hover {
+  background: #ffffff;
+  border-color: rgba(0, 212, 165, 0.45);
+  box-shadow: 0 4px 16px rgba(0, 212, 165, 0.22);
+}
+
+.themeGlassMap .glassBtnThemeActive {
+  background: rgba(10, 37, 64, 0.08);
+  border-color: rgba(10, 37, 64, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.themeGlassMap .glassBtnLogoutIcon,
+.themeGlassMap .glassBtnThemeIcon {
+  opacity: 0.72;
+  filter: brightness(0.35);
+}
+
+.themeGlassMap .glassBtnLogout:hover .glassBtnLogoutIcon,
+.themeGlassMap .glassBtnTheme:hover .glassBtnThemeIcon {
+  opacity: 0.9;
+  filter: brightness(0.2);
+}
+
+.themeGlassMap .glassStatCard {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(10, 37, 64, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.themeGlassMap .glassStatValue {
+  color: var(--ag-teal);
+  font-weight: 800;
+  text-shadow: none;
+}
+
+.themeGlassMap .glassStatLabel {
+  color: #3d5068;
+  font-weight: 600;
+}
+
+.themeGlassMap .label {
+  color: #0a2540;
+  font-weight: 600;
+}
+
+.themeGlassMap .glassTextarea,
+.themeGlassMap .glassSelect,
+.themeGlassMap .input,
+.themeGlassMap .textarea,
+.themeGlassMap .inputNeo {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(10, 37, 64, 0.14);
+  color: #0a2540;
+  font-weight: 500;
+}
+
+.themeGlassMap .glassTextarea::placeholder,
+.themeGlassMap .input::placeholder,
+.themeGlassMap .textarea::placeholder {
+  color: rgba(61, 80, 104, 0.75);
+}
+
+.themeGlassMap .glassTextarea:focus,
+.themeGlassMap .glassSelect:focus,
+.themeGlassMap .input:focus,
+.themeGlassMap .textarea:focus,
+.themeGlassMap .inputNeo:focus {
+  border-color: rgba(0, 212, 165, 0.55);
+  box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.28);
+  background: #ffffff;
+}
+
+.themeGlassMap .hint {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(10, 37, 64, 0.1);
+  color: #3d5068;
+  font-weight: 500;
+}
+
+.themeGlassMap .collapseTrigger {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(10, 37, 64, 0.12);
+  color: #0a2540;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(10, 37, 64, 0.06);
+}
+
+.themeGlassMap .collapseTrigger:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 212, 165, 0.35);
+}
+
+.themeGlassMap .collapseChevron {
+  color: var(--ag-teal);
+}
+
+.themeGlass.themeGlassMap .subtitle,
+.themeGlass.themeGlassMap .subtitleNeo {
+  margin-bottom: 14px;
+  color: #3d5068;
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.themeGlassMap .tableWrap {
+  background: rgba(255, 255, 255, 0.68);
+  border-color: rgba(10, 37, 64, 0.12);
+}
+
+.themeGlassMap .table th {
+  background: rgba(103, 232, 249, 0.22);
+  color: var(--ag-navy);
+  font-weight: 700;
+}
+
+.themeGlassMap .table td {
+  color: #1a3352;
+  border-color: rgba(10, 37, 64, 0.1);
+  font-weight: 500;
+}
+
+.themeGlassMap .table tr:hover td {
+  background: rgba(103, 232, 249, 0.16);
+}
+
+.themeGlassMap .btnSmall {
+  background: #ffffff;
+  border-color: rgba(10, 37, 64, 0.14);
+  color: var(--ag-teal);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.06);
+}
+
+.themeGlassMap .btnSmall:hover {
+  background: rgba(103, 232, 249, 0.22);
+  color: #0a2540;
+  border-color: rgba(0, 212, 165, 0.35);
+}
+
+.themeGlassMap .specSelectBtn {
+  border-color: rgba(10, 37, 64, 0.2);
+  background: #ffffff;
+  color: rgba(10, 37, 64, 0.35);
+}
+
+.themeGlassMap .specSelectBtn:hover {
+  border-color: var(--ag-teal);
+  color: var(--ag-teal);
+}
+
+.themeGlassMap .specSelectBtnActive {
+  border-color: var(--ag-teal);
+  background: rgba(0, 212, 165, 0.14);
+  color: #008f72;
+  box-shadow: 0 0 0 3px rgba(0, 212, 165, 0.18);
+}
+
+.themeGlassMap .specIconBtn {
+  border-color: rgba(10, 37, 64, 0.18);
+  background: #ffffff;
+  color: var(--ag-teal);
+}
+
+.themeGlassMap .specIconBtn:hover {
+  border-color: rgba(0, 212, 165, 0.4);
+  background: rgba(103, 232, 249, 0.16);
+}
+
+.themeGlassMap .specIconBtnOff {
+  border-color: rgba(10, 37, 64, 0.14);
+  color: rgba(10, 37, 64, 0.4);
+  background: #f4f6f8;
+}
+
+.themeGlassMap .specIconBtnOff:hover {
+  border-color: var(--ag-teal);
+  color: #008f72;
+  background: rgba(0, 212, 165, 0.12);
+}
+
+.themeGlassMap .specIconBtnDanger {
+  border-color: rgba(183, 28, 28, 0.3);
+  background: #fff5f5;
+  color: #b71c1c;
+}
+
+.themeGlassMap .tableRowSelected td {
+  background: rgba(0, 212, 165, 0.1);
+}
+
+.themeGlassMap .tableRowSelected td:first-child {
+  box-shadow: inset 3px 0 0 var(--ag-teal);
+}
+
+.themeGlassMap .btnSmallDanger {
+  background: #fff5f5;
+  border-color: rgba(183, 28, 28, 0.35);
+  color: #b71c1c;
+  font-weight: 600;
+}
+
+.themeGlassMap .btnNeoGhost,
+.themeGlassMap .btnGhost {
+  background: #ffffff !important;
+  color: #0a2540 !important;
+  border: 1px solid rgba(10, 37, 64, 0.18) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.08) !important;
+}
+
+.themeGlassMap .btnNeoGhost:hover:not(:disabled),
+.themeGlassMap .btnGhost:hover:not(:disabled) {
+  background: rgba(103, 232, 249, 0.18) !important;
+  color: #0a2540 !important;
+  border-color: rgba(0, 212, 165, 0.35) !important;
+}
+
+.themeGlassMap .btnNeoGhost:disabled,
+.themeGlassMap .btnGhost:disabled {
+  opacity: 0.55;
+  color: #5c6b8a !important;
+}
+
+.themeGlassMap .btnNeoDanger,
+.themeGlassMap .btnDanger {
+  color: #4a4f5c !important;
+  font-weight: 600;
+}
+
+.themeGlassMap .glassSelect option {
+  background: #eef7f9;
+  color: #0a2540;
+}
+
+.themeGlassMap .glassLoginCard {
+  position: relative;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid rgba(103, 232, 249, 0.32);
+  border-radius: 24px;
+  box-shadow: 0 10px 32px rgba(10, 37, 64, 0.08);
+}
+
+.themeGlassMap .glassLoginCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    165deg,
+    rgba(236, 245, 249, 0.94) 0%,
+    rgba(224, 238, 245, 0.92) 55%,
+    rgba(214, 232, 241, 0.9) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  pointer-events: none;
+}
+
+.themeGlassMap .glassLoginCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.themeGlassMap .glassLoginCard .cabinetKicker {
+  color: var(--ag-teal);
+  font-weight: 700;
+}
+
+.themeGlassMap .glassLoginCard .loginTitle {
+  color: #0a2540;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.themeGlassMap .glassLoginCard .loginLead,
+.themeGlassMap .glassLoginCard .hintNeoFoot,
+.themeGlassMap .glassLoginCard .hintCreds,
+.themeGlassMap .glassLoginCard .hintNeo,
+.themeGlassMap .glassLoginCard .hintList,
+.themeGlassMap .glassLoginCard .hintList li {
+  color: #3d5068;
+  font-weight: 500;
+}
+
+.themeGlassMap .glassLoginCard .label {
+  color: #0a2540;
+  font-weight: 600;
+}
+
+.themeGlassMap .glassLoginCard .hintNeo {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(10, 37, 64, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.themeGlassMap .glassLoginCard .hintNeoLabel {
+  color: var(--ag-teal);
+  font-weight: 700;
+}
+
+.themeGlassMap .glassLoginCard .hintList strong {
+  color: #0a2540;
+  font-weight: 700;
+}
+
+.themeGlassMap .glassLoginCard .inputNeo {
+  background: #ffffff;
+  border: 1px solid rgba(10, 37, 64, 0.14);
+  color: #0a2540;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.06);
+}
+
+.themeGlassMap .glassLoginCard .inputNeo:focus {
+  border-color: rgba(0, 212, 165, 0.55);
+  box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.28);
+}
+
+.themeGlassMap .glassLoginCard .btnNeoPrimary {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, var(--ag-navy) 0%, #124656 100%) !important;
+  border: 1px solid rgba(10, 37, 64, 0.2) !important;
+  box-shadow: 0 6px 20px rgba(10, 37, 64, 0.28) !important;
+  font-weight: 700;
+}
+
+.themeGlassMap .glassLoginCard .btnNeoPrimary:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 8px 24px rgba(10, 37, 64, 0.38) !important;
+}
+
+.themeGlassMap .glassLoginCard .btnNeoGhost {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(10, 37, 64, 0.14) !important;
+  color: var(--ag-teal) !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.06);
+}
+
+.themeGlassMap .glassLoginCard .btnNeoGhost:hover {
+  background: rgba(103, 232, 249, 0.2) !important;
+  color: #0a2540 !important;
+}
+
+.themeGlassMap .glassLoginCard .error {
+  color: #c62828;
+  font-weight: 600;
+}
+
+.themeGlassMap .glassPanelScroll .section + .section,
+.themeGlassMap .glassPanelScroll .glassStats + .section,
+.themeGlassMap .glassPanelScroll .section .section,
+.themeGlassMap .section {
+  border-top-color: rgba(10, 37, 64, 0.12);
+}
+
+.themeGlassMap .glassHint {
+  color: #4a5f78;
+  font-weight: 500;
+}

@@ -1,0 +1,274 @@
+/**
+ * KPI подрядчика — glass-карточки в палитре кабинета (светлая / тёмная тема).
+ */
+
+html[data-portal-design="v2"] .contractor-glass-kpi {
+  width: 100%;
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi__row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  align-items: stretch;
+}
+
+@media (max-width: 1100px) {
+  html[data-portal-design="v2"] .contractor-glass-kpi__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  html[data-portal-design="v2"] .contractor-glass-kpi__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— Базовая карточка —— */
+html[data-portal-design="v2"] .contractor-glass-kpi-card {
+  --cgk-bg: rgba(255, 255, 255, 0.92);
+  --cgk-border: rgba(36, 59, 116, 0.12);
+  --cgk-glow: rgba(43, 100, 253, 0.1);
+  --cgk-title: #0a2540;
+  --cgk-meta: #5c6b8a;
+  --cgk-value: #243974;
+  --cgk-icon: #243974;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+  min-height: 148px;
+  min-width: 0;
+  padding: 20px 22px;
+  border-radius: 22px;
+  border: 1px solid var(--cgk-border);
+  background:
+    radial-gradient(120% 90% at 0% 0%, var(--cgk-glow) 0%, transparent 58%),
+    linear-gradient(165deg, var(--cgk-bg) 0%, rgba(255, 255, 255, 0.78) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 8px 24px rgba(36, 59, 116, 0.08),
+    0 2px 8px rgba(36, 59, 116, 0.04);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  color: var(--cgk-title);
+  text-align: left;
+  font: inherit;
+  transition:
+    transform 0.22s var(--pv2-ease-out, ease),
+    box-shadow 0.22s var(--pv2-ease-out, ease),
+    border-color 0.22s var(--pv2-ease-out, ease);
+}
+
+/* Акценты — мягкие оттенки под фон кабинета #e6ebf5 */
+html[data-portal-design="v2"] .contractor-glass-kpi-card--default {
+  --cgk-bg: rgba(240, 245, 252, 0.95);
+  --cgk-glow: rgba(43, 100, 253, 0.12);
+  --cgk-border: rgba(36, 59, 116, 0.14);
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card--violet {
+  --cgk-bg: rgba(236, 238, 248, 0.96);
+  --cgk-glow: rgba(99, 102, 241, 0.14);
+  --cgk-border: rgba(67, 56, 120, 0.12);
+  --cgk-value: #3730a3;
+  --cgk-icon: #4338ca;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card--teal {
+  --cgk-bg: rgba(232, 244, 248, 0.96);
+  --cgk-glow: rgba(14, 116, 144, 0.12);
+  --cgk-border: rgba(21, 94, 117, 0.12);
+  --cgk-value: #0e7490;
+  --cgk-icon: #155e75;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card--copper {
+  --cgk-bg: rgba(248, 242, 236, 0.96);
+  --cgk-glow: rgba(154, 52, 24, 0.1);
+  --cgk-border: rgba(124, 45, 18, 0.1);
+  --cgk-value: #7c2d12;
+  --cgk-icon: #9a3412;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card--actionable {
+  cursor: pointer;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card--actionable:hover {
+  transform: translateY(-2px);
+  border-color: rgba(36, 59, 116, 0.2);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.98) inset,
+    0 14px 32px rgba(36, 59, 116, 0.12),
+    0 4px 12px rgba(36, 59, 116, 0.06);
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card--actionable:focus-visible {
+  outline: 2px solid rgba(43, 100, 253, 0.65);
+  outline-offset: 2px;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--cgk-icon);
+  opacity: 0.88;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__copy {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--cgk-title);
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__meta {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--cgk-meta);
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__value {
+  font-size: clamp(1.75rem, 2.4vw, 2.125rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--cgk-value);
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__trend {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__trend--up {
+  background: var(--pv2-primary, #2b64fd);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(43, 100, 253, 0.35);
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__trend--down {
+  background: #c2410c;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(194, 65, 12, 0.3);
+}
+
+html[data-portal-design="v2"] .contractor-glass-kpi-card__trend-svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+/* —— Тёмная тема кабинета подрядчика —— */
+html[data-portal-design="v2"][data-cabinet-theme="dark"]
+  .cabinet-chrome--v2.cabinet-v2-scene
+  .contractor-glass-kpi-card {
+  --cgk-bg: rgba(26, 34, 56, 0.88);
+  --cgk-border: rgba(255, 255, 255, 0.1);
+  --cgk-glow: rgba(43, 100, 253, 0.16);
+  --cgk-title: rgba(255, 255, 255, 0.96);
+  --cgk-meta: rgba(255, 255, 255, 0.52);
+  --cgk-value: #fff;
+  --cgk-icon: rgba(255, 255, 255, 0.88);
+  background:
+    radial-gradient(120% 90% at 0% 0%, var(--cgk-glow) 0%, transparent 58%),
+    linear-gradient(165deg, var(--cgk-bg) 0%, rgba(15, 22, 40, 0.92) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 12px 32px rgba(0, 0, 0, 0.28);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"]
+  .cabinet-chrome--v2.cabinet-v2-scene
+  .contractor-glass-kpi-card--default {
+  --cgk-bg: rgba(30, 38, 58, 0.9);
+  --cgk-glow: rgba(43, 100, 253, 0.18);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"]
+  .cabinet-chrome--v2.cabinet-v2-scene
+  .contractor-glass-kpi-card--violet {
+  --cgk-bg: rgba(36, 32, 58, 0.9);
+  --cgk-glow: rgba(129, 140, 248, 0.2);
+  --cgk-value: #e0e7ff;
+  --cgk-icon: #c7d2fe;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"]
+  .cabinet-chrome--v2.cabinet-v2-scene
+  .contractor-glass-kpi-card--teal {
+  --cgk-bg: rgba(28, 42, 48, 0.9);
+  --cgk-glow: rgba(45, 212, 191, 0.14);
+  --cgk-value: #ccfbf1;
+  --cgk-icon: #99f6e4;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"]
+  .cabinet-chrome--v2.cabinet-v2-scene
+  .contractor-glass-kpi-card--copper {
+  --cgk-bg: rgba(42, 32, 28, 0.9);
+  --cgk-glow: rgba(251, 146, 60, 0.16);
+  --cgk-value: #ffedd5;
+  --cgk-icon: #fed7aa;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"]
+  .cabinet-chrome--v2.cabinet-v2-scene
+  .contractor-glass-kpi-card--actionable:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-portal-design="v2"] .contractor-glass-kpi-card {
+    transition: none;
+  }
+  html[data-portal-design="v2"] .contractor-glass-kpi-card--actionable:hover {
+    transform: none;
+  }
+}

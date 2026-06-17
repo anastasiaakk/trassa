@@ -1,0 +1,147 @@
+/**
+ * Этап D — вложенные разделы РАДОР/АДО, события, формы в кабинете.
+ */
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .association-v2__shell,
+html[data-portal-design="v2"] .pv2-scene--light .association-v2__shell {
+  background: var(--pv2-glass-l1-bg) !important;
+  border: 1px solid var(--pv2-glass-l1-border) !important;
+  box-shadow: var(--pv2-glass-l1-shadow) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .association-v2__card,
+html[data-portal-design="v2"] .pv2-scene--light .association-v2__card {
+  background: var(--pv2-glass-l2-bg) !important;
+  border-color: var(--pv2-glass-l2-border) !important;
+  box-shadow: var(--pv2-glass-l2-shadow);
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .association-v2__notice {
+  background: rgba(var(--pv2-r-primary), 0.08);
+  border-color: rgba(var(--pv2-r-primary), 0.22);
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .association-v2__btn-primary {
+  background: var(--pv2-primary);
+  color: var(--pv2-white);
+  box-shadow: 0 8px 24px rgba(var(--pv2-r-primary), 0.28);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .association-v2__btn-ghost {
+  background: var(--pv2-white);
+  border-color: rgba(var(--pv2-r-primary), 0.2);
+  color: var(--pv2-ink);
+}
+
+/* RadorFormsHub в кабинете ассоциации */
+html[data-portal-design="v2"] .rador-forms-hub-v2 {
+  width: 100%;
+  padding: 22px 26px 28px;
+  border-radius: var(--pv2-radius-xl);
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2 {
+  background: var(--pv2-glass-l1-bg);
+  border: 1px solid var(--pv2-glass-l1-border);
+  box-shadow: var(--pv2-glass-l1-shadow);
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2 .admin-tables-v2,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2 .admin-tables-v2 .tablesWorkspace {
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2.admin-tables-v2 .navBtn,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2.admin-tables-v2 .tabBtn {
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid rgba(var(--pv2-r-primary), 0.16);
+  background: rgba(var(--pv2-r-white), 0.9);
+  color: var(--pv2-muted);
+  font-family: inherit;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2.admin-tables-v2 .navBtnActive,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2.admin-tables-v2 .tabBtnActive {
+  background: var(--pv2-primary);
+  color: var(--pv2-white);
+  border-color: transparent;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2.admin-tables-v2 .sidebar {
+  background: var(--pv2-glass-l2-bg);
+  border: 1px solid var(--pv2-glass-l2-border);
+  border-radius: var(--pv2-radius-lg);
+  box-shadow: var(--pv2-glass-l2-shadow);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-tables-v2 .tablesWorkspace .sidebar,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-dashboard--portal-v2 .admin-tables-v2 .tablesWorkspace .sidebar {
+  background: var(--pv2-glass-l2-bg);
+  border: 1px solid var(--pv2-glass-l2-border);
+  border-radius: var(--pv2-radius-lg);
+  box-shadow: var(--pv2-glass-l2-shadow);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-tables-v2 .tablesWorkspace .editor,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-dashboard--portal-v2 .admin-tables-v2 .tablesWorkspace .editor {
+  background: var(--pv2-glass-l2-bg);
+  border: 1px solid var(--pv2-glass-l2-border);
+  border-radius: var(--pv2-radius-lg);
+  box-shadow: var(--pv2-glass-l2-shadow);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2 table {
+  background: var(--pv2-white);
+  border-radius: var(--pv2-radius-md);
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2 table th {
+  background: rgba(var(--pv2-r-primary), 0.08);
+  color: var(--pv2-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: var(--pv2-font-xs);
+  letter-spacing: 0.04em;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2 table td {
+  color: var(--pv2-ink);
+  border-bottom: 1px solid rgba(var(--pv2-r-primary), 0.08);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .rador-forms-hub-v2 table tbody tr:hover td {
+  background: rgba(var(--pv2-r-primary), 0.05);
+}
+
+/* Календарь мероприятий */
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-events-v2 {
+  background: var(--pv2-glass-l1-bg) !important;
+  border: 1px solid var(--pv2-glass-l1-border) !important;
+  box-shadow: var(--pv2-glass-l1-shadow) !important;
+  border-radius: var(--pv2-radius-xl) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-events-v2 .page5-events-v2__day--today {
+  box-shadow: 0 0 0 2px var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page5-v2__main-region {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2__main-region > .association-v2__shell,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2__main-region > .page5-events-v2,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2__main-region > .messenger-v2,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2__main-region > .rador-forms-hub-v2 {
+  flex: 1;
+}

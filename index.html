@@ -3,18 +3,89 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#000" />
     <meta name="description" content="ТрассА — цифровой портал для управления персоналом и дорожной деятельностью" />
     <title>ТрассА</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Шрифты в бандле (@fontsource), без Google — стабильнее через VPN -->
     <link rel="preload" href="/Vector.svg" as="image" type="image/svg+xml" />
-    <link rel="dns-prefetch" href="https://storage.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="/entry-splash-poster.jpg" as="image" />
+    <link rel="preload" href="/entry-splash-bg.mp4" as="fetch" type="video/mp4" crossorigin="anonymous" />
+    <script>
+      try {
+        var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+        var isReload = nav && (nav.type === "reload" || nav.type === "navigate");
+        if (sessionStorage.getItem("trassa_intro_done") !== "1" || isReload) {
+          document.documentElement.setAttribute("data-intro-pending", "1");
+          document.documentElement.style.background = "#000";
+        }
+      } catch (e) {}
+    </script>
+    <style>
+      html[data-intro-pending],
+      html[data-intro-pending] body {
+        background: #000 !important;
+      }
+      #portal-capture-shield {
+        display: none;
+      }
+      html.portal-capture-shield-active #portal-capture-shield {
+        display: flex !important;
+      }
+      html.portal-capture-shield-active #root {
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+      .portal-capture-shield__panel {
+        max-width: 420px;
+        width: 100%;
+        padding: 28px 24px 22px;
+        border-radius: 20px;
+        background: linear-gradient(165deg, #fff8f0 0%, #ffe8d6 45%, #ffd4b8 100%);
+        text-align: center;
+        color: #3d1f12;
+      }
+      .portal-capture-shield__finger {
+        font-size: 4.5rem;
+        margin-bottom: 12px;
+      }
+      .portal-capture-shield__title {
+        margin: 0 0 12px;
+        font-size: 1.15rem;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+      .portal-capture-shield__text {
+        margin: 0 0 20px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+      .portal-capture-shield__btn {
+        min-width: 140px;
+        padding: 10px 22px;
+        border: none;
+        border-radius: 999px;
+        background: #9a3218;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+    </style>
+    <!-- Safari, Chrome, Яндекс — до загрузки React -->
+    <script src="/capture-shield-early.js"></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <p style="margin:0;padding:24px;font-family:system-ui,sans-serif;text-align:center;color:#5c6b8a">
+        Загрузка портала ТрассА…
+      </p>
+    </div>
+    <noscript>
+      <p style="padding:24px;font-family:system-ui,sans-serif;text-align:center">
+        Для работы портала нужен JavaScript. Откройте
+        <a href="https://trassa.duckdns.org/#/">https://trassa.duckdns.org/#/</a>
+      </p>
+    </noscript>
     <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>

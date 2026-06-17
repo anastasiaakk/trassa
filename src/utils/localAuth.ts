@@ -187,6 +187,7 @@ export function deleteRegisteredUser(
         phone: "",
         notifyEmail: true,
         notifyPush: false,
+        specializationId: "",
       });
     }
   } catch {

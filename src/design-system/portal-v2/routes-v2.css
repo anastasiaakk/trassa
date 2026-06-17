@@ -1,0 +1,15 @@
+/**
+ * Маршрутные классы на body/html (App.tsx) для v2.
+ */
+html[data-portal-design="v2"] body.route-page3 {
+  background: var(--pv2-deep);
+  color: var(--pv2-frost);
+}
+
+html[data-portal-design="v2"] body.route-profile {
+  background-color: var(--pv2-deep);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] body.route-profile {
+  background-color: var(--pv2-white);
+}

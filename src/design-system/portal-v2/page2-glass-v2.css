@@ -1,0 +1,130 @@
+/**
+ * Page2 v2 — тёмный hero (референс) + glass-панель карты. Палитра: 5 цветов v2.
+ */
+
+html[data-portal-design="v2"] body.route-page2 {
+  color: var(--pv2-ink);
+}
+
+/* Hero: заголовок + KPI в одной тёмной карточке */
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview[class*="overviewCard"] {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+  padding: clamp(1.35rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 2.5vw, 1.5rem);
+  border-radius: 24px;
+  border: 1px solid rgba(var(--pv2-r-primary), 0.38);
+  background-color: var(--pv2-primary);
+  background-image: linear-gradient(
+    165deg,
+    rgba(var(--pv2-r-white), 0.24) 0%,
+    rgba(var(--pv2-r-primary), 0.9) 32%,
+    var(--pv2-primary) 100%
+  );
+  box-shadow: 0 16px 36px rgba(var(--pv2-r-primary), 0.3);
+}
+
+/* Белые летающие орбы hero — отключены */
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview[class*="overviewCard"]::before,
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview[class*="overviewCard"]::after {
+  content: none !important;
+  display: none !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="overviewIntro"] {
+  position: relative;
+  z-index: 1;
+  margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+  padding-bottom: clamp(1.1rem, 2vw, 1.35rem);
+  border-bottom: 1px solid rgba(var(--pv2-r-white), 0.12);
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="overviewTitle"] {
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="overviewText"] {
+  color: rgba(var(--pv2-r-white), 0.78);
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="overviewStats"] {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__map-panel {
+  display: block;
+  min-height: auto;
+  overflow: hidden;
+  padding: clamp(12px, 1.5vw, 18px) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2-map-hint {
+  flex-shrink: 0;
+  margin: 0 0 var(--pv2-space-3) !important;
+  padding: 8px 14px !important;
+  width: fit-content;
+  max-width: 100%;
+  border-radius: var(--pv2-radius-pill) !important;
+  font-size: var(--pv2-font-xs) !important;
+  font-weight: 600;
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="mapLayout"] {
+  min-height: 0;
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="mapCanvas"] {
+  min-height: 0;
+  border-radius: var(--pv2-radius-lg);
+  overflow: hidden;
+  background: var(--pv2-white);
+  border: 1px solid rgba(var(--pv2-r-primary), 0.12);
+  box-shadow: 0 4px 18px rgba(var(--pv2-r-ink), 0.05);
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="subjectAsideTitle"] {
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="subjectAsideHint"] {
+  color: var(--pv2-muted) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="subjectFieldLabel"] {
+  color: var(--pv2-muted) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="subjectEmpty"] {
+  border-color: rgba(var(--pv2-r-primary), 0.22) !important;
+  background: rgba(var(--pv2-r-white), 0.72) !important;
+  color: var(--pv2-muted) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="mapCanvas"] [class*="wrap"] {
+  background: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__btn-primary {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="btnOutline"] {
+  border-color: rgba(var(--pv2-r-primary), 0.28) !important;
+  color: var(--pv2-ink) !important;
+  background: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2-scene [class*="linkAbout"] {
+  color: var(--pv2-primary) !important;
+  font-weight: 600;
+}
+
+@media (max-width: 960px) {
+  html[data-portal-design="v2"] .page2-v2__map-panel {
+    min-height: auto;
+    padding: var(--pv2-space-4) !important;
+  }
+}

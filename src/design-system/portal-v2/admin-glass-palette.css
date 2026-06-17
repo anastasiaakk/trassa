@@ -1,0 +1,151 @@
+/**
+ * Админка в v2 — переопределение legacy glass (#00D4A5 / #67E8F9 / #0A2540).
+ */
+html[data-portal-design="v2"] .admin-dashboard--portal-v2,
+html[data-portal-design="v2"] .admin-tables-v2 {
+  --ag-navy: var(--pv2-ink);
+  --ag-teal: var(--pv2-primary);
+  --ag-teal-dim: rgba(var(--pv2-r-primary), 0.55);
+  --ag-cyan: var(--pv2-primary);
+  --ag-cyan-soft: rgba(var(--pv2-r-primary), 0.35);
+  --ag-muted: rgba(var(--pv2-r-white), 0.82);
+  --ag-muted-dim: rgba(var(--pv2-r-muted), 0.55);
+  --ag-border: rgba(var(--pv2-r-white), 0.22);
+  --ag-glow: 0 0 28px rgba(var(--pv2-r-primary), 0.18);
+  --ag-text: var(--pv2-ink);
+  --ag-text-soft: var(--pv2-ink);
+  --cab-text: var(--pv2-ink);
+  --cab-muted: var(--pv2-muted);
+  --cab-accent: var(--pv2-primary);
+  --cab-accent2: var(--pv2-white);
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene {
+  background:
+    var(--pv2-gradient-mesh-a),
+    var(--pv2-gradient-mesh-b),
+    var(--pv2-gradient-glass-light) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .btnNeoPrimary,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassBtnPrimary,
+html[data-portal-design="v2"] .admin-tables-v2 .btnNeoPrimary {
+  background: var(--pv2-primary) !important;
+  border-color: transparent !important;
+  color: var(--pv2-white) !important;
+  box-shadow: 0 4px 20px rgba(var(--pv2-r-primary), 0.35) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .btnNeoGhost,
+html[data-portal-design="v2"] .admin-tables-v2 .btnNeoGhost {
+  color: var(--pv2-ink) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.35) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .btnNeoGhost:hover {
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassNavBtn:hover,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassNavBtnActive {
+  background: rgba(var(--pv2-r-primary), 0.14) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+  color: var(--pv2-primary) !important;
+  box-shadow: 0 0 14px rgba(var(--pv2-r-primary), 0.2) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .navBtnActive,
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-nav-btn--active,
+html[data-portal-design="v2"] .admin-tables-v2 [class*="navBtnActive"] {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+  border-color: transparent !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassSidebar,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassStatCard,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassChartCard,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassIncidentsBlock,
+html[data-portal-design="v2"] .admin-tables-v2 {
+  border-color: rgba(var(--pv2-r-ink), 0.12) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 input,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 select,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 textarea,
+html[data-portal-design="v2"] .admin-tables-v2 input,
+html[data-portal-design="v2"] .admin-tables-v2 select,
+html[data-portal-design="v2"] .admin-tables-v2 textarea {
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 input:focus,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 select:focus,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 textarea:focus {
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+  box-shadow:
+    0 0 0 3px rgba(var(--pv2-r-primary), 0.2),
+    0 0 20px rgba(var(--pv2-r-primary), 0.12) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassPanelTitle,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassStatValue,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassPanelGreeting {
+  color: var(--pv2-primary) !important;
+  text-shadow: none !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 tbody tr:hover td,
+html[data-portal-design="v2"] .admin-tables-v2 tbody tr:hover td {
+  background: rgba(var(--pv2-r-primary), 0.08) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .tableRowSelected td,
+html[data-portal-design="v2"] .admin-tables-v2 .tableRowSelected td {
+  background: rgba(var(--pv2-r-primary), 0.14) !important;
+  box-shadow: inset 3px 0 0 var(--pv2-primary) !important;
+}
+
+/* AdminGlass.module (hashed) внутри админки */
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="glassCard"],
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="GlassCard"] {
+  border-color: rgba(var(--pv2-r-primary), 0.2) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="glassBtnPrimary"],
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="toggleOn"] {
+  background: var(--pv2-primary) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.5) !important;
+  color: var(--pv2-ink) !important;
+  box-shadow: 0 0 16px rgba(var(--pv2-r-primary), 0.35) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="glassToggle"]:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--pv2-r-primary), 0.4) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="error"],
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .error {
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="success"],
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .success {
+  color: var(--pv2-primary) !important;
+}
+
+/* Пикер фона Page2 в админке */
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="pickerOption"]:hover,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 [class*="pickerOptionActive"] {
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 input[type="radio"],
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 input[type="checkbox"] {
+  accent-color: var(--pv2-primary) !important;
+}

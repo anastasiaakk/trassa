@@ -1,0 +1,94 @@
+/**
+ * Page1 / сплэш-флоу — glass-сцена при v2.
+ */
+html[data-portal-design="v2"] body.route-page1 {
+  background: var(--pv2-gradient-deep) !important;
+  background-color: var(--pv2-deep) !important;
+}
+
+html[data-portal-design="v2"] body.route-page1 .page1-ambient__aurora--a {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(0, 212, 165, 0.2) 55deg,
+    transparent 110deg,
+    rgba(103, 232, 249, 0.16) 185deg,
+    transparent 250deg,
+    rgba(0, 212, 165, 0.12) 310deg,
+    transparent 360deg
+  );
+  opacity: 0.85;
+}
+
+html[data-portal-design="v2"] body.route-page1 .page1-ambient__aurora--b {
+  background: conic-gradient(
+    from 120deg at 45% 55%,
+    transparent 0deg,
+    rgba(103, 232, 249, 0.14) 70deg,
+    transparent 140deg,
+    rgba(19, 74, 92, 0.35) 220deg,
+    transparent 300deg,
+    rgba(0, 212, 165, 0.1) 340deg,
+    transparent 360deg
+  );
+  opacity: 0.7;
+}
+
+html[data-portal-design="v2"] body.route-page1 .page1-ambient__depth {
+  background:
+    radial-gradient(ellipse 120% 80% at 12% 18%, rgba(0, 212, 165, 0.18) 0%, transparent 58%),
+    radial-gradient(ellipse 100% 70% at 90% 85%, rgba(103, 232, 249, 0.12) 0%, transparent 55%);
+  opacity: 1;
+}
+
+html[data-portal-design="v2"] body.route-page1 .page1-ambient__sweep {
+  background: linear-gradient(
+    108deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(255, 255, 255, 0.02) 47%,
+    rgba(0, 212, 165, 0.1) 50%,
+    rgba(103, 232, 249, 0.08) 52%,
+    rgba(255, 255, 255, 0.02) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+}
+
+html[data-portal-design="v2"] .page1-v2__stat {
+  border: 1px solid var(--pv2-border) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+  color: var(--pv2-frost) !important;
+  box-shadow: var(--pv2-shadow-sm) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__stat-muted {
+  color: var(--pv2-text-muted) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__stat-value {
+  color: var(--pv2-frost) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__stat-icon {
+  background: rgba(0, 212, 165, 0.18) !important;
+  color: var(--pv2-cyan) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__stat-chart {
+  color: var(--pv2-teal) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__hero {
+  box-shadow: var(--pv2-shadow-md), 0 0 56px rgba(0, 212, 165, 0.22) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__progress-track {
+  background: rgba(10, 37, 64, 0.35) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__progress-fill {
+  background: linear-gradient(90deg, var(--pv2-deep) 0%, var(--pv2-cyan) 100%) !important;
+}

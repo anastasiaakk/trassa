@@ -1,0 +1,162 @@
+/**
+ * Настройки профиля (/profile) при portal v2.
+ */
+html[data-portal-design="v2"] .profile-v2 {
+  background: var(--pv2-gradient-deep) !important;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .profile-v2 {
+  background: linear-gradient(180deg, var(--pv2-white) 0%, var(--pv2-white) 100%) !important;
+  color: var(--pv2-deep);
+}
+
+html[data-portal-design="v2"] .profile-v2__header,
+html[data-portal-design="v2"] .profile-v2__card {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+  box-shadow: var(--pv2-shadow-sm) !important;
+}
+
+html[data-portal-design="v2"] .profile-v2__banner {
+  background: linear-gradient(
+    135deg,
+    var(--pv2-deep) 0%,
+    var(--pv2-muted) 48%,
+    rgba(var(--pv2-r-primary), 0.4) 100%
+  ) !important;
+  color: var(--pv2-frost) !important;
+  border: 1px solid var(--pv2-border) !important;
+}
+
+html[data-portal-design="v2"] .profile-v2 input,
+html[data-portal-design="v2"] .profile-v2 select,
+html[data-portal-design="v2"] .profile-v2 textarea {
+  border: 1px solid var(--pv2-border) !important;
+  color: var(--pv2-text) !important;
+}
+
+html[data-portal-design="v2"] .profile-v2 input::placeholder {
+  color: var(--pv2-text-subtle);
+  opacity: 1;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .profile-v2 input,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .profile-v2 select {
+  background: rgba(var(--pv2-r-white), 0.94) !important;
+}
+
+html[data-portal-design="v2"] .profile-v2__save {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border: none !important;
+  box-shadow: 0 6px 18px rgba(var(--pv2-r-primary), 0.28) !important;
+}
+
+html[data-portal-design="v2"] .profile-v2__ghost {
+  border: 1px solid var(--pv2-border) !important;
+  background: var(--pv2-bg-glass) !important;
+}
+
+html[data-portal-design="v2"] .profile-v2__page {
+  min-height: 100vh;
+  padding: 24px;
+  font-family: Inter, sans-serif;
+}
+
+html[data-portal-design="v2"] .profile-v2__inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+html[data-portal-design="v2"] .profile-v2__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: 28px;
+}
+
+html[data-portal-design="v2"] .profile-v2__header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+html[data-portal-design="v2"] .profile-v2__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+html[data-portal-design="v2"] .profile-v2__banner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  border-radius: 28px;
+}
+
+/* Аватар в шапке профиля — всегда круг */
+.profile-v2__avatar-wrap {
+  position: relative;
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
+  overflow: visible;
+}
+
+.profile-v2__avatar-wrap > .profile-v2__avatar,
+button.profile-v2__avatar {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  box-sizing: border-box;
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  min-height: 72px;
+  padding: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-v2__avatar-wrap > .profile-v2__avatar > .profile-avatar-display__clip,
+.profile-v2__avatar > .profile-avatar-display__clip {
+  border-radius: 50%;
+}
+
+.profile-v2__avatar-wrap > .profile-v2__avatar > .profile-avatar-display__clip > img,
+.profile-v2__avatar > .profile-avatar-display__clip > img {
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+html[data-portal-design="v2"] .profile-v2__card {
+  padding: 22px 24px;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+html[data-portal-design="v2"] .profile-v2__admin-back {
+  border: none;
+  cursor: pointer;
+  border-radius: 18px;
+  padding: 12px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  box-shadow: 0 6px 18px rgba(var(--pv2-r-primary), 0.28) !important;
+}

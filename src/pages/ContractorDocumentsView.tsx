@@ -1,5 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
+import { cx } from "../design-system/cabinetChromeClasses";
+import type { CabinetChromeClassNames } from "../design-system/cabinetChromeClasses";
 import { loadProfileSettings } from "../profileSettingsStorage";
 import {
   contractorHasSubmittedDocument,
@@ -9,6 +11,12 @@ import {
   SHARED_DOCS_UPDATED_EVENT,
   type AssociationDocument,
 } from "../utils/sharedAssociationDocumentsStorage";
+import Page4V2PageContent from "../components/cabinet-v2/Page4V2PageContent";
+import { usePortalDesign } from "../design-system/usePortalDesign";
+import { page4V2PanelStyle } from "../utils/page4V2PanelStyle";
+
+const PAGE_LEDE =
+  "Просматривайте шаблоны, заполняйте поля и отправляйте ответ. Можно прикрепить файл.";
 
 type ThemeStyles = {
   text: string;
@@ -24,8 +32,10 @@ type ThemeStyles = {
 type Props = {
   styles: ThemeStyles;
   layoutStyles: Record<string, CSSProperties>;
+  cn?: CabinetChromeClassNames;
   /** Тема кабинета — для неоморфной плашки «Документ отправлен» */
   isDark?: boolean;
+  isV2?: boolean;
 };
 
 function fileToDataUrl(file: File): Promise<{ name: string; dataUrl: string }> {
@@ -51,8 +61,11 @@ async function applyFile(f: File | undefined, onError: (msg: string) => void) {
 const ContractorDocumentsView = memo(function ContractorDocumentsView({
   styles,
   layoutStyles,
+  cn,
   isDark = false,
+  isV2: isV2Prop,
 }: Props) {
+  const isV2 = isV2Prop === true || usePortalDesign() === "v2";
   const [docs, setDocs] = useState(() => listAllDocumentsForContractors());
   const [activeId, setActiveId] = useState<string | null>(null);
   const [filled, setFilled] = useState("");
@@ -152,13 +165,8 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
 
   const fieldLocked = alreadySubmitted;
 
-  return (
-    <div style={{ ...(layoutStyles.recentPanel ?? {}), maxWidth: 920 }}>
-      <div style={layoutStyles.recentTitle ?? {}}>Документы ассоциаций</div>
-      <p style={{ fontSize: 14, lineHeight: 1.55, color: styles.muted, margin: "0 0 18px" }}>
-        Просматривайте шаблоны, заполняйте поля и отправляйте ответ. Можно прикрепить файл.
-      </p>
-
+  const body = (
+    <>
       <div style={{ display: "grid", gap: 12, marginBottom: 22 }}>
         {docs.length === 0 ? (
           <div style={{ fontSize: 14, color: styles.muted, padding: 18, borderRadius: 18, background: styles.sectionBg, boxShadow: styles.insetShadow }}>
@@ -169,8 +177,11 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
             <button
               key={d.id}
               type="button"
+              className={isV2 ? "page4-v2__list-item-btn" : undefined}
               onClick={() => {
-                setActiveId(d.id);
+                const collapsing = activeId === d.id;
+                setActiveId(collapsing ? null : d.id);
+                if (collapsing) return;
                 setFilled("");
                 setAttach(null);
                 setError(null);
@@ -200,6 +211,7 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
 
       {activeDoc ? (
         <div
+          className={isV2 ? "page4-v2__panel" : undefined}
           style={{
             padding: 20,
             borderRadius: 24,
@@ -254,6 +266,7 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
             Заполненная форма / комментарий для отправки
           </label>
           <textarea
+            className={isV2 ? "page4-v2__field" : undefined}
             value={filled}
             onChange={(e) => setFilled(e.target.value)}
             rows={8}
@@ -286,6 +299,7 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
             style={{ display: "none" }}
           />
           <div
+            className={isV2 ? "page4-v2__dropzone" : undefined}
             role="button"
             tabIndex={fieldLocked ? -1 : 0}
             aria-disabled={fieldLocked}
@@ -343,6 +357,7 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
 
           {attach ? (
             <div
+              className={isV2 ? "page4-v2__file-chip" : undefined}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -392,6 +407,7 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
           ) : null}
           <button
             type="button"
+            className={isV2 ? "page4-v2__primary-btn" : undefined}
             onClick={handleSubmit}
             disabled={fieldLocked}
             style={{
@@ -410,6 +426,29 @@ const ContractorDocumentsView = memo(function ContractorDocumentsView({
           </button>
         </div>
       ) : null}
+    </>
+  );
+
+  if (isV2) {
+    return (
+      <Page4V2PageContent
+        title="Документы ассоциаций"
+        lede={PAGE_LEDE}
+        cn={cn}
+        className="page4-v2__documents"
+      >
+        {body}
+      </Page4V2PageContent>
+    );
+  }
+
+  return (
+    <div className={cx(cn?.recentPanel)} style={page4V2PanelStyle(layoutStyles, false)}>
+      <div className={cn?.recentTitle} style={layoutStyles.recentTitle ?? {}}>
+        Документы ассоциаций
+      </div>
+      <p style={{ fontSize: 14, lineHeight: 1.55, color: styles.muted, margin: "0 0 18px" }}>{PAGE_LEDE}</p>
+      {body}
     </div>
   );
 });

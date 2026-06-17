@@ -1,0 +1,165 @@
+/**
+ * Этап C — публичные экраны v2: light-first (MediAid / Travel / Quanta refs).
+ * Перекрывает тёмные правила page1.css, page3.css, public-v2.css, entry-splash.css.
+ */
+
+/* —— Entry splash —— */
+html[data-portal-design="v2"] .entry-splash--v2 {
+  background: #000 !important;
+  background-color: #000 !important;
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__shade--readable {
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(var(--pv2-r-ink), 0.5) 0%, transparent 62%),
+    linear-gradient(180deg, transparent 0%, transparent 42%, rgba(var(--pv2-r-ink), 0.4) 100%) !important;
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 {
+  --entry-brand-r: var(--pv2-r-primary);
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__video-stage {
+  background: #000;
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__brand-tint {
+  background: linear-gradient(
+    160deg,
+    rgba(var(--pv2-r-primary), 0.24) 0%,
+    rgba(var(--pv2-r-primary), 0.16) 45%,
+    rgba(var(--pv2-r-primary), 0.28) 100%
+  );
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__caption {
+  color: var(--pv2-white) !important;
+  text-shadow: 0 2px 20px rgba(var(--pv2-r-ink), 0.75);
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__progress-fill {
+  background: var(--pv2-primary) !important;
+  box-shadow: 0 0 16px rgba(var(--pv2-r-primary), 0.55) !important;
+}
+
+/* —— Page1 —— */
+html[data-portal-design="v2"] body.route-page1,
+html[data-portal-design="v2"] .page1-v2-scene {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] body.route-page1 .page1-ambient__depth {
+  background:
+    radial-gradient(ellipse 100% 70% at 8% 0%, rgba(var(--pv2-r-primary), 0.14) 0%, transparent 52%),
+    radial-gradient(ellipse 85% 60% at 92% 88%, rgba(var(--pv2-r-primary), 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 45% at 72% 18%, rgba(var(--pv2-r-primary), 0.06) 0%, transparent 55%);
+  opacity: 1;
+}
+
+html[data-portal-design="v2"] .page1-v2__hero {
+  border: none !important;
+  background: var(--pv2-primary) !important;
+  box-shadow: var(--pv2-shadow-md), 0 0 56px rgba(var(--pv2-r-primary), 0.28) !important;
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .page1-v2__hero [class*="heroTag"] {
+  background: rgba(var(--pv2-r-white), 0.35) !important;
+  color: var(--pv2-ink) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.12) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__hero [class*="heroTitle"],
+html[data-portal-design="v2"] .page1-v2__hero [class*="heroDesc"],
+html[data-portal-design="v2"] .page1-v2__hero [class*="progressHead"] {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__hero [class*="heroCta"] {
+  border-color: var(--pv2-white) !important;
+  color: var(--pv2-white) !important;
+  background: transparent !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__hero [class*="heroCta"]:hover {
+  background: rgba(var(--pv2-r-white), 0.2) !important;
+}
+
+html[data-portal-design="v2"] .page1-v2__hero [class*="progressFill"] {
+  background: var(--pv2-white) !important;
+}
+
+/* KPI cards — page1-cards-v2.css */
+
+html[data-portal-design="v2"] .page1-v2__progress-track {
+  background: var(--pv2-fill-subtle) !important;
+}
+
+/* —— Page3 —— */
+html[data-portal-design="v2"] .page3-v2 {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page3-v2__title {
+  color: var(--pv2-primary) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .page3-v2__subtitle {
+  color: var(--pv2-muted) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__back {
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__role-card {
+  background: var(--pv2-glass-l2-bg) !important;
+  border-color: var(--pv2-glass-l2-border) !important;
+  box-shadow: var(--pv2-glass-l2-shadow) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page3-v2__role-card--selected {
+  outline-color: rgba(var(--pv2-r-primary), 0.45);
+  box-shadow: 0 16px 48px rgba(var(--pv2-r-primary), 0.18), var(--pv2-glass-l2-shadow) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__login-card {
+  background: var(--pv2-glass-l1-bg) !important;
+  border-color: var(--pv2-glass-l1-border) !important;
+  box-shadow: var(--pv2-glass-l1-shadow) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page3-v2__login-card input,
+html[data-portal-design="v2"] .page3-v2__login-card textarea,
+html[data-portal-design="v2"] .page3-v2__login-card select {
+  background: var(--pv2-white) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.2) !important;
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__primary-btn {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+  box-shadow: 0 8px 28px rgba(var(--pv2-r-primary), 0.32) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__profile-btn {
+  background: var(--pv2-glass-l3-bg) !important;
+  border-color: var(--pv2-glass-l3-border) !important;
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__profile-btn--active {
+  background: rgba(var(--pv2-r-primary), 0.12) !important;
+  border-color: var(--pv2-primary) !important;
+}
+
+/* Page2 glass — см. page2-glass-v2.css (финальный слой) */

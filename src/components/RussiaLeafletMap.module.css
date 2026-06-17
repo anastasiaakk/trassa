@@ -1,105 +1,265 @@
-/* Неоморфизм: белая векторная карта только РФ на тёмном фоне страницы */
+/* Карта РФ — палитра бренда */
 
 .wrap {
   position: relative;
   width: 100%;
-  height: min(72vh, 640px);
-  min-height: 360px;
-  border-radius: 28px;
+  height: min(62vh, 580px);
+  min-height: 400px;
+  border-radius: inherit;
   overflow: hidden;
   box-sizing: border-box;
-  background: linear-gradient(145deg, #f1f5f9 0%, #e8edf4 50%, #dfe6ef 100%);
-  box-shadow:
-    12px 12px 28px rgba(15, 23, 42, 0.22),
-    -10px -10px 24px rgba(255, 255, 255, 0.85),
-    inset 2px 2px 6px rgba(255, 255, 255, 0.45),
-    inset -2px -2px 8px rgba(15, 23, 42, 0.06);
+  background: #f8fcfb;
+  border: none;
+  box-shadow: none;
 }
 
 .mapHost {
   width: 100%;
   height: 100%;
   z-index: 0;
-  border-radius: 28px;
+  border-radius: inherit;
 }
 
 .subjectPopup {
   position: absolute;
   z-index: 1001;
   transform: translate(-50%, -100%);
-  min-width: 280px;
-  max-width: 320px;
-  padding: 12px;
-  border-radius: 16px;
-  background: rgba(49, 64, 103, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 14px 26px rgba(15, 23, 42, 0.36);
-  color: #eef2ff;
+  box-sizing: border-box;
+  width: 320px;
+  min-width: 320px;
+  max-width: 340px;
+  padding: 14px 14px 12px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(103, 232, 249, 0.35);
+  box-shadow: 0 12px 32px rgba(10, 37, 64, 0.14);
+  color: #0a2540;
+  font-family: var(--font-ui);
 }
 
 .subjectPopupHead {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .subjectPopupTitle {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #0a2540;
+  padding-right: 4px;
 }
 
 .subjectPopupClose {
   border: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 10px;
   cursor: pointer;
-  color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.12);
-  font-size: 18px;
+  color: #5c6b8a;
+  background: rgba(103, 232, 249, 0.12);
+  font-size: 1.125rem;
   line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.subjectPopupActions {
+.subjectPopupClose:hover {
+  background: rgba(43, 100, 253, 0.15);
+  color: #0a2540;
+}
+
+.subjectPopupTabs {
+  position: relative;
   display: grid;
-  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  width: 100%;
+  padding: 4px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #eef7f9 0%, #e8f2f6 100%);
+  border: 1px solid rgba(103, 232, 249, 0.28);
+  isolation: isolate;
+  box-sizing: border-box;
 }
 
-.subjectPopupBtn {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 999px;
-  padding: 8px 12px;
-  text-align: left;
-  background: rgba(255, 255, 255, 0.06);
-  color: #f8fafc;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Скользящая подложка — размер кнопок не меняется при выборе */
+.subjectPopupTabs::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px - 6px) / 2);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(10, 37, 64, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    left 0.2s ease,
+    opacity 0.15s ease;
+}
+
+.subjectPopupTabs[data-active="education"]::before,
+.subjectPopupTabs[data-active="contractors"]::before {
+  opacity: 1;
+}
+
+.subjectPopupTabs[data-active="contractors"]::before {
+  left: calc(50% + 3px);
+}
+
+.subjectPopupTab {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 10px;
+  background: transparent;
+  color: #5c6b8a;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
   cursor: pointer;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s ease;
 }
 
-.subjectPopupBtnActive {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.38);
+.subjectPopupTab:focus {
+  outline: none;
+}
+
+.subjectPopupTab:focus-visible {
+  outline: 2px solid rgba(43, 100, 253, 0.45);
+  outline-offset: -2px;
+}
+
+.subjectPopupTab:hover:not(.subjectPopupTabActive) {
+  color: #0a2540;
+}
+
+.subjectPopupTabActive {
+  background: transparent;
+  color: #0a2540;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.subjectPopupTabActive:hover {
+  color: #0a2540;
 }
 
 /* Подложка карты — чистый белый (без растровых тайлов) */
 .wrap :global(.leaflet-container) {
-  font-family: "Montserrat", "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: var(--font-ui);
   background: #ffffff;
 }
 
 .wrap :global(.leaflet-overlay-pane svg path) {
   vector-effect: non-scaling-stroke;
+}
+
+/* Метки на карте — аккуратные, без лишнего свечения */
+.markerIconRoot {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Главная: федеральный округ */
+.markerMainWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.markerMainCore {
+  position: relative;
+  z-index: 2;
+  width: var(--marker-core, 14px);
+  height: var(--marker-core, 14px);
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: #00d4a5;
+  border: 1.5px solid #ffffff;
+  box-shadow:
+    0 1px 2px rgba(10, 37, 64, 0.2),
+    0 0 0 1px rgba(0, 184, 148, 0.35),
+    0 0 8px 2px rgba(0, 212, 165, 0.42);
+}
+
+.markerMainRing {
+  position: absolute;
+  width: calc(var(--marker-core, 14px) + 14px);
+  height: calc(var(--marker-core, 14px) + 14px);
+  border-radius: 50%;
+  border: 1px solid rgba(103, 232, 249, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.markerMainActive .markerMainCore {
+  background: #00e8dc;
+  box-shadow:
+    0 1px 3px rgba(10, 37, 64, 0.25),
+    0 0 0 1px rgba(0, 212, 165, 0.5),
+    0 0 10px 3px rgba(0, 212, 165, 0.5);
+}
+
+.markerMainActive .markerMainRing {
+  opacity: 1;
+}
+
+.markerSubjectWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Второстепенные: субъекты */
+.markerSubject {
+  display: block;
+  width: var(--marker-core, 11px);
+  height: var(--marker-core, 11px);
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: #5ed4e8;
+  border: 1px solid #ffffff;
+  box-shadow:
+    0 1px 2px rgba(10, 37, 64, 0.18),
+    0 0 6px 1px rgba(103, 232, 249, 0.35);
+}
+
+.markerSubjectActive {
+  display: block;
+  width: var(--marker-core, 13px);
+  height: var(--marker-core, 13px);
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: #00d4a5;
+  border: 1.5px solid #ffffff;
+  box-shadow:
+    0 1px 2px rgba(10, 37, 64, 0.2),
+    0 0 8px 2px rgba(0, 212, 165, 0.4);
 }
 
 .zoomCluster {
@@ -114,57 +274,42 @@
 }
 
 .zoomBtn {
-  width: 46px;
-  height: 46px;
-  border: none;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(103, 232, 249, 0.35);
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 1;
-  color: #1e293b;
-  background: linear-gradient(145deg, #eef2f8, #dce4f0);
-  box-shadow:
-    6px 6px 14px rgba(15, 23, 42, 0.18),
-    -4px -4px 10px rgba(255, 255, 255, 0.9),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.7);
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    color 0.15s ease;
+  color: #0a2540;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(10, 37, 64, 0.12);
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .zoomBtn:hover {
-  color: #475569;
-  background: linear-gradient(145deg, #ebeef3, #d8dee8);
-  box-shadow:
-    5px 5px 11px rgba(15, 23, 42, 0.11),
-    -3px -3px 9px rgba(255, 255, 255, 0.82),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.55);
+  background: rgba(103, 232, 249, 0.15);
+  color: #00a884;
 }
 
 .zoomBtn:active {
-  transform: translateY(0);
-  box-shadow:
-    inset 4px 4px 10px rgba(15, 23, 42, 0.15),
-    inset -3px -3px 8px rgba(255, 255, 255, 0.5);
+  transform: scale(0.97);
 }
 
 .scaleReadout {
   position: absolute;
   left: 16px;
-  bottom: 52px;
+  bottom: 56px;
   z-index: 1000;
-  padding: 10px 16px;
-  border-radius: 14px;
-  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 12px;
   font-weight: 600;
-  color: #1e293b;
-  background: linear-gradient(145deg, #eef2f8, #e2e9f4);
-  box-shadow:
-    6px 6px 14px rgba(15, 23, 42, 0.14),
-    -4px -4px 10px rgba(255, 255, 255, 0.85),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.65);
+  color: #0a2540;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(103, 232, 249, 0.3);
+  box-shadow: 0 4px 12px rgba(10, 37, 64, 0.1);
   pointer-events: none;
 }
 
@@ -187,9 +332,31 @@
 
 @media (max-width: 640px) {
   .wrap {
-    height: min(58vh, 480px);
-    min-height: 280px;
+    height: min(52dvh, 440px);
+    min-height: 260px;
     border-radius: 22px;
+  }
+
+  .subjectPopup {
+    left: 50% !important;
+    top: auto !important;
+    bottom: max(12px, env(safe-area-inset-bottom, 0)) !important;
+    width: min(320px, calc(100vw - 24px));
+    min-width: 0;
+    max-width: calc(100vw - 24px);
+    transform: translateX(-50%) !important;
+  }
+
+  .subjectPopupClose {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .subjectPopupTab {
+    min-height: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   .zoomCluster {
@@ -197,8 +364,8 @@
   }
 
   .zoomBtn {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     font-size: 20px;
   }
 

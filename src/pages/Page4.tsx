@@ -1,11 +1,21 @@
-﻿import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import CabinetChromeLayout, { type CabinetChromeContext } from "../components/CabinetChromeLayout";
 import { ROLE_ICON_CONTRACTOR } from "../assets/appIcons";
 
 const CABINET_HERO_CONTRACTOR = new URL("../assets/cabinet-hero-contractor.png", import.meta.url).href;
 import HeroRoleIconButton from "../components/HeroRoleIconButton";
-import { buildCabinetHeroCardStyle, heroTopRowStyle } from "../utils/cabinetHero";
+import ContractorCabinetDashboardV2 from "../components/cabinet-v2/ContractorCabinetDashboardV2";
+import ContractorGlassKpiRow from "../components/cabinet-v2/ContractorGlassKpiRow";
+import { CONTRACTOR_UPCOMING_EVENTS_PANEL_ID } from "../components/cabinet-v2/CabinetV2Primitives";
+import Page4V2MainRegion from "../components/cabinet-v2/Page4V2MainRegion";
+import { cx } from "../design-system/cabinetChromeClasses";
+import {
+  buildCabinetHeroCardStyle,
+  CABINET_HERO_BG_POSITION_CONTRACTOR,
+  heroTagBadgeStyle,
+  heroTopRowStyle,
+} from "../utils/cabinetHero";
 import { ContractorCabinetAside } from "../components/ContractorCabinetAside";
 import { AUDIENCE_LABELS, getUpcomingStudentSchoolEventsForPanel } from "./Page5EventsView";
 import {
@@ -16,16 +26,153 @@ import {
 import { Page4ContractorProforientationMain } from "./Page4ContractorProforientation";
 import ContractorDocumentsView from "./ContractorDocumentsView";
 import ContractorStudentTeamsView from "./ContractorStudentTeamsView";
+import ContractorRecommendationsView from "./ContractorRecommendationsView";
+import ContractorFormsView from "./ContractorFormsView";
+import ContractorPlannerView from "./ContractorPlannerView";
+import { fetchContractorAssignedForms, fetchContractorFormAlerts } from "../api/formsApi";
+import type { FormSubmission, FormTemplate } from "../types/adminForms";
+import { loadAdminFormsStore, listContractorAssignments } from "../utils/adminFormsStorage";
+import { formatKpiCount, kpiTrendFromCount } from "../utils/kpiCardHelpers";
+import {
+  countUnreadContractorRecommendations,
+  DISTRIBUTION_PROPOSALS_CHANGED,
+  loadContractorRecommendations,
+  type ContractorRecommendation,
+} from "../utils/distributionRecommendations";
+import { countUnreadContractorAlerts } from "../utils/formAlertsStorage";
+import { isAuthApiEnabled } from "../utils/authMode";
+import {
+  formNotificationsSupported,
+  requestFormNotificationPermission,
+} from "../utils/formBrowserNotify";
 
 function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
-  const { styles, layoutStyles, profilePlaque, isDark } = ctx;
+  const { styles, layoutStyles, profilePlaque, isDark, cn, isV2 } = ctx;
   const location = useLocation();
+  const navigate = useNavigate();
   const isDocumentsPage = location.pathname === "/page4/documents";
   const isTeamsPage = location.pathname === "/page4/teams";
+  const isRecommendationsPage = location.pathname === "/page4/recommendations";
   const isProforientationPage = location.pathname === "/page4/proforientation";
+  const isFormsPage = location.pathname === "/page4/forms";
+  const isPlannerPage = location.pathname === "/page4/planner";
   const [sharedCalendarEvents, setSharedCalendarEvents] = useState(() =>
     loadSharedCalendarEvents()
   );
+  const [recommendations, setRecommendations] = useState<ContractorRecommendation[]>([]);
+  const [formsUnread, setFormsUnread] = useState(0);
+  const [assignedTemplates, setAssignedTemplates] = useState<FormTemplate[]>([]);
+  const [formSubmissions, setFormSubmissions] = useState<FormSubmission[]>([]);
+  const [notifyAsked, setNotifyAsked] = useState(false);
+
+  const reloadRecommendations = useCallback(() => {
+    const email = profilePlaque.email.trim();
+    if (!email) {
+      setRecommendations([]);
+      return;
+    }
+    void loadContractorRecommendations(email).then(setRecommendations);
+  }, [profilePlaque.email]);
+
+  useEffect(() => {
+    reloadRecommendations();
+    const onChange = () => reloadRecommendations();
+    window.addEventListener(DISTRIBUTION_PROPOSALS_CHANGED, onChange);
+    window.addEventListener("trassa-profile-saved", onChange);
+    window.addEventListener("focus", onChange);
+    const id = window.setInterval(reloadRecommendations, 20_000);
+    return () => {
+      window.removeEventListener(DISTRIBUTION_PROPOSALS_CHANGED, onChange);
+      window.removeEventListener("trassa-profile-saved", onChange);
+      window.removeEventListener("focus", onChange);
+      window.clearInterval(id);
+    };
+  }, [reloadRecommendations]);
+
+  const recommendationsUnread = countUnreadContractorRecommendations(
+    profilePlaque.email,
+    recommendations
+  );
+
+  const syncFormAlertsUnreadLocal = useCallback(() => {
+    const email = profilePlaque.email.trim().toLowerCase();
+    setFormsUnread(email ? countUnreadContractorAlerts(email) : 0);
+  }, [profilePlaque.email]);
+
+  const reloadFormAlertsFromApi = useCallback(() => {
+    const email = profilePlaque.email.trim().toLowerCase();
+    if (!email) {
+      setFormsUnread(0);
+      return;
+    }
+    if (!isAuthApiEnabled()) {
+      syncFormAlertsUnreadLocal();
+      return;
+    }
+    void fetchContractorFormAlerts().then((r) => {
+      if (r.ok) {
+        setFormsUnread(r.alerts.filter((a) => !a.read).length);
+      } else {
+        syncFormAlertsUnreadLocal();
+      }
+    });
+  }, [profilePlaque.email, syncFormAlertsUnreadLocal]);
+
+  const reloadAssignedForms = useCallback(() => {
+    const emailNorm = profilePlaque.email.trim().toLowerCase();
+    if (!emailNorm) {
+      setAssignedTemplates([]);
+      setFormSubmissions([]);
+      return;
+    }
+    if (isAuthApiEnabled()) {
+      void fetchContractorAssignedForms().then((r) => {
+        if (r.ok) {
+          setAssignedTemplates(r.templates);
+          setFormSubmissions(r.submissions);
+        }
+      });
+      return;
+    }
+    const store = loadAdminFormsStore();
+    const assigned = listContractorAssignments(emailNorm).map((a) => a.templateId);
+    setAssignedTemplates(store.templates.filter((t) => t.active && assigned.includes(t.id)));
+    setFormSubmissions(
+      store.submissions.filter(
+        (s) => s.contractorEmailNorm === emailNorm && assigned.includes(s.templateId)
+      )
+    );
+  }, [profilePlaque.email]);
+
+  useEffect(() => {
+    reloadAssignedForms();
+    const onFormsChange = () => reloadAssignedForms();
+    window.addEventListener("trassa-admin-forms-changed", onFormsChange);
+    window.addEventListener("trassa-portal-state-synced", onFormsChange);
+    window.addEventListener("focus", reloadAssignedForms);
+    const id = window.setInterval(reloadAssignedForms, 30_000);
+    return () => {
+      window.removeEventListener("trassa-admin-forms-changed", onFormsChange);
+      window.removeEventListener("trassa-portal-state-synced", onFormsChange);
+      window.removeEventListener("focus", reloadAssignedForms);
+      window.clearInterval(id);
+    };
+  }, [reloadAssignedForms]);
+
+  useEffect(() => {
+    reloadFormAlertsFromApi();
+    const onLocalChange = () => syncFormAlertsUnreadLocal();
+    window.addEventListener("trassa-form-alerts-changed", onLocalChange);
+    window.addEventListener("trassa-portal-state-synced", onLocalChange);
+    window.addEventListener("focus", reloadFormAlertsFromApi);
+    const id = window.setInterval(reloadFormAlertsFromApi, 30_000);
+    return () => {
+      window.removeEventListener("trassa-form-alerts-changed", onLocalChange);
+      window.removeEventListener("trassa-portal-state-synced", onLocalChange);
+      window.removeEventListener("focus", reloadFormAlertsFromApi);
+      window.clearInterval(id);
+    };
+  }, [reloadFormAlertsFromApi, syncFormAlertsUnreadLocal]);
 
   useEffect(() => {
     const reloadCalendar = () => setSharedCalendarEvents(loadSharedCalendarEvents());
@@ -46,7 +193,13 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
   const contractorHeroTitle = profilePlaque.contractorCompanyName.trim();
 
   const contractorHeroCardStyle = useMemo(
-    () => buildCabinetHeroCardStyle(layoutStyles.heroCard, CABINET_HERO_CONTRACTOR, isDark),
+    () =>
+      buildCabinetHeroCardStyle(
+        layoutStyles.heroCard,
+        CABINET_HERO_CONTRACTOR,
+        isDark,
+        CABINET_HERO_BG_POSITION_CONTRACTOR
+      ),
     [layoutStyles.heroCard, isDark]
   );
 
@@ -54,22 +207,212 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
     () => getUpcomingStudentSchoolEventsForPanel(sharedCalendarEvents, 6),
     [sharedCalendarEvents]
   );
+
+  const openUpcomingEventsPanel = useCallback(() => {
+    const panel = document.getElementById(CONTRACTOR_UPCOMING_EVENTS_PANEL_ID);
+    if (panel instanceof HTMLDetailsElement) {
+      panel.open = true;
+    }
+    panel?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  const contractorBentoMetrics = useMemo(() => {
+    const events = contractorUpcomingEvents.length;
+    return [
+      {
+        id: "events",
+        icon: "calendar" as const,
+        label: "Событий в календаре",
+        value: formatKpiCount(events),
+        trend: kpiTrendFromCount(events),
+        subtitle:
+          events > 0 ? "Ближайшие из общего календаря" : "Список ниже — пока пуст",
+        insightActionLabel: "Показать события",
+        onClick: openUpcomingEventsPanel,
+      },
+      {
+        id: "forms",
+        icon: "forms" as const,
+        label: "Уведомления по формам",
+        value: formatKpiCount(formsUnread),
+        trend: kpiTrendFromCount(formsUnread),
+        subtitle: formsUnread > 0 ? "Требуют просмотра" : "Все таблицы актуальны",
+        insightActionLabel: "Открыть формы",
+        onClick: () => navigate("/page4/forms"),
+      },
+      {
+        id: "students",
+        icon: "students" as const,
+        label: "Подборки студентов",
+        value: formatKpiCount(recommendationsUnread),
+        trend: kpiTrendFromCount(recommendationsUnread),
+        subtitle:
+          recommendationsUnread > 0 ? "Новые от администратора" : "Все рекомендации просмотрены",
+        insightActionLabel: "Открыть подборки",
+        onClick: () => navigate("/page4/recommendations"),
+      },
+      {
+        id: "documents",
+        icon: "documents" as const,
+        label: "Документы",
+        value: "→",
+        trend: "neutral" as const,
+        subtitle: "Письма и файлы от РАДОР",
+        insightActionLabel: "Открыть документы",
+        onClick: () => navigate("/page4/documents"),
+      },
+    ];
+  }, [contractorUpcomingEvents.length, formsUnread, recommendationsUnread, navigate, openUpcomingEventsPanel]);
+  const isPage4Home = location.pathname === "/page4";
+  const isPage4V2 = isV2 && location.pathname.startsWith("/page4");
+
+  const contractorV2KpiHeader = (
+    <ContractorGlassKpiRow metrics={contractorBentoMetrics} ariaLabel="Ключевые показатели подрядчика" />
+  );
+
+  const renderPage4V2Body = (): ReactNode => {
+    if (isFormsPage) {
+      return (
+        <ContractorFormsView
+          styles={styles}
+          layoutStyles={layoutStyles}
+          cn={ctx.cn}
+          isDark={ctx.isDark}
+          isV2
+        />
+      );
+    }
+    if (isDocumentsPage) {
+      return (
+        <ContractorDocumentsView
+          styles={styles}
+          layoutStyles={layoutStyles}
+          cn={ctx.cn}
+          isDark={ctx.isDark}
+          isV2
+        />
+      );
+    }
+    if (isRecommendationsPage) {
+      return (
+        <ContractorRecommendationsView
+          styles={styles}
+          layoutStyles={layoutStyles}
+          cn={ctx.cn}
+          isV2
+        />
+      );
+    }
+    if (isTeamsPage) {
+      return (
+        <ContractorStudentTeamsView
+          styles={styles}
+          layoutStyles={layoutStyles}
+          cn={ctx.cn}
+          isV2
+        />
+      );
+    }
+    if (isPlannerPage) {
+      return <ContractorPlannerView cn={ctx.cn} isV2 />;
+    }
+    if (isProforientationPage) {
+      return <Page4ContractorProforientationMain ctx={ctx} />;
+    }
+    if (isPage4Home) {
+      return (
+        <ContractorCabinetDashboardV2
+          ctx={ctx}
+          contractorHeroCardStyle={contractorHeroCardStyle}
+          contractorHeroTitle={contractorHeroTitle}
+          contractorUpcomingEvents={contractorUpcomingEvents}
+          formsUnread={formsUnread}
+          recommendationsUnread={recommendationsUnread}
+          assignedTemplates={assignedTemplates}
+          formSubmissions={formSubmissions}
+        />
+      );
+    }
+    return null;
+  };
+
+  if (isPage4V2) {
+    return (
+      <>
+        {isPage4Home ? contractorV2KpiHeader : null}
+        <Page4V2MainRegion>{renderPage4V2Body()}</Page4V2MainRegion>
+      </>
+    );
+  }
+
   const instituteCardDarkBg =
     "linear-gradient(145deg, rgba(36, 59, 116, 0.88) 0%, rgba(31, 52, 102, 0.86) 52%, rgba(26, 42, 82, 0.84) 100%)";
   const institutePanelDarkBg =
     "linear-gradient(152deg, rgba(26, 42, 82, 0.82) 0%, rgba(31, 52, 102, 0.78) 48%, rgba(20, 34, 70, 0.84) 100%)";
 
-  if (isDocumentsPage) {
+  if (isFormsPage) {
     return (
-      <main style={layoutStyles.main}>
+      <main className={ctx.cn.main} style={layoutStyles.main}>
         <ContractorCabinetAside
           styles={styles}
           layoutStyles={layoutStyles}
+          cn={ctx.cn}
+          isDark={ctx.isDark}
+          active="forms"
+          recommendationsUnread={recommendationsUnread}
+          formsUnread={formsUnread}
+        />
+        <section className={ctx.cn.section} style={layoutStyles.section}>
+          <ContractorFormsView
+            styles={styles}
+            layoutStyles={layoutStyles}
+            cn={ctx.cn}
+            isDark={ctx.isDark}
+            isV2={ctx.isV2}
+          />
+        </section>
+      </main>
+    );
+  }
+
+  if (isDocumentsPage) {
+    return (
+      <main className={ctx.cn.main} style={layoutStyles.main}>
+        <ContractorCabinetAside
+          styles={styles}
+          layoutStyles={layoutStyles}
+          cn={ctx.cn}
           isDark={ctx.isDark}
           active="documents"
+          recommendationsUnread={recommendationsUnread}
+          formsUnread={formsUnread}
         />
-        <section style={layoutStyles.section}>
-          <ContractorDocumentsView styles={styles} layoutStyles={layoutStyles} isDark={ctx.isDark} />
+        <section className={ctx.cn.section} style={layoutStyles.section}>
+          <ContractorDocumentsView
+            styles={styles}
+            layoutStyles={layoutStyles}
+            cn={ctx.cn}
+            isDark={ctx.isDark}
+          />
+        </section>
+      </main>
+    );
+  }
+
+  if (isRecommendationsPage) {
+    return (
+      <main className={ctx.cn.main} style={layoutStyles.main}>
+        <ContractorCabinetAside
+          styles={styles}
+          layoutStyles={layoutStyles}
+          cn={ctx.cn}
+          isDark={ctx.isDark}
+          active="recommendations"
+          recommendationsUnread={recommendationsUnread}
+          formsUnread={formsUnread}
+        />
+        <section className={ctx.cn.section} style={layoutStyles.section}>
+          <ContractorRecommendationsView styles={styles} layoutStyles={layoutStyles} cn={ctx.cn} />
         </section>
       </main>
     );
@@ -77,15 +420,18 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
 
   if (isTeamsPage) {
     return (
-      <main style={layoutStyles.main}>
+      <main className={ctx.cn.main} style={layoutStyles.main}>
         <ContractorCabinetAside
           styles={styles}
           layoutStyles={layoutStyles}
+          cn={ctx.cn}
           isDark={ctx.isDark}
           active="teams"
+          recommendationsUnread={recommendationsUnread}
+          formsUnread={formsUnread}
         />
-        <section style={layoutStyles.section}>
-          <ContractorStudentTeamsView styles={styles} layoutStyles={layoutStyles} />
+        <section className={ctx.cn.section} style={layoutStyles.section}>
+          <ContractorStudentTeamsView styles={styles} layoutStyles={layoutStyles} cn={ctx.cn} />
         </section>
       </main>
     );
@@ -93,12 +439,15 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
 
   if (isProforientationPage) {
     return (
-      <main style={layoutStyles.main}>
+      <main className={ctx.cn.main} style={layoutStyles.main}>
         <ContractorCabinetAside
           styles={styles}
           layoutStyles={layoutStyles}
+          cn={ctx.cn}
           isDark={ctx.isDark}
           active="proforientation"
+          recommendationsUnread={recommendationsUnread}
+          formsUnread={formsUnread}
         />
         <Page4ContractorProforientationMain ctx={ctx} />
       </main>
@@ -106,16 +455,156 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
   }
 
   return (
-    <main style={layoutStyles.main}>
+    <>
+      <main className={ctx.cn.main} style={layoutStyles.main}>
       <ContractorCabinetAside
         styles={styles}
         layoutStyles={layoutStyles}
+        cn={ctx.cn}
         isDark={ctx.isDark}
         active="home"
+        recommendationsUnread={recommendationsUnread}
+        formsUnread={formsUnread}
       />
-      <section style={layoutStyles.section}>
+      <section className={cn.section} style={layoutStyles.section}>
+        {formsUnread > 0 ? (
+          <div
+            className={isV2 ? "page4-v2__notice page4-v2__notice--forms" : undefined}
+            style={
+              isV2
+                ? undefined
+                : {
+                    marginBottom: 16,
+                    padding: "14px 18px",
+                    borderRadius: 18,
+                    background: isDark ? "rgba(86, 6, 29, 0.28)" : "rgba(86, 6, 29, 0.07)",
+                    border: `1px solid ${isDark ? "rgba(232, 180, 196, 0.35)" : "rgba(86, 6, 29, 0.22)"}`,
+                    color: styles.text,
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                  }
+            }
+          >
+            <strong style={isV2 ? undefined : { color: isDark ? "#e8b4c4" : "#56061D" }}>
+              Таблицы:
+            </strong>{" "}
+            {formsUnread === 1
+              ? "есть непрочитанное уведомление"
+              : `непрочитанных уведомлений: ${formsUnread}`}{" "}
+            — откройте{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/page4/forms")}
+              className={
+                isV2 ? "page4-v2__inline-link page4-v2__inline-link-btn" : undefined
+              }
+              style={
+                isV2
+                  ? undefined
+                  : {
+                      border: "none",
+                      background: "none",
+                      padding: 0,
+                      color: "inherit",
+                      font: "inherit",
+                      fontWeight: 700,
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                    }
+              }
+            >
+              «Заполнение таблиц»
+            </button>
+            .
+            {formNotificationsSupported() && Notification.permission === "default" && !notifyAsked ? (
+              <>
+                {" "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNotifyAsked(true);
+                    void requestFormNotificationPermission();
+                  }}
+                  className={
+                    isV2
+                      ? "page4-v2__inline-link page4-v2__inline-link--muted page4-v2__inline-link-btn page4-v2__inline-link-btn--muted"
+                      : undefined
+                  }
+                  style={
+                    isV2
+                      ? undefined
+                      : {
+                          border: "none",
+                          background: "none",
+                          padding: 0,
+                          color: "inherit",
+                          font: "inherit",
+                          fontWeight: 600,
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }
+                  }
+                >
+                  Включить push в браузере
+                </button>
+              </>
+            ) : null}
+          </div>
+        ) : null}
+        {recommendationsUnread > 0 ? (
+          <div
+            className={isV2 ? "page4-v2__notice page4-v2__notice--recommendations" : undefined}
+            style={
+              isV2
+                ? undefined
+                : {
+                    marginBottom: 16,
+                    padding: "14px 18px",
+                    borderRadius: 18,
+                    background: isDark ? "rgba(198, 40, 40, 0.22)" : "rgba(198, 40, 40, 0.08)",
+                    border: `1px solid ${isDark ? "rgba(255, 180, 180, 0.35)" : "rgba(198, 40, 40, 0.25)"}`,
+                    color: styles.text,
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                  }
+            }
+          >
+            <strong>Новая подборка студентов.</strong> Администратор рекомендовал вам{" "}
+            {recommendationsUnread}{" "}
+            {recommendationsUnread === 1
+              ? "студента"
+              : recommendationsUnread < 5
+                ? "студентов"
+                : "студентов"}{" "}
+            — откройте раздел{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/page4/recommendations")}
+              className={isV2 ? "page4-v2__inline-link" : undefined}
+              style={{
+                border: "none",
+                background: "none",
+                padding: 0,
+                color: "inherit",
+                font: "inherit",
+                fontWeight: 700,
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              «Студенты»
+            </button>
+            .
+          </div>
+        ) : null}
         <div
-          className="dashboard-glass-frame ref-stage ref-surface-soft"
+          className={cx(
+            "dashboard-glass-frame",
+            "ref-stage",
+            "ref-surface-soft",
+            isV2 && "cabinet-bento-shell",
+            isV2 && "page4-v2__dashboard"
+          )}
           style={{
             padding: 22,
             background: isDark
@@ -130,11 +619,9 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
           }}
         >
           <div className="dashboard-hero-grid">
-            <div className="ref-radius-a" style={{ ...contractorHeroCardStyle, minHeight: 404 }}>
+            <div className={cx("ref-radius-a", "cabinet-hero-plaque", cn.hero)} style={contractorHeroCardStyle}>
             <div style={heroTopRowStyle}>
-              <button type="button" style={{ ...layoutStyles.heroTag, flexShrink: 1, minWidth: 0 }}>
-                Письма, практика и обучение
-              </button>
+              <div style={heroTagBadgeStyle(layoutStyles.heroTag)}>Письма, практика и обучение</div>
               <HeroRoleIconButton
                 iconSrc={ROLE_ICON_CONTRACTOR}
                 buttonBaseStyle={layoutStyles.heroButton}
@@ -150,7 +637,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
           </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 14 }}>
               <div
-                className="ref-utility-card ref-radius-b ref-overlap-up"
+                className={cx("ref-utility-card", "ref-radius-b", "ref-overlap-up", cn.infoCard)}
                 style={{
                   ...layoutStyles.infoCard,
                   gridColumn: "1 / -1",
@@ -168,7 +655,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
             </div>
             <button
               type="button"
-                className="softtouch-plaque ref-radius-c ref-overlap-left"
+                className={cx("softtouch-plaque", "ref-radius-c", "ref-overlap-left", isV2 && "page4-v2__action-tile")}
                 style={{
                   ...layoutStyles.actionCard,
                   minHeight: 132,
@@ -196,7 +683,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
             </button>
             <button
               type="button"
-                className="softtouch-plaque ref-radius-b ref-overlap-right"
+                className={cx("softtouch-plaque", "ref-radius-b", "ref-overlap-right", isV2 && "page4-v2__action-tile")}
                 style={{
                   ...layoutStyles.actionCard,
                   minHeight: 132,
@@ -225,7 +712,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
             </div>
           </div>
           <div
-            className="ref-utility-card ref-radius-a"
+            className={cx("ref-utility-card", "ref-radius-a", cn.recentPanel)}
             style={{
               ...layoutStyles.recentPanel,
               padding: 24,
@@ -233,7 +720,9 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
               background: isDark ? institutePanelDarkBg : layoutStyles.recentPanel.background,
             }}
           >
-          <div style={layoutStyles.recentTitle}>Ближайшие мероприятия</div>
+          <div className={cn.recentTitle} style={layoutStyles.recentTitle}>
+            Ближайшие мероприятия
+          </div>
           <div style={{ fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 4 }}>
             Мероприятия для студентов и школьников, которые создают ассоциации РАДОР и АДО во вкладке «Мероприятия».
           </div>
@@ -262,6 +751,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
               return (
                 <div
                   key={ev.id}
+                  className={isV2 ? "page4-v2__event-card" : undefined}
                   style={{
                     padding: 18,
                     borderRadius: 24,
@@ -288,6 +778,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
         </div>
       </section>
     </main>
+    </>
   );
 }
 

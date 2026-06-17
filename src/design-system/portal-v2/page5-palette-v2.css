@@ -1,0 +1,262 @@
+/**
+ * Page5 legacy под v2 — только 5 цветов макета.
+ */
+html[data-portal-design="v2"] .page5-legacy__shell {
+  --p5l-text: var(--pv2-ink);
+  --p5l-muted: var(--pv2-muted);
+  --p5l-surface: var(--pv2-white);
+  --p5l-section: var(--pv2-white);
+  --p5l-card: var(--pv2-white);
+  --p5l-button-bg: var(--pv2-fill-subtle);
+  --p5l-card-shadow: 0 8px 24px rgba(var(--pv2-r-ink), 0.08);
+  --p5l-inset-shadow: inset 0 2px 6px rgba(var(--pv2-r-ink), 0.06);
+  --p5l-card-accent: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .page5-legacy__admin-back-btn {
+  border-color: rgba(var(--pv2-r-primary), 0.35) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__msgr-btn--active {
+  background: rgba(var(--pv2-r-primary), 0.35) !important;
+  box-shadow: var(--p5l-inset-shadow), 0 0 0 2px rgba(var(--pv2-r-primary), 0.65) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__msgr-btn--active {
+  background: rgba(var(--pv2-r-primary), 0.92) !important;
+  box-shadow: var(--p5l-inset-shadow), 0 0 0 2px rgba(var(--pv2-r-primary), 0.65) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__msgr-unread-dot {
+  background: #f87171 !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__msgr-unread-dot {
+  box-shadow: 0 0 0 2px var(--pv2-ink), 0 2px 6px rgba(var(--pv2-r-ink), 0.4) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__msgr-unread-dot {
+  box-shadow: 0 0 0 2px var(--pv2-white), 0 2px 6px rgba(var(--pv2-r-ink), 0.2) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__profile-bar {
+  background: var(--pv2-gradient-deep) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(var(--pv2-r-white), 0.1),
+    0 8px 24px rgba(var(--pv2-r-ink), 0.35),
+    0 0 0 1px rgba(var(--pv2-r-primary), 0.22) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__profile-bar {
+  background: linear-gradient(145deg, var(--pv2-primary) 0%, var(--pv2-brand-end) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(var(--pv2-r-white), 0.2),
+    0 8px 22px rgba(var(--pv2-r-primary), 0.28),
+    0 0 0 1px rgba(var(--pv2-r-white), 0.2) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__section-card {
+  border-color: rgba(var(--pv2-r-white), 0.2) !important;
+  background: linear-gradient(
+    145deg,
+    rgba(var(--pv2-r-ink), 0.88) 0%,
+    rgba(var(--pv2-r-ink), 0.86) 52%,
+    rgba(var(--pv2-r-ink), 0.84) 100%
+  ) !important;
+  box-shadow: 0 18px 34px rgba(var(--pv2-r-ink), 0.44), inset 0 1px 0 rgba(var(--pv2-r-white), 0.16) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__section-card {
+  border-color: rgba(var(--pv2-r-white), 0.76) !important;
+  background:
+    radial-gradient(118% 94% at 14% 98%, rgba(var(--pv2-r-primary), 0.26) 0%, rgba(var(--pv2-r-primary), 0) 68%),
+    linear-gradient(155deg, var(--pv2-white) 0%, var(--pv2-white) 54%, var(--pv2-white) 100%) !important;
+  box-shadow: 0 22px 36px rgba(var(--pv2-r-muted), 0.2), inset 0 1px 0 rgba(var(--pv2-r-white), 0.92) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__card-accent {
+  background: radial-gradient(
+    circle,
+    rgba(var(--pv2-r-primary), 0.25) 0%,
+    rgba(var(--pv2-r-primary), 0.12) 44%,
+    transparent 76%
+  ) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__card-accent {
+  background: radial-gradient(
+    circle,
+    rgba(var(--pv2-r-primary), 0.24) 0%,
+    rgba(var(--pv2-r-primary), 0.06) 56%,
+    transparent 84%
+  ) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__card-tag {
+  color: rgba(var(--pv2-r-white), 0.8) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__card-tag {
+  color: rgba(var(--pv2-r-muted), 0.72) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__card-icon-well {
+  border-color: rgba(var(--pv2-r-primary), 0.32) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__card-icon-well {
+  background: linear-gradient(150deg, rgba(var(--pv2-r-white), 0.86) 0%, rgba(var(--pv2-r-primary), 0.1) 100%) !important;
+  border-color: rgba(var(--pv2-r-white), 0.72) !important;
+  color: rgba(var(--pv2-r-muted), 0.88) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__card-open,
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__card-title {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__card-open,
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__card-title {
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__side-nav-item--active {
+  border-color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__scroll-thumb {
+  background: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__scroll-track {
+  background: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__scroll-track {
+  background: var(--pv2-fill-subtle) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__progress-track {
+  background: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__progress-track {
+  background: var(--pv2-fill-subtle) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__progress-fill {
+  background: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__side-nav-ring {
+  border-color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__side-nav-ring {
+  border-color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__event-cancel {
+  background: rgba(var(--pv2-r-white), 0.08) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__event-cancel {
+  background: rgba(var(--pv2-r-white), 0.7) !important;
+}
+
+/* Жёстко гасим legacy HEX в page5.css */
+html[data-portal-design="v2"] .page5-legacy__shell [class*="msgr-unread-dot"] {
+  background: #f87171 !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell [class*="profile-bar"] {
+  background: var(--pv2-gradient-deep) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] [class*="profile-bar"] {
+  background: linear-gradient(145deg, var(--pv2-primary) 0%, var(--pv2-brand-end) 100%) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell [class*="card-open"] {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell [class*="side-nav"] {
+  border-color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell [class*="progress-fill"] {
+  background: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell [class*="progress-track"] {
+  background: var(--pv2-fill-subtle) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] [class*="progress-track"] {
+  background: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__profile-name {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__profile-name {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__nav-btn--active {
+  background: linear-gradient(
+    138deg,
+    var(--pv2-primary) 0%,
+    rgba(var(--pv2-r-ink), 0.92) 100%
+  ) !important;
+  box-shadow: 0 12px 24px rgba(var(--pv2-r-ink), 0.28), inset 0 1px 0 rgba(var(--pv2-r-white), 0.24) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__card-open {
+  background: linear-gradient(
+    160deg,
+    rgba(var(--pv2-r-primary), 0.84) 0%,
+    rgba(var(--pv2-r-ink), 0.9) 100%
+  ) !important;
+  box-shadow:
+    0 10px 20px rgba(var(--pv2-r-ink), 0.38),
+    inset 0 1px 0 rgba(var(--pv2-r-white), 0.28),
+    inset 0 -1px 0 rgba(var(--pv2-r-ink), 0.45) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__card-open {
+  background: linear-gradient(
+    160deg,
+    rgba(var(--pv2-r-primary), 0.95) 0%,
+    rgba(var(--pv2-r-muted), 0.96) 50%,
+    rgba(var(--pv2-r-ink), 0.97) 100%
+  ) !important;
+  box-shadow:
+    0 12px 24px rgba(var(--pv2-r-muted), 0.28),
+    inset 0 1px 0 rgba(var(--pv2-r-white), 0.94),
+    inset 0 -1px 0 rgba(var(--pv2-r-ink), 0.34) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__card-title,
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="dark"] .page5-legacy__card-desc {
+  color: rgba(var(--pv2-r-white), 0.88) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__card-title {
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__card-desc {
+  color: rgba(var(--pv2-r-muted), 0.88) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__side-nav-ring,
+html[data-portal-design="v2"] .page5-legacy__aside-nav-ring {
+  border-color: var(--pv2-primary) !important;
+}

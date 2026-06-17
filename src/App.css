@@ -1,8 +1,8 @@
 :root {
   --color-primary: #243B74;
   --color-secondary: #1A2A52;
-  --color-accent: #56061D;
-  --color-muted: #7A2338;
+  --color-accent: #243b74;
+  --color-muted: #5c6b8a;
   --color-background: #F5F2EC;
 
   /* Неоморфный «короб» вокруг контента (тёмный soft-ui) */
@@ -26,7 +26,7 @@ body {
 }
 
 body, html, #root {
-  font-family: "Montserrat", "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: var(--font-ui);
   color: var(--color-primary);
   width: 100%;
   height: 100%;
@@ -77,6 +77,440 @@ html {
   inset: 0;
   z-index: 0;
   background: linear-gradient(160deg, #1e2a48 0%, #1a2b4c 40%, #162240 100%);
+}
+
+/* Страница 1: палитра бренда (#0A2540, #00D4A5, #67E8F9) — приглушённый градиент */
+body.route-page1 {
+  background-color: #0a2540;
+}
+
+body.route-page1 #root {
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+body.route-page1 .app-shell,
+body.route-page1 .app-shell--page1 {
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: auto;
+  overflow: visible;
+}
+
+body.route-page1 .app-shell__main {
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+body.route-page1 .page1-flow-bg,
+body.route-page1 .page1-flow-bg__page {
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: auto;
+  overflow: visible;
+}
+
+body.route-page1 .app-shell__bgFill {
+  z-index: 0;
+  background-color: #0a2540;
+  background-image: linear-gradient(152deg, #124656 0%, #0f3d52 38%, #0a2540 68%, #081c32 100%);
+  transition:
+    background-color var(--page1-handoff-ms, 750ms) cubic-bezier(0.22, 1, 0.36, 1),
+    background-image var(--page1-handoff-ms, 750ms) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-intro-pending] body.route-page1 .app-shell__bgFill,
+html[data-entry-splash-active]:not([data-page1-handoff]) body.route-page1 .app-shell__bgFill {
+  background-color: #000 !important;
+  background-image: none !important;
+  transition: none;
+}
+
+/* Живой фон: северное сияние + глубина + лёгкий блик (без «шаров») */
+body.route-page1 .page1-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+body.route-page1 .page1-ambient__aurora {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 160vmax;
+  height: 160vmax;
+  margin-left: -80vmax;
+  margin-top: -80vmax;
+  will-change: transform;
+}
+
+body.route-page1 .page1-ambient__aurora--a {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(0, 212, 165, 0.2) 55deg,
+    transparent 110deg,
+    rgba(103, 232, 249, 0.16) 185deg,
+    transparent 250deg,
+    rgba(0, 212, 165, 0.12) 310deg,
+    transparent 360deg
+  );
+  filter: blur(72px);
+  opacity: 0.9;
+  animation: page1AuroraSpinA 36s linear infinite;
+}
+
+body.route-page1 .page1-ambient__aurora--b {
+  background: conic-gradient(
+    from 120deg at 45% 55%,
+    transparent 0deg,
+    rgba(103, 232, 249, 0.14) 70deg,
+    transparent 140deg,
+    rgba(19, 74, 92, 0.35) 220deg,
+    transparent 300deg,
+    rgba(0, 212, 165, 0.1) 340deg,
+    transparent 360deg
+  );
+  filter: blur(88px);
+  opacity: 0.75;
+  animation: page1AuroraSpinB 52s linear infinite reverse;
+}
+
+body.route-page1 .page1-ambient__depth {
+  position: absolute;
+  inset: -15%;
+  background:
+    radial-gradient(ellipse 120% 80% at 12% 18%, rgba(0, 212, 165, 0.18) 0%, transparent 58%),
+    radial-gradient(ellipse 100% 70% at 90% 85%, rgba(103, 232, 249, 0.12) 0%, transparent 55%);
+  background-size: 130% 130%, 125% 125%;
+  animation: page1DepthPulse 14s ease-in-out infinite;
+}
+
+body.route-page1 .page1-ambient__sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    108deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(255, 255, 255, 0.02) 47%,
+    rgba(0, 212, 165, 0.1) 50%,
+    rgba(103, 232, 249, 0.08) 52%,
+    rgba(255, 255, 255, 0.02) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 260% 100%;
+  animation: page1LightSweep 11s ease-in-out infinite;
+}
+
+@keyframes page1AuroraSpinA {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes page1AuroraSpinB {
+  from {
+    transform: rotate(0deg) scale(1.05);
+  }
+  to {
+    transform: rotate(360deg) scale(1.05);
+  }
+}
+
+@keyframes page1DepthPulse {
+  0%,
+  100% {
+    background-position: 0% 10%, 100% 90%;
+    opacity: 0.85;
+  }
+  50% {
+    background-position: 22% 28%, 78% 72%;
+    opacity: 1;
+  }
+}
+
+@keyframes page1LightSweep {
+  0%,
+  100% {
+    background-position: 130% 0;
+    opacity: 0.5;
+  }
+  45% {
+    background-position: -30% 0;
+    opacity: 1;
+  }
+}
+
+/* Пока идёт entry-splash — не крутить aurora под роликом (рывки на десктопе). */
+html[data-entry-splash-active]:not([data-page1-handoff]) body.route-page1 .page1-ambient,
+html[data-entry-splash-active]:not([data-page1-handoff]) body.route-page1 .page1-ambient__aurora,
+html[data-entry-splash-active]:not([data-page1-handoff]) body.route-page1 .page1-ambient__depth,
+html[data-entry-splash-active]:not([data-page1-handoff]) body.route-page1 .page1-ambient__sweep {
+  animation: none !important;
+  visibility: hidden;
+}
+
+@keyframes page1AmbientHandoffIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+html[data-page1-handoff] body.route-page1 .page1-ambient {
+  visibility: visible;
+  opacity: 1;
+  animation: page1AmbientHandoffIn var(--page1-handoff-ms, 750ms) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+html[data-page1-handoff] body.route-page1 .page1-ambient__aurora,
+html[data-page1-handoff] body.route-page1 .page1-ambient__depth,
+html[data-page1-handoff] body.route-page1 .page1-ambient__sweep {
+  visibility: visible;
+  animation-play-state: running !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.route-page1 .page1-ambient__aurora,
+  body.route-page1 .page1-ambient__depth,
+  body.route-page1 .page1-ambient__sweep {
+    animation: none !important;
+  }
+}
+
+body.route-page1 .page1-flow-bg {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.page1-flow-bg--handoff {
+  --page1-handoff-ms: 750ms;
+}
+
+.page1-flow-bg__page {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity var(--page1-handoff-ms, 750ms) cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--page1-handoff-ms, 750ms) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.page1-flow-bg__page--in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Страница 3 — прокрутка как на карте (без обрезки .app-shell) */
+body.route-page3 #root {
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  overflow: visible;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+body.route-page3 {
+  background-color: #e8edf6;
+  background-image: linear-gradient(165deg, #edf2fa 0%, #e8edf6 45%, #e4eaf4 100%);
+}
+
+body.route-page3 .app-shell {
+  overflow: visible;
+  border-radius: 0;
+  box-shadow: none;
+  height: auto;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+body.route-page3 .app-shell__main {
+  overflow: visible;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+/* Кабинеты — без legacy neo-«рамки» (#root padding 14px + тёмный rim), как page2/page3 */
+html.route-cabinet,
+body.route-cabinet,
+html.route-profile,
+body.route-profile {
+  background-color: #f8fafc;
+  background-image: linear-gradient(180deg, #ffffff 0%, #f8fafc 48%, #f1f5f9 100%);
+}
+
+body.route-cabinet #root,
+body.route-profile #root {
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+body.route-cabinet .app-shell,
+body.route-profile .app-shell {
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+  height: auto;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+body.route-cabinet .app-shell__bgFill,
+body.route-profile .app-shell__bgFill {
+  background-color: #f8fafc;
+  background-image: linear-gradient(180deg, #ffffff 0%, #f8fafc 48%, #f1f5f9 100%);
+}
+
+body.route-cabinet .app-shell__main,
+body.route-profile .app-shell__main {
+  overflow: visible;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+/* Админка на карте (embed) и отдельные маршруты */
+body.route-page2 .admin-v2-soft,
+body.route-page2 .admin-dashboard--portal-v2 {
+  overflow: visible;
+  max-height: none;
+}
+
+/* Страница 2 — светлый фон в палитре бренда (без тёмной «рамки» html/body) */
+html.route-page2,
+body.route-page2 {
+  background-color: #e8f2f6;
+  background-image: linear-gradient(
+    180deg,
+    #eef7f9 0%,
+    #e8f2f6 42%,
+    #e2edf2 100%
+  );
+}
+
+body.route-page2 #root {
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  /* overflow-x: clip даёт overflow-y: auto и режет box-shadow админ-панели */
+  overflow: visible;
+}
+
+body.route-page2 .app-shell,
+body.route-page2 .app-shell--page1,
+body.route-page2 .app-shell--page2 {
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+body.route-page2 .app-shell__bgFill {
+  background-color: #e8f2f6;
+  background-image: linear-gradient(
+    180deg,
+    #eef7f9 0%,
+    #e8f2f6 42%,
+    #e2edf2 100%
+  );
+}
+
+body.route-page2 .app-shell__main {
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+/* Страница 2 — видеофон + светлая вуаль для читаемости */
+body.route-page2 .page2-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+body.route-page2 .page2-ambient__video {
+  position: absolute;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transform: translate3d(0, 0, 0) scale(1.03);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: opacity, transform;
+  filter: blur(0.8px) saturate(1.05);
+  transition: opacity 2.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.route-page2 .page2-ambient--ready .page2-ambient__video {
+  opacity: 0.48;
+  animation: page2VideoFloat 36s ease-in-out infinite alternate;
+}
+
+body.route-page2 .page2-ambient__veil {
+  position: absolute;
+  inset: 0;
+  opacity: 0.92;
+  background: linear-gradient(
+    180deg,
+    rgba(238, 247, 249, 0.55) 0%,
+    rgba(232, 242, 246, 0.38) 42%,
+    rgba(228, 240, 245, 0.42) 68%,
+    rgba(226, 237, 242, 0.6) 100%
+  );
+  transition: opacity 2.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.route-page2 .page2-ambient--ready .page2-ambient__veil {
+  opacity: 1;
+}
+
+body.route-page2 .page2-ambient--failed .page2-ambient__video {
+  display: none;
+}
+
+@keyframes page2VideoFloat {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(0, -1.2%, 0) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.route-page2 .page2-ambient__video {
+    display: none;
+    animation: none;
+  }
 }
 
 .app-shell__main {
@@ -142,144 +576,228 @@ html {
 }
 
 .entry-splash {
+  --entry-splash-cyan: #2b64fd;
+  --entry-brand-r: 43, 100, 253;
   position: fixed;
   inset: 0;
   z-index: 9999;
-  display: grid;
-  place-items: center;
   overflow: hidden;
   pointer-events: none;
-  animation: entrySplashOut 1350ms ease forwards;
+  background: #05080f;
 }
 
-.entry-splash__bg {
-  position: absolute;
-  inset: -30%;
-  background:
-    radial-gradient(900px 600px at 15% 20%, rgba(255, 255, 255, 0.18), transparent 55%),
-    radial-gradient(900px 680px at 78% 22%, rgba(26, 42, 82, 0.70), transparent 62%),
-    radial-gradient(820px 620px at 60% 92%, rgba(26, 42, 82, 0.66), transparent 60%),
-    radial-gradient(820px 620px at 88% 32%, rgba(86, 6, 29, 0.26), transparent 62%),
-    linear-gradient(-45deg, #1a2a52 0%, #1a2a52 58%, #56061d 100%);
-  background-size: 120% 120%;
-  filter: saturate(1.15) contrast(1.05);
-  animation: entryGradient 1600ms ease-in-out infinite alternate;
-}
-
-.entry-splash__card {
-  position: relative;
+.entry-splash--exiting {
+  opacity: 0;
+  transition: opacity var(--entry-splash-fade, 750ms) cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
-  width: min(520px, calc(100vw - 48px));
-  border-radius: 28px;
-  padding: 28px 26px 24px;
-  color: rgba(255, 255, 255, 0.92);
-  text-align: center;
-  min-height: 320px;
+}
+
+.entry-splash--exiting .entry-splash__stack {
+  opacity: 0;
+  transition: opacity calc(var(--entry-splash-fade, 750ms) * 0.45) ease;
+}
+
+.entry-splash__video-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+  isolation: isolate;
+  contain: strict;
+  transform: translate3d(0, 0, 0);
+}
+
+.entry-splash__video-stage .entry-splash__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.entry-splash__video-stage .entry-splash__video--frame,
+.entry-splash--video-frame .entry-splash__video-stage .entry-splash__video {
+  opacity: 1;
+}
+
+.entry-splash__video-stage .entry-splash__video--ready {
+  opacity: 1;
+}
+
+/* Лёгкая синяя вуаль — без mix-blend-mode: color (он «мылит» картинку) */
+.entry-splash__brand-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    160deg,
+    rgba(var(--entry-brand-r), 0.22) 0%,
+    rgba(var(--entry-brand-r), 0.14) 45%,
+    rgba(var(--entry-brand-r), 0.26) 100%
+  );
+}
+
+.entry-splash__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 38%, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.72) 72%),
+    linear-gradient(180deg, rgba(5, 8, 15, 0.35) 0%, rgba(5, 8, 15, 0.55) 48%, rgba(5, 8, 15, 0.82) 100%);
+  pointer-events: none;
+}
+
+.entry-splash__shade--minimal {
+  background: transparent;
+}
+
+.entry-splash__shade--readable {
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(0, 0, 0, 0.38) 0%, transparent 62%),
+    linear-gradient(180deg, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.22) 100%);
+}
+
+.entry-splash__stack {
+  position: relative;
+  z-index: 2;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.04));
+  padding: 48px 28px 18vh;
+  gap: 22px;
+  text-align: center;
+  animation: entryStackIn 700ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+}
+
+.entry-splash__stack--overlay {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.entry-splash__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: min(420px, calc(100vw - 48px));
+  padding: 28px 32px 30px;
+  border-radius: 20px;
+  background: rgba(6, 12, 26, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow:
-    18px 18px 40px rgba(10, 14, 28, 0.55),
-    -18px -18px 38px rgba(255, 255, 255, 0.06),
-    inset 1px 1px 0 rgba(255, 255, 255, 0.16),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.28);
-  transform: translateY(10px) scale(0.985);
-  animation: entryCardIn 620ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+    0 20px 56px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-.entry-splash__logoWrap {
-  position: relative;
-  width: 72px;
-  height: 72px;
-  border-radius: 24px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
-  box-shadow:
-    10px 10px 22px rgba(0, 0, 0, 0.35),
-    -10px -10px 22px rgba(255, 255, 255, 0.08),
-    inset 2px 2px 0 rgba(255, 255, 255, 0.14),
-    inset -2px -2px 0 rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  display: grid;
-  place-items: center;
+.entry-splash__progress--loading .entry-splash__progress-fill {
+  animation: entryProgressLoading 2s cubic-bezier(0.45, 0.05, 0.25, 1) infinite alternate;
 }
 
-.entry-splash__content {
-  margin-top: 16px;
+.entry-splash__progress--loading .entry-splash__progress-glow {
+  opacity: 0.85;
+  animation: entryProgressLoadingGlow 1.1s ease-in-out infinite alternate;
 }
 
-.entry-splash__logoWrap::after {
-  content: "";
-  position: absolute;
-  inset: -70%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.35), transparent 55%);
-  transform: rotate(12deg);
-  animation: entrySheen 900ms ease-in-out infinite alternate;
+@keyframes entryProgressLoading {
+  from {
+    transform: scaleX(0.1);
+    opacity: 0.5;
+  }
+  to {
+    transform: scaleX(0.36);
+    opacity: 1;
+  }
+}
+
+@keyframes entryProgressLoadingGlow {
+  from {
+    left: 8%;
+    opacity: 0.45;
+  }
+  to {
+    left: 48%;
+    opacity: 0.95;
+  }
 }
 
 .entry-splash__logo {
-  width: 56px;
-  height: 56px;
+  width: min(132px, 34vw);
+  height: auto;
+  max-height: 12vh;
   object-fit: contain;
   display: block;
-  filter:
-    brightness(0) invert(1)
-    drop-shadow(0 14px 24px rgba(0, 0, 0, 0.32));
+  image-rendering: auto;
+  filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.55));
+  animation: entryLogoPulse 2200ms ease-in-out infinite alternate;
+}
+
+.entry-splash__caption {
+  margin: 0;
+  font-size: clamp(0.9375rem, 2.2vw, 1.0625rem);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--leading-snug);
+  color: #fff;
+  text-shadow: none;
+}
+
+.entry-splash__progress {
   position: relative;
-  z-index: 1;
-}
-
-.entry-splash__title {
-  font-family: "Montserrat", "Segoe UI", Roboto, Arial, sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.6px;
-  font-size: 34px;
-  line-height: 1.1;
-  text-align: center;
-  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
-
-.entry-splash__subtitle {
-  margin-top: 8px;
-  text-align: center;
-  font-size: 14px;
-  letter-spacing: 0.6px;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.entry-splash__dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.entry-splash__dots span {
-  width: 7px;
-  height: 7px;
+  width: 100%;
+  height: 6px;
+  margin-top: 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-  animation: entryDot 900ms ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.22);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
-.entry-splash__dots span:nth-child(2) {
-  animation-delay: 120ms;
-  opacity: 0.9;
-}
-.entry-splash__dots span:nth-child(3) {
-  animation-delay: 240ms;
-  opacity: 0.85;
+.entry-splash__progress-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2b64fd 0%, #6b9bff 100%);
+  box-shadow: 0 0 18px rgba(43, 100, 253, 0.55);
+  transform: scaleX(0.08);
+  transform-origin: left center;
 }
 
-@keyframes entryCardIn {
+.entry-splash__progress-fill--sync {
+  animation: none;
+  will-change: transform;
+}
+
+.entry-splash__progress-glow {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  margin-top: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(43, 100, 253, 0.45) 45%, transparent 70%);
+  opacity: 0;
+  animation: entryProgressGlow var(--entry-splash-duration, 2800ms) cubic-bezier(0.35, 0.05, 0.2, 1) forwards;
+}
+
+@keyframes entryStackIn {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.98);
+    transform: translateY(18px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -287,58 +805,74 @@ html {
   }
 }
 
-@keyframes entrySplashOut {
+@keyframes entryLogoPulse {
+  from {
+    transform: scale(1);
+    filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.55));
+  }
+  to {
+    transform: scale(1.03);
+    filter: drop-shadow(0 22px 48px rgba(46, 232, 216, 0.22));
+  }
+}
+
+@keyframes entryProgressFill {
   0% {
-    opacity: 1;
-  }
-  72% {
-    opacity: 1;
+    transform: scaleX(0.08);
   }
   100% {
+    transform: scaleX(0.78);
+  }
+}
+
+/* Во время ролика — без тяжёлых filter-анимаций поверх декодера */
+.entry-splash--playing .entry-splash__logo {
+  animation: none;
+  filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.55));
+}
+
+.entry-splash--playing .entry-splash__stack,
+.entry-splash--playing .entry-splash__panel {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.entry-splash__stack--after-video {
+  pointer-events: none;
+}
+
+@keyframes entryProgressGlow {
+  0% {
     opacity: 0;
-    visibility: hidden;
+    left: 4%;
   }
-}
-
-@keyframes entryGradient {
-  from {
-    transform: translate3d(-1%, -1%, 0) scale(1.04);
+  12% {
+    opacity: 1;
   }
-  to {
-    transform: translate3d(1.5%, 1%, 0) scale(1.06);
-  }
-}
-
-@keyframes entryDot {
-  0%,
   100% {
-    transform: translateY(0);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translateY(-6px);
-    opacity: 1;
-  }
-}
-
-@keyframes entrySheen {
-  from {
-    transform: rotate(12deg) translate3d(-2%, -1%, 0);
-    opacity: 0.75;
-  }
-  to {
-    transform: rotate(12deg) translate3d(2%, 1%, 0);
-    opacity: 1;
+    opacity: 0.85;
+    left: 74%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .entry-splash,
-  .entry-splash__bg,
-  .entry-splash__card,
-  .entry-splash__dots span,
-  .entry-splash__logoWrap::after {
+  .entry-splash__stack,
+  .entry-splash__logo,
+  .entry-splash__progress-fill,
+  .entry-splash__progress-glow {
     animation: none !important;
+  }
+
+  .entry-splash__panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(6, 12, 26, 0.88);
+  }
+
+  .entry-splash__progress-fill {
+    transform: scaleX(0.72);
   }
 }
 
@@ -396,13 +930,11 @@ input {
 
 button {
   padding: 10px;
-  background: var(--color-accent);
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-button:hover {
-  background: var(--color-muted);
-}
+/* Глобальный бордовый hover убран — hover задаётся в модулях страниц */

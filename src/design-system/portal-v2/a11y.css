@@ -1,0 +1,98 @@
+/**
+ * Доступность v2: фокус, контраст, prefers-contrast.
+ */
+html[data-portal-design="v2"] :focus {
+  outline: none;
+}
+
+html[data-portal-design="v2"] :focus-visible:not(.cabinet-v2-soft-sidebar__btn) {
+  outline: 2px solid var(--pv2-primary);
+  outline-offset: 2px;
+}
+
+html[data-portal-design="v2"] .pv2-btn:focus-visible,
+html[data-portal-design="v2"] .cabinet-chrome__msgr-btn:focus-visible,
+html[data-portal-design="v2"] .cabinet-chrome__nav-active:focus-visible,
+html[data-portal-design="v2"] .page3-v2__role-card:focus-visible,
+html[data-portal-design="v2"] .page3-v2__next:focus-visible,
+html[data-portal-design="v2"] .map-v2-zoom-btn:focus-visible,
+html[data-portal-design="v2"] .page2-v2__btn-primary:focus-visible,
+html[data-portal-design="v2"] .profile-v2 input:focus-visible,
+html[data-portal-design="v2"] .profile-v2 select:focus-visible,
+html[data-portal-design="v2"] .profile-v2__save:focus-visible,
+html[data-portal-design="v2"] .floating-widget-v2__panel button:focus-visible,
+html[data-portal-design="v2"] .floating-widget-v2__fab-tbot:focus-visible,
+html[data-portal-design="v2"] .floating-widget-v2__fab-notes:focus-visible,
+html[data-portal-design="v2"] .messenger-v2__dialog button:focus-visible,
+html[data-portal-design="v2"] .page5-v2__section-card:focus-within,
+html[data-portal-design="v2"] .contractor-forms-v2 .contractor-forms__templateBtn:focus-visible,
+html[data-portal-design="v2"] .cabinet-quick-dock__btn:focus-visible,
+html[data-portal-design="v2"] .desktop-download-v2__btn:focus-visible {
+  outline: 2px solid var(--pv2-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(var(--pv2-r-primary), 0.28);
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__search-input:focus-visible,
+html[data-portal-design="v2"] .pv2-input:focus-visible,
+html[data-portal-design="v2"] input:focus-visible,
+html[data-portal-design="v2"] textarea:focus-visible,
+html[data-portal-design="v2"] select:focus-visible {
+  outline: 2px solid var(--pv2-primary);
+  outline-offset: 0;
+  box-shadow: 0 0 0 3px rgba(var(--pv2-r-primary), 0.28);
+}
+
+html[data-portal-design="v2"] .subjectPopupTab:focus-visible,
+html[data-portal-design="v2"] .page2-v2__about-tab--active:focus-visible {
+  outline-offset: 2px;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-rail__btn:focus-visible,
+html[data-portal-design="v2"] .pv2-rail-btn:focus-visible,
+html[data-portal-design="v2"] .page5-v2__section-card:focus-visible,
+html[data-portal-design="v2"] .association-v2__btn-primary:focus-visible,
+html[data-portal-design="v2"] .association-v2__btn-ghost:focus-visible,
+html[data-portal-design="v2"] .admin-v2-nav-active:focus-visible {
+  outline: 2px solid var(--pv2-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(var(--pv2-r-primary), 0.28);
+}
+
+html[data-portal-design="v2"] .page2-v2__map-panel:focus-within {
+  box-shadow: var(--pv2-glass-l1-shadow), 0 0 0 2px rgba(var(--pv2-r-primary), 0.35);
+}
+
+/* Минимальный размер тач-целей */
+html[data-portal-design="v2"] .cabinet-v2-rail__btn,
+html[data-portal-design="v2"] .pv2-rail-btn,
+html[data-portal-design="v2"] .cabinet-quick-dock__btn {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+@media (prefers-contrast: more) {
+  html[data-portal-design="v2"] {
+    --pv2-text-muted: rgba(var(--pv2-r-white), 0.9);
+    --pv2-border: rgba(var(--pv2-r-white), 0.32);
+    --pv2-border-strong: rgba(var(--pv2-r-white), 0.48);
+  }
+
+  html[data-portal-design="v2"][data-cabinet-theme="light"] {
+    --pv2-text-muted: rgba(var(--pv2-r-ink), 0.88);
+  }
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] {
+  --pv2-text: var(--pv2-ink);
+  --pv2-text-muted: rgba(var(--pv2-r-ink), 0.78);
+  --pv2-text-subtle: rgba(var(--pv2-r-ink), 0.62);
+  --pv2-border: rgba(var(--pv2-r-ink), 0.2);
+  --pv2-border-strong: rgba(var(--pv2-r-primary), 0.38);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] body {
+  background: linear-gradient(180deg, var(--pv2-white) 0%, var(--pv2-white) 100%);
+  background-color: var(--pv2-white);
+  color: var(--pv2-text);
+}

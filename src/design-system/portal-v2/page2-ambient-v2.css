@@ -1,0 +1,50 @@
+/**
+ * Page2 ambient v2 — видео-волны и SVG-линии без тёмной вуали.
+ * По умолчанию режим video (page2-bg.mov), не lines.
+ */
+
+html[data-portal-design="v2"] body.route-page2 .app-shell__bgFill {
+  background-color: var(--pv2-white) !important;
+  background-image: var(--pv2-gradient-page-light) !important;
+}
+
+/* —— Видеофон (режим data-page2-bg="video") —— */
+html[data-portal-design="v2"] body.route-page2 .page2-ambient__video {
+  filter: blur(0.5px) brightness(1.14) saturate(0.92) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-ambient--ready .page2-ambient__video {
+  opacity: 0.5 !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-ambient__veil:not(.page2-ambient__veil--lines) {
+  opacity: 1 !important;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--pv2-r-white), 0.58) 0%,
+    rgba(var(--pv2-r-white), 0.42) 45%,
+    rgba(var(--pv2-r-white), 0.36) 100%
+  ) !important;
+}
+
+/* —— SVG-линии (режим data-page2-bg="lines") —— */
+html[data-portal-design="v2"] body.route-page2 .page2-ambient--lines .page2-ambient__linesBase {
+  background-color: var(--pv2-white) !important;
+  background-image: var(--pv2-gradient-page-light) !important;
+  opacity: 1 !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-ambient__veil--lines {
+  opacity: 1 !important;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--pv2-r-white), 0.18) 0%,
+    rgba(var(--pv2-r-white), 0.06) 100%
+  ) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-portal-design="v2"] body.route-page2 .page2-ambient__video {
+    display: none !important;
+  }
+}

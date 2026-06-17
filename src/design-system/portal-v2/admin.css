@@ -1,0 +1,33 @@
+﻿/**
+ * Админ-панель при включённом portal v2 (глобальные хуки на разметке).
+ */
+html[data-portal-design="v2"] .admin-v2-panel {
+  position: relative;
+}
+
+html[data-portal-design="v2"] .admin-v2-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pv2-gradient-brand-h);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 3;
+}
+
+html[data-portal-design="v2"] .admin-v2-nav-active {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border-color: transparent !important;
+  box-shadow: 0 6px 18px rgba(var(--pv2-r-primary), 0.28) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2__stat-spark {
+  display: block;
+  margin-top: 10px;
+  color: var(--pv2-teal);
+  opacity: 0.92;
+}

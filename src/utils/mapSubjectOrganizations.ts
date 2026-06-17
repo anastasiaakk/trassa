@@ -1,7 +1,7 @@
 import { SUBJECT_MARKERS_GEO } from "../data/page2MapGeo";
 
 import { PORTAL_KV } from "../config/portalKeys";
-import { pushPortalKv } from "./portalSync";
+import { pushPortalKvWithAck } from "./portalSync";
 
 const STORAGE_KEY = "trassa-map-subject-organizations-v1";
 
@@ -22,6 +22,13 @@ function normalizeText(value: string): string {
   return value.replace(/\s+/g, " ").trim();
 }
 
+function createEntryId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `org-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+}
+
 function normalizeEntry(entry: MapSubjectOrganization): MapSubjectOrganization {
   return {
     id: normalizeText(entry.id),
@@ -40,13 +47,13 @@ function defaultEntries(): MapSubjectOrganization[] {
   const rows: MapSubjectOrganization[] = [];
   for (const subject of seedSubjects) {
     rows.push({
-      id: crypto.randomUUID(),
+      id: createEntryId(),
       subjectName: subject,
       kind: "education",
       name: `${subject} государственный университет`,
     });
     rows.push({
-      id: crypto.randomUUID(),
+      id: createEntryId(),
       subjectName: subject,
       kind: "contractors",
       name: `ООО «ДорСтрой ${subject}»`,
@@ -80,19 +87,23 @@ function readRaw(): StoreFile {
   }
 }
 
-function writeRaw(file: StoreFile): void {
-  pushPortalKv(PORTAL_KV.MAP_SUBJECT_ORGS, file);
+async function writeRaw(
+  file: StoreFile
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  return pushPortalKvWithAck(PORTAL_KV.MAP_SUBJECT_ORGS, file);
 }
 
 export function loadMapSubjectOrganizations(): MapSubjectOrganization[] {
   const data = readRaw();
   if (data.entries.length > 0) return data.entries;
   const defaults = defaultEntries();
-  writeRaw({ entries: defaults });
+  void writeRaw({ entries: defaults });
   return defaults;
 }
 
-export function saveMapSubjectOrganizations(entries: MapSubjectOrganization[]): void {
+export async function saveMapSubjectOrganizations(
+  entries: MapSubjectOrganization[]
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const normalized = entries
     .map(normalizeEntry)
     .filter((x) => x.id && x.subjectName && x.name)
@@ -103,14 +114,14 @@ export function saveMapSubjectOrganizations(entries: MapSubjectOrganization[]): 
       if (byKind !== 0) return byKind;
       return a.name.localeCompare(b.name, "ru");
     });
-  writeRaw({ entries: normalized });
+  return writeRaw({ entries: normalized });
 }
 
-export function addMapSubjectOrganization(input: {
+export async function addMapSubjectOrganization(input: {
   subjectName: string;
   kind: MapOrgKind;
   name: string;
-}): { ok: true } | { ok: false; error: string } {
+}): Promise<{ ok: true } | { ok: false; error: string }> {
   const subjectName = normalizeText(input.subjectName);
   const name = normalizeText(input.name);
   if (!subjectName) return { ok: false, error: "Выберите субъект." };
@@ -125,19 +136,18 @@ export function addMapSubjectOrganization(input: {
   );
   if (exists) return { ok: false, error: "Такая запись уже существует." };
   entries.push({
-    id: crypto.randomUUID(),
+    id: createEntryId(),
     subjectName,
     kind: input.kind,
     name,
   });
-  saveMapSubjectOrganizations(entries);
-  return { ok: true };
+  return saveMapSubjectOrganizations(entries);
 }
 
-export function updateMapSubjectOrganization(
+export async function updateMapSubjectOrganization(
   id: string,
   patch: { subjectName: string; kind: MapOrgKind; name: string }
-): { ok: true } | { ok: false; error: string } {
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const entries = loadMapSubjectOrganizations();
   const idx = entries.findIndex((x) => x.id === id);
   if (idx < 0) return { ok: false, error: "Запись не найдена." };
@@ -159,12 +169,13 @@ export function updateMapSubjectOrganization(
     kind: patch.kind,
     name,
   };
-  saveMapSubjectOrganizations(entries);
-  return { ok: true };
+  return saveMapSubjectOrganizations(entries);
 }
 
-export function removeMapSubjectOrganization(id: string): void {
+export async function removeMapSubjectOrganization(
+  id: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const entries = loadMapSubjectOrganizations().filter((x) => x.id !== id);
-  saveMapSubjectOrganizations(entries);
+  return saveMapSubjectOrganizations(entries);
 }
 

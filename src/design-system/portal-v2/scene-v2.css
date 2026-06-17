@@ -1,0 +1,99 @@
+/**
+ * Сцена v2 — светлые орбы (Quanta / Lumica / glass Dribbble) и тёмный mesh.
+ * Применяется к body, .pv2-scene, .cabinet-v2-scene, публичным маршрутам.
+ */
+
+html[data-portal-design="v2"] {
+  --pv2-orb-a: radial-gradient(
+    ellipse 90% 70% at 12% -8%,
+    rgba(var(--pv2-r-primary), 0.14) 0%,
+    transparent 58%
+  );
+  --pv2-orb-b: radial-gradient(
+    ellipse 75% 60% at 98% 4%,
+    rgba(var(--pv2-r-primary), 0.1) 0%,
+    transparent 52%
+  );
+  --pv2-orb-c: radial-gradient(
+    ellipse 65% 55% at 48% 108%,
+    rgba(var(--pv2-r-primary), 0.06) 0%,
+    transparent 54%
+  );
+  --pv2-scene-light: var(--pv2-orb-a), var(--pv2-orb-b), var(--pv2-orb-c), var(--pv2-gradient-page-light);
+  --pv2-scene-dark: var(--pv2-gradient-mesh-a), var(--pv2-gradient-mesh-b), var(--pv2-gradient-mesh-c),
+    var(--pv2-gradient-deep);
+}
+
+/* Светлая сцена — дефолт для preview и light-кабинетов */
+html[data-portal-design="v2"] .pv2-scene--light,
+html[data-portal-design="v2"] .pv2-scene.pv2-scene--light,
+html[data-portal-design="v2"][data-cabinet-theme="light"] body.route-cabinet,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-v2-scene,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome--v2.cabinet-v2-scene,
+html[data-portal-design="v2"] body.route-page1,
+html[data-portal-design="v2"] body.route-page2,
+html[data-portal-design="v2"] body.route-page3,
+html[data-portal-design="v2"] body.route-profile {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .pv2-scene--light::before,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-v2-scene::before {
+  opacity: 0.18;
+}
+
+/* Плавающие «blobs» (только декор, pointer-events: none) */
+html[data-portal-design="v2"] .pv2-scene--light::after,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-v2-scene::after {
+  content: "";
+  position: fixed;
+  width: min(42vw, 420px);
+  height: min(42vw, 420px);
+  top: -12%;
+  right: -8%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(var(--pv2-r-primary), 0.12) 0%, transparent 68%);
+  filter: blur(48px);
+}
+
+html[data-portal-design="v2"] .pv2-mesh-scene.pv2-scene--light,
+html[data-portal-design="v2"] .pv2-scene.pv2-scene--light {
+  background: var(--pv2-scene-light);
+  background-color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .pv2-scene--light .pv2-rail,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-v2-rail {
+  background: rgba(var(--pv2-r-white), 0.82);
+  border-color: rgba(var(--pv2-r-primary), 0.12);
+  box-shadow: 0 12px 40px rgba(var(--pv2-r-ink), 0.06), inset 0 1px 0 rgba(var(--pv2-r-white), 0.95);
+}
+
+html[data-portal-design="v2"] .pv2-scene--light .pv2-rail-btn {
+  color: var(--pv2-muted);
+}
+
+html[data-portal-design="v2"] .pv2-scene--light .pv2-rail-btn:hover {
+  color: var(--pv2-primary);
+  background: rgba(var(--pv2-r-primary), 0.08);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-v2-scene.cabinet-chrome--v2 {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-v2-rail {
+  background: rgba(var(--pv2-r-white), 0.88);
+  border-right-color: rgba(var(--pv2-r-primary), 0.1);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-v2-topbar {
+  background: rgba(var(--pv2-r-white), 0.78);
+  border-color: rgba(var(--pv2-r-primary), 0.14);
+  box-shadow: 0 8px 32px rgba(var(--pv2-r-ink), 0.06), inset 0 1px 0 rgba(var(--pv2-r-white), 0.98);
+}

@@ -1,0 +1,79 @@
+/**
+ * Усиление glass по мотивам Figma SaaS / glassmorphism UI kits.
+ * Палитра ТрассА v2 (blue glass).
+ */
+
+/* Mesh-фон на кабинетах (как в community glass dashboards) */
+html[data-portal-design="v2"] body.route-cabinet,
+html[data-portal-design="v2"] .cabinet-chrome--v2 {
+  background: var(--pv2-gradient-mesh-a), var(--pv2-gradient-mesh-b), var(--pv2-gradient-mesh-c),
+    var(--pv2-gradient-deep) !important;
+  background-color: var(--pv2-deep) !important;
+}
+
+/* Карточки: двойная кромка + сильнее blur (Figma glass layer) */
+html[data-portal-design="v2"] .cabinet-chrome__header,
+html[data-portal-design="v2"] .cabinet-chrome__aside,
+html[data-portal-design="v2"] .cabinet-bento-metric,
+html[data-portal-design="v2"] .page5-v2__section-card,
+html[data-portal-design="v2"] .page5-v2__hero-panel,
+html[data-portal-design="v2"] .pv2-glass {
+  box-shadow:
+    var(--pv2-shadow-sm),
+    inset 0 1px 0 rgba(var(--pv2-r-white), 0.12),
+    inset 0 -1px 0 rgba(var(--pv2-r-ink), 0.08) !important;
+  backdrop-filter: blur(var(--pv2-blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) saturate(140%);
+}
+
+html[data-portal-design="v2"] .page5-v2__section-card {
+  transition:
+    transform var(--pv2-dur-fast) var(--pv2-ease-out),
+    box-shadow var(--pv2-dur-fast);
+}
+
+@media (hover: hover) {
+  html[data-portal-design="v2"] .page5-v2__section-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      var(--pv2-shadow-md),
+      0 12px 40px rgba(var(--pv2-r-primary), 0.18),
+      inset 0 1px 0 rgba(var(--pv2-r-white), 0.16) !important;
+  }
+}
+
+html[data-portal-design="v2"] .cabinet-bento-metric {
+  position: relative;
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .cabinet-bento-metric::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pv2-gradient-brand-h);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* Dock — «плавающая» пилюля (тёмная тема) */
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-quick-dock__inner {
+  backdrop-filter: blur(var(--pv2-blur-lg)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-lg)) saturate(150%);
+  box-shadow:
+    var(--pv2-shadow-md),
+    0 0 0 1px rgba(var(--pv2-r-white), 0.08) inset,
+    0 20px 50px rgba(var(--pv2-r-ink), 0.35) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] body.route-cabinet,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome--v2 {
+  background:
+    var(--pv2-gradient-mesh-a),
+    var(--pv2-gradient-mesh-b),
+    var(--pv2-gradient-glass-light) !important;
+  background-color: var(--pv2-white) !important;
+}

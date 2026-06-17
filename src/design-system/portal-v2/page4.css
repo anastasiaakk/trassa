@@ -1,0 +1,1468 @@
+/**
+ * Кабинет подрядчика (Page4) — v2.
+ */
+html[data-portal-design="v2"] .page4-v2__dashboard.cabinet-bento-shell .dashboard-hero-grid {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+}
+
+html[data-portal-design="v2"] .page4-v2__dashboard .cabinet-hero-plaque {
+  box-shadow: var(--pv2-shadow-md), 0 0 36px rgba(var(--pv2-r-primary), 0.22) !important;
+  border: 1px solid var(--pv2-border-strong) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__notice {
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pv2-text);
+  border-radius: var(--pv2-radius-md) !important;
+  border: 1px solid var(--pv2-border-strong) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+html[data-portal-design="v2"] .page4-v2__notice--forms strong {
+  color: var(--pv2-deep);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .page4-v2__notice--forms strong {
+  color: var(--pv2-primarySoft);
+}
+
+html[data-portal-design="v2"] .page4-v2__inline-link-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+html[data-portal-design="v2"] .page4-v2__inline-link-btn--muted {
+  font-weight: 600;
+}
+
+html[data-portal-design="v2"] .page4-v2__notice--forms {
+  background: linear-gradient(135deg, rgba(var(--pv2-r-primary), 0.12), rgba(var(--pv2-r-white), 0.08)) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__notice--recommendations {
+  background: linear-gradient(135deg, rgba(var(--pv2-r-primary), 0.14), rgba(var(--pv2-r-primary), 0.09)) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__inline-link {
+  color: var(--pv2-primary) !important;
+  text-decoration-color: rgba(var(--pv2-r-primary), 0.45) !important;
+  text-underline-offset: 2px;
+}
+
+html[data-portal-design="v2"] .page4-v2__inline-link--muted {
+  color: var(--pv2-text-muted) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__dashboard .dashboard-glass-frame {
+  border: 1px solid var(--pv2-border-strong) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+  backdrop-filter: blur(var(--pv2-blur-md)) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) saturate(120%) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__dashboard .cabinet-bento-metric {
+  border: 1px solid var(--pv2-border) !important;
+  background: var(--pv2-bg-glass) !important;
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+html[data-portal-design="v2"] .page4-v2__action-tile {
+  border: 1px solid var(--pv2-border-strong) !important;
+  box-shadow: var(--pv2-shadow-sm);
+  transition:
+    transform var(--pv2-dur-fast) var(--pv2-ease-out),
+    box-shadow var(--pv2-dur-fast) var(--pv2-ease-out),
+    border-color var(--pv2-dur-fast) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .page4-v2__action-tile:hover {
+  transform: translateY(-1px);
+  border-color: var(--pv2-border-accent) !important;
+  box-shadow: var(--pv2-shadow-md), 0 0 24px var(--pv2-accent-glow);
+}
+
+html[data-portal-design="v2"] .page4-v2__event-card {
+  border: 1px solid var(--pv2-border) !important;
+  background: rgba(var(--pv2-r-white), 0.86) !important;
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+@media (max-width: 1180px) {
+  html[data-portal-design="v2"] .page4-v2__dashboard.cabinet-bento-shell .dashboard-hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .page4-v2__notice {
+  border-color: rgba(var(--pv2-r-primary), 0.32) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .page4-v2__event-card {
+  background: rgba(var(--pv2-r-ink), 0.84) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.26) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__section:not(.page4-v2__page) {
+  border: 1px solid var(--pv2-border-strong) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+}
+
+/* Внутри стеклянной панели — без второй рамки (как у «Студенты») */
+html[data-portal-design="v2"] .page4-v2__main-region > .page4-v2__page {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/**
+ * /page4 v2 — KPI + панель прямые дети stage (как Page5), одна ширина колонки.
+ */
+html[data-portal-design="v2"].route-page4 .cabinet-chrome > .cabinet-v2-layout,
+html[data-portal-design="v2"] body.route-page4 .cabinet-chrome > .cabinet-v2-layout {
+  width: 100% !important;
+  max-width: 1520px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"].route-page4 .cabinet-v2-layout > .cabinet-v2-body,
+html[data-portal-design="v2"] body.route-page4 .cabinet-v2-layout > .cabinet-v2-body {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .page4-v2-dashboard {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  align-self: stretch !important;
+  gap: 14px;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page4-v2-dashboard > * {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  align-self: stretch !important;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .cabinet-v2-page-kpi,
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .page4-v2__main-region,
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .page4-v2-dashboard > .cabinet-v2-page-kpi,
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .page4-v2-dashboard > .page4-v2__main-region,
+html[data-portal-design="v2"].route-page4 .cabinet-v2-dashboard-stage > .cabinet-v2-page-kpi,
+html[data-portal-design="v2"].route-page4 .cabinet-v2-dashboard-stage > .page4-v2__main-region {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  align-self: stretch !important;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page4-v2__main-region,
+html[data-portal-design="v2"] .page4-v2-dashboard__panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0 !important;
+  overflow-x: hidden;
+}
+
+/* Подстраницы — та же ширина, что «Студенты» и «Профориентация» */
+html[data-portal-design="v2"] .page4-v2__main-region > .page4-v2__page,
+html[data-portal-design="v2"] .page4-v2__forms,
+html[data-portal-design="v2"] .page4-v2__documents,
+html[data-portal-design="v2"] .page4-v2__teams,
+html[data-portal-design="v2"] .page4-v2__recommendations,
+html[data-portal-design="v2"] .page4-v2__proforientation {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  align-self: stretch !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__page .cabinet-chrome__recent-panel {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+html[data-portal-design="v2"].route-page4 .cabinet-chrome,
+html[data-portal-design="v2"] body.route-page4 .cabinet-chrome {
+  align-items: stretch !important;
+}
+
+html[data-portal-design="v2"].route-page4 .cabinet-v2-body,
+html[data-portal-design="v2"] body.route-page4 .cabinet-v2-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+html[data-portal-design="v2"].route-page4 .cabinet-v2-dashboard-stage,
+html[data-portal-design="v2"] body.route-page4 .cabinet-v2-dashboard-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+html[data-portal-design="v2"].route-page4 .page4-v2__main-region {
+  flex: 1 1 auto;
+  min-height: clamp(420px, calc(100svh - 300px), 680px);
+  overflow-y: auto;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Стекло до краёв колонки — отступы внутри .page4-v2__page (как KPI-карточки по ширине) */
+html[data-portal-design="v2"].route-page4 .page4-v2__main-region.page4-v2-dashboard__panel {
+  padding: 0 !important;
+}
+
+html[data-portal-design="v2"].route-page4 .page4-v2__main-region > .page4-v2__page {
+  flex: 1 1 auto;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 2vw, 22px);
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page4-v2__page {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page4-v2__page-head {
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .page4-v2__page-title {
+  margin: 0;
+}
+
+html[data-portal-design="v2"] .page4-v2__page-lede {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .page4-v2__page-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+
+html[data-portal-design="v2"] .page4-v2__page-body > * {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page4-v2__panel {
+  border: 1px solid var(--pv2-border) !important;
+  background: rgba(var(--pv2-r-white), 0.9) !important;
+  box-shadow: var(--pv2-shadow-sm) !important;
+  border-radius: var(--pv2-radius-xl);
+  padding: clamp(16px, 2vw, 20px);
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page4-v2__section-title {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page4-v2__section-lede {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .page4-v2__empty-hint {
+  padding: 16px 18px;
+  border-radius: var(--pv2-radius-lg);
+  background: rgba(var(--pv2-r-white), 0.55);
+  border: 1px solid var(--pv2-glass-l3-border);
+  color: var(--pv2-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+html[data-portal-design="v2"] .page4-v2__empty-hint--inline {
+  margin-top: 4px;
+}
+
+html[data-portal-design="v2"] .page4-v2__tag-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+html[data-portal-design="v2"] .page4-v2__tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid var(--pv2-glass-l3-border);
+  background: rgba(var(--pv2-r-white), 0.72);
+  font-size: 13px;
+  color: var(--pv2-ink);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+html[data-portal-design="v2"] .page4-v2__tag-chip--active {
+  background: rgba(var(--pv2-r-primary), 0.12);
+  border-color: rgba(var(--pv2-r-primary), 0.35);
+  color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .page4-v2__field {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .page4-v2__textarea {
+  width: 100%;
+  min-height: 72px;
+  border-radius: var(--pv2-radius-lg);
+  border: 1px solid var(--pv2-glass-l3-border);
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--pv2-ink);
+  background: rgba(var(--pv2-r-white), 0.88);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page4-v2__textarea:focus {
+  outline: 2px solid rgba(var(--pv2-r-primary), 0.35);
+  outline-offset: 1px;
+}
+
+html[data-portal-design="v2"] .page4-v2__list-item-card,
+html[data-portal-design="v2"] .page4-v2__list-item-btn {
+  border: 1px solid var(--pv2-border) !important;
+  background: rgba(var(--pv2-r-white), 0.86) !important;
+  box-shadow: var(--pv2-shadow-sm) !important;
+  transition:
+    border-color var(--pv2-dur-fast) var(--pv2-ease-out),
+    transform var(--pv2-dur-fast) var(--pv2-ease-out),
+    box-shadow var(--pv2-dur-fast) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .page4-v2__list-item-btn:hover,
+html[data-portal-design="v2"] .page4-v2__list-item-card:hover {
+  border-color: var(--pv2-border-accent) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+  transform: translateY(-1px);
+}
+
+html[data-portal-design="v2"] .page4-v2__dropzone {
+  border-color: var(--pv2-border-accent) !important;
+  background: linear-gradient(135deg, rgba(var(--pv2-r-primary), 0.08), rgba(var(--pv2-r-white), 0.05)) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__dropzone:focus-visible {
+  outline: 2px solid var(--pv2-primary);
+  outline-offset: 2px;
+}
+
+html[data-portal-design="v2"] .page4-v2__file-chip {
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.32) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__field {
+  border-color: var(--pv2-border-strong) !important;
+  background: rgba(var(--pv2-r-white), 0.94) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__field:focus {
+  outline: none;
+  border-color: var(--pv2-primary) !important;
+  box-shadow: 0 0 0 3px rgba(var(--pv2-r-primary), 0.18) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__secondary-btn {
+  border-color: var(--pv2-border-strong) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__primary-btn {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-white) !important;
+  border-color: transparent !important;
+  box-shadow: 0 10px 28px rgba(var(--pv2-r-primary), 0.24) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--pv2-shadow-md), 0 0 24px var(--pv2-accent-glow) !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__form-panel {
+  border: 1px solid var(--pv2-border) !important;
+  background: rgba(var(--pv2-r-white), 0.88) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .page4-v2__panel,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .page4-v2__list-item-card,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .page4-v2__list-item-btn,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .page4-v2__form-panel {
+  background: rgba(var(--pv2-r-ink), 0.82) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.26) !important;
+}
+
+/* —— Дашборд подрядчика: вкладки Главная / Дедлайны / Мониторинг —— */
+html[data-portal-design="v2"] .contractor-dashboard-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-tabs__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.5);
+  color: var(--pv2-text);
+  font: inherit;
+  font-size: var(--pv2-font-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--pv2-dur-fast),
+    border-color var(--pv2-dur-fast),
+    color var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-tabs__btn:hover {
+  border-color: var(--pv2-border-strong);
+  background: var(--pv2-bg-glass-hover);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-tabs__btn--active {
+  border-color: transparent;
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-white);
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-tabs__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--pv2-radius-pill);
+  background: rgba(var(--pv2-r-white), 0.92);
+  color: var(--pv2-primary);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-tabs__btn--active .contractor-dashboard-tabs__badge {
+  background: rgba(var(--pv2-r-white), 0.22);
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__widgets .cabinet-v2-dashboard__actions {
+  flex: 1;
+  align-content: stretch;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__widgets .cabinet-v2-dashboard__action {
+  min-height: 148px;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__action-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--pv2-radius-pill);
+  background: rgba(var(--pv2-r-primary), 0.12);
+  color: var(--pv2-primary);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__action-count--alert {
+  background: var(--pv2-primary);
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines {
+  padding: 18px 20px;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__title {
+  margin: 0 0 6px;
+  font-size: var(--pv2-font-md);
+  font-weight: 800;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__hint {
+  margin: 0 0 14px;
+  font-size: var(--pv2-font-xs);
+  line-height: 1.5;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 4px 10px;
+  padding: 14px 16px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.55);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color var(--pv2-dur-fast),
+    transform var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__item:hover {
+  border-color: var(--pv2-border-strong);
+  transform: translateY(-1px);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__item--urgent {
+  border-color: rgba(var(--pv2-r-primary), 0.45);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__item--overdue {
+  border-color: rgba(220, 38, 38, 0.45);
+  background: rgba(220, 38, 38, 0.06);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__kind {
+  grid-row: 1 / span 2;
+  align-self: center;
+  padding: 4px 8px;
+  border-radius: var(--pv2-radius-pill);
+  background: rgba(var(--pv2-r-primary), 0.1);
+  color: var(--pv2-primary);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__item-title {
+  font-size: var(--pv2-font-sm);
+  font-weight: 700;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-deadlines__meta {
+  font-size: var(--pv2-font-xs);
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-monitoring {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-monitoring__widgets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 900px) {
+  html[data-portal-design="v2"] .contractor-dashboard-monitoring__widgets {
+    grid-template-columns: 1fr;
+  }
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-widget {
+  padding: 18px 20px;
+  border: 1px solid var(--pv2-border-strong);
+  border-radius: var(--pv2-radius-lg);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-widget__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-widget__title {
+  margin: 0;
+  font-size: var(--pv2-font-sm);
+  font-weight: 800;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-widget__link {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: var(--pv2-font-xs);
+  font-weight: 700;
+  color: var(--pv2-primary);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-widget__empty {
+  margin: 0;
+  font-size: var(--pv2-font-xs);
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-widget__bars,
+html[data-portal-design="v2"] .contractor-dashboard-widget__statuses {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-progress__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-progress__label {
+  font-size: var(--pv2-font-xs);
+  font-weight: 600;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-progress__pct {
+  font-size: var(--pv2-font-xs);
+  font-weight: 800;
+  color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-progress__pct--overdue {
+  color: #dc2626;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-progress__track {
+  height: 8px;
+  border-radius: var(--pv2-radius-pill);
+  background: rgba(var(--pv2-r-primary), 0.1);
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--pv2-gradient-brand);
+  transition: width var(--pv2-dur-med) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-progress__fill--done {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-progress__fill--overdue {
+  background: linear-gradient(90deg, #dc2626, #f87171);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.45);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-status__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-status__name {
+  font-size: var(--pv2-font-xs);
+  font-weight: 700;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-status__spec {
+  font-size: 11px;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-status__badge {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: var(--pv2-radius-pill);
+  background: rgba(var(--pv2-r-primary), 0.1);
+  color: var(--pv2-text-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+html[data-portal-design="v2"] .contractor-dashboard-status__badge--new {
+  background: var(--pv2-primary);
+  color: var(--pv2-white);
+}
+
+/* —— Планнер + таблица дедлайнов РАДОР (вместо карточек справа от героя) —— */
+html[data-portal-design="v2"] .cabinet-v2-dashboard__widgets--planner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 404px;
+  height: 404px;
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__widgets--planner .contractor-planner--compact {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__widgets--planner .contractor-rador-deadlines--compact {
+  flex: 1.15 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .contractor-planner--compact .contractor-planner__list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines--compact .contractor-rador-deadlines__table-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  html[data-portal-design="v2"] .cabinet-v2-dashboard__widgets--planner {
+    height: auto;
+    min-height: 0;
+  }
+}
+
+html[data-portal-design="v2"] .contractor-planner,
+html[data-portal-design="v2"] .contractor-rador-deadlines {
+  padding: 0;
+  border-radius: var(--pv2-radius-xl) !important;
+  border: 1px solid rgba(var(--pv2-r-primary), 0.1);
+  background:
+    linear-gradient(165deg, rgba(var(--pv2-r-white), 0.96) 0%, rgba(var(--pv2-r-white), 0.88) 100%);
+  box-shadow:
+    0 1px 0 rgba(var(--pv2-r-white), 0.98) inset,
+    0 14px 36px rgba(var(--pv2-r-ink), 0.06),
+    0 2px 8px rgba(var(--pv2-r-primary), 0.04);
+}
+
+html[data-portal-design="v2"] .contractor-planner.pv2-accent-edge::after,
+html[data-portal-design="v2"] .contractor-rador-deadlines.pv2-accent-edge::after {
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--pv2-r-primary), 0.15) 0%,
+    rgba(var(--pv2-r-primary), 0.95) 38%,
+    rgba(var(--pv2-r-primary), 0.55) 100%
+  );
+  opacity: 1;
+}
+
+html[data-portal-design="v2"] .contractor-planner__head,
+html[data-portal-design="v2"] .contractor-rador-deadlines__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(var(--pv2-r-primary), 0.08);
+  background:
+    linear-gradient(180deg, rgba(var(--pv2-r-primary), 0.05) 0%, rgba(var(--pv2-r-white), 0) 100%);
+}
+
+html[data-portal-design="v2"] .contractor-planner__head-main,
+html[data-portal-design="v2"] .contractor-rador-deadlines__head-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .contractor-planner__icon,
+html[data-portal-design="v2"] .contractor-rador-deadlines__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--pv2-primary);
+  background:
+    linear-gradient(145deg, rgba(var(--pv2-r-primary), 0.14) 0%, rgba(var(--pv2-r-primary), 0.06) 100%);
+  border: 1px solid rgba(var(--pv2-r-primary), 0.12);
+  box-shadow: inset 0 1px 0 rgba(var(--pv2-r-white), 0.65);
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__icon {
+  color: #0e7490;
+  background:
+    linear-gradient(145deg, rgba(14, 116, 144, 0.14) 0%, rgba(14, 116, 144, 0.06) 100%);
+  border-color: rgba(14, 116, 144, 0.14);
+}
+
+html[data-portal-design="v2"] .contractor-planner__head-text,
+html[data-portal-design="v2"] .contractor-rador-deadlines__head-text {
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .contractor-planner__kicker,
+html[data-portal-design="v2"] .contractor-rador-deadlines__kicker {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pv2-ink);
+  line-height: 1.2;
+}
+
+html[data-portal-design="v2"] .contractor-planner__lede,
+html[data-portal-design="v2"] .contractor-rador-deadlines__lede {
+  margin: 3px 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .contractor-planner__manage,
+html[data-portal-design="v2"] .contractor-rador-deadlines__manage {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--pv2-r-primary), 0.16);
+  background: rgba(var(--pv2-r-white), 0.82);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pv2-primary);
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(var(--pv2-r-white), 0.9) inset;
+  transition:
+    background var(--pv2-dur-fast) var(--pv2-ease-out),
+    border-color var(--pv2-dur-fast) var(--pv2-ease-out),
+    transform var(--pv2-dur-fast) var(--pv2-ease-out),
+    box-shadow var(--pv2-dur-fast) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .contractor-planner__manage span[aria-hidden],
+html[data-portal-design="v2"] .contractor-rador-deadlines__manage span[aria-hidden] {
+  display: inline-block;
+  transition: transform var(--pv2-dur-fast) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .contractor-planner__manage:hover,
+html[data-portal-design="v2"] .contractor-rador-deadlines__manage:hover {
+  background: rgba(var(--pv2-r-primary), 0.08);
+  border-color: rgba(var(--pv2-r-primary), 0.24);
+  box-shadow: 0 4px 14px rgba(var(--pv2-r-primary), 0.1);
+  transform: translateY(-1px);
+}
+
+html[data-portal-design="v2"] .contractor-planner__manage:hover span[aria-hidden],
+html[data-portal-design="v2"] .contractor-rador-deadlines__manage:hover span[aria-hidden] {
+  transform: translateX(2px);
+}
+
+html[data-portal-design="v2"] .contractor-planner__empty,
+html[data-portal-design="v2"] .contractor-rador-deadlines__empty {
+  margin: 0;
+  padding: 4px 18px 16px;
+  font-size: var(--pv2-font-sm);
+  color: var(--pv2-text-muted);
+  line-height: 1.45;
+}
+
+html[data-portal-design="v2"] .contractor-planner__list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+html[data-portal-design="v2"] .contractor-planner__list > li {
+  animation: contractor-planner-row-in 0.38s var(--pv2-ease-out) both;
+}
+
+html[data-portal-design="v2"] .contractor-planner__list > li:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+html[data-portal-design="v2"] .contractor-planner__list > li:nth-child(2) {
+  animation-delay: 45ms;
+}
+
+html[data-portal-design="v2"] .contractor-planner__list > li:nth-child(3) {
+  animation-delay: 90ms;
+}
+
+html[data-portal-design="v2"] .contractor-planner__list > li:nth-child(4) {
+  animation-delay: 135ms;
+}
+
+html[data-portal-design="v2"] .contractor-planner__list > li:nth-child(n + 5) {
+  animation-delay: 180ms;
+}
+
+@keyframes contractor-planner-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html[data-portal-design="v2"] .contractor-planner__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 8px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid transparent;
+  transition:
+    background var(--pv2-dur-fast) var(--pv2-ease-out),
+    border-color var(--pv2-dur-fast) var(--pv2-ease-out),
+    opacity 0.24s var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .contractor-planner__row:hover {
+  background: rgba(var(--pv2-r-primary), 0.06);
+  border-color: rgba(var(--pv2-r-primary), 0.08);
+}
+
+html[data-portal-design="v2"] .contractor-planner__row--done {
+  opacity: 0.82;
+}
+
+html[data-portal-design="v2"] .contractor-planner__check-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+html[data-portal-design="v2"] .contractor-planner__row-main {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 4px 4px 4px 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+html[data-portal-design="v2"] .contractor-planner__row--done .contractor-planner__title {
+  text-decoration: line-through;
+  text-decoration-color: rgba(var(--pv2-r-ink), 0.35);
+  opacity: 0.55;
+}
+
+html[data-portal-design="v2"] .contractor-planner__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 1.5px solid var(--pv2-border-strong);
+  background: rgba(var(--pv2-r-white), 0.7);
+  flex-shrink: 0;
+  transition:
+    background 0.22s var(--pv2-ease-out),
+    border-color 0.22s var(--pv2-ease-out),
+    color 0.22s var(--pv2-ease-out),
+    transform 0.18s var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .contractor-planner__check-btn:active .contractor-planner__check {
+  transform: scale(0.9);
+}
+
+html[data-portal-design="v2"] .contractor-planner__check--done {
+  border-color: transparent;
+  background: var(--pv2-primary);
+  color: var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .contractor-planner__check--done svg path {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  animation: contractor-planner-check-draw 0.28s var(--pv2-ease-out) 0.04s forwards;
+}
+
+@keyframes contractor-planner-check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+html[data-portal-design="v2"] .contractor-planner__title {
+  font-size: var(--pv2-font-sm);
+  font-weight: 600;
+  color: var(--pv2-text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition:
+    opacity 0.24s var(--pv2-ease-out),
+    color 0.24s var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .contractor-planner__date {
+  font-size: var(--pv2-font-xs);
+  font-weight: 600;
+  color: var(--pv2-text-muted);
+  padding: 4px 10px;
+  border-radius: var(--pv2-radius-pill);
+  background: rgba(var(--pv2-r-white), 0.55);
+  white-space: nowrap;
+  transition:
+    background 0.24s var(--pv2-ease-out),
+    opacity 0.24s var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] .contractor-planner__row--done .contractor-planner__date {
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-portal-design="v2"] .contractor-planner__list > li,
+  html[data-portal-design="v2"] .contractor-planner__check--done,
+  html[data-portal-design="v2"] .contractor-planner__check--done svg path {
+    animation: none !important;
+  }
+
+  html[data-portal-design="v2"] .contractor-planner__row,
+  html[data-portal-design="v2"] .contractor-planner__check,
+  html[data-portal-design="v2"] .contractor-planner__title,
+  html[data-portal-design="v2"] .contractor-planner__date,
+  html[data-portal-design="v2"] .contractor-planner__manage span[aria-hidden] {
+    transition: none !important;
+  }
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__table-wrap {
+  overflow-x: auto;
+  padding: 4px 14px 14px;
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--pv2-font-xs);
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__table th {
+  padding: 8px 12px 10px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pv2-text-muted);
+  border-bottom: 1px solid rgba(var(--pv2-r-primary), 0.1);
+  background: rgba(var(--pv2-r-primary), 0.03);
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(var(--pv2-r-primary), 0.08);
+  color: var(--pv2-text);
+  vertical-align: middle;
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__name {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: var(--pv2-font-sm);
+  font-weight: 700;
+  color: var(--pv2-text);
+  cursor: pointer;
+  text-align: left;
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__name:hover {
+  color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__status--submitted {
+  color: #16a34a;
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__status--overdue {
+  color: #dc2626;
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__status--progress {
+  color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .contractor-rador-deadlines__status--muted {
+  color: var(--pv2-text-muted);
+}
+
+/* —— Страница планнера /page4/planner —— */
+html[data-portal-design="v2"] .contractor-planner-page {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(300px, 1.1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  html[data-portal-design="v2"] .contractor-planner-page {
+    grid-template-columns: 1fr;
+  }
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__calendar,
+html[data-portal-design="v2"] .contractor-planner-page__day {
+  padding: 18px 20px;
+  border: 1px solid var(--pv2-border-strong);
+  border-radius: var(--pv2-radius-lg);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__month {
+  margin: 0;
+  font-size: var(--pv2-font-md);
+  font-weight: 800;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__nav {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.6);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__weekdays,
+html[data-portal-design="v2"] .contractor-planner-page__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__weekdays {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__cell {
+  min-height: 52px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid transparent;
+  background: rgba(var(--pv2-r-white), 0.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  font: inherit;
+  padding: 4px;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__cell--empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+  min-height: 0;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__cell--selected {
+  border-color: var(--pv2-primary);
+  background: rgba(var(--pv2-r-primary), 0.12);
+  box-shadow: 0 0 0 1px rgba(var(--pv2-r-primary), 0.2);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__cell--today .contractor-planner-page__day-num {
+  color: var(--pv2-primary);
+  font-weight: 800;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__day-num {
+  font-size: var(--pv2-font-sm);
+  font-weight: 600;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__dot {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--pv2-radius-pill);
+  background: var(--pv2-primary);
+  color: var(--pv2-white);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 18px;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__day-title {
+  margin: 0 0 14px;
+  font-size: var(--pv2-font-sm);
+  font-weight: 800;
+  color: var(--pv2-text);
+  text-transform: capitalize;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__add {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border-strong);
+  background: rgba(var(--pv2-r-white), 0.75);
+  font: inherit;
+  font-size: var(--pv2-font-sm);
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__add-btn {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border-radius: var(--pv2-radius-pill);
+  border: none;
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-white);
+  font: inherit;
+  font-size: var(--pv2-font-xs);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__add-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__item {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.5);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__check {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 1.5px solid var(--pv2-border-strong);
+  background: rgba(var(--pv2-r-white), 0.8);
+  cursor: pointer;
+  padding: 0;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__check--done {
+  background: var(--pv2-primary);
+  border-color: transparent;
+  box-shadow: inset 0 0 0 2px var(--pv2-white);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__item-title {
+  font-size: var(--pv2-font-sm);
+  font-weight: 600;
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__item-title--done {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__delete {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--pv2-text-muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__delete:hover {
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+}
+
+html[data-portal-design="v2"] .contractor-planner-page__empty {
+  margin: 0;
+  font-size: var(--pv2-font-sm);
+  color: var(--pv2-text-muted);
+}

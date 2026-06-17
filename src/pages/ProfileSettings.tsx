@@ -1,51 +1,59 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loadCabinetTheme, loadProfileSettings, type ProfileSettingsData } from "../profileSettingsStorage";
+import {
+  loadCabinetTheme,
+  loadProfileSettings,
+  type ProfileSettingsData,
+} from "../profileSettingsStorage";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { syncCabinetThemeDocument } from "../design-system/syncCabinetThemeDocument";
+import { usePortalDesign } from "../design-system/usePortalDesign";
+import { buildCabinetChromeThemeV2 } from "../theme/cabinetPalettesV2";
+import type { CabinetChromeStyles } from "../components/CabinetChromeLayout";
 import { persistProfileToStores } from "../utils/profilePersist";
+import {
+  isContractorCabinetPath,
+  readPortalRole,
+  resolveCabinetBase,
+  resolveProfileReturnPath,
+} from "../utils/profileNavigation";
 import {
   ADMIN_CABINET_SEARCH,
   shouldShowReturnToAdminDashboard,
 } from "../utils/adminReturnNavigation";
 import { ICON_AVATAR } from "../assets/appIcons";
-
-function readPortalRole(): string | null {
-  try {
-    return sessionStorage.getItem("trassaPortalRole");
-  } catch {
-    return null;
-  }
-}
+import EditableProfileAvatar from "../components/EditableProfileAvatar";
+import SpecializationPicker from "../components/SpecializationPicker";
+import { specializationTitle } from "../utils/specializationsStorage";
 
 function ProfileSettings() {
   const navigate = useNavigate();
   const location = useLocation();
   const stateFrom = (location.state as { from?: string } | null)?.from;
   const portalRole = readPortalRole();
-  const fromPath =
-    stateFrom ??
-    (portalRole === "0"
-      ? "/cabinet-school"
-      : portalRole === "1"
-        ? "/cabinet-spo"
-        : "/page5");
-  /** Поля кабинета подрядчика — только при входе из /page4, не в РАДОР/АДО. */
-  const showContractorCabinetSection = fromPath === "/page4";
+  const fromPath = resolveProfileReturnPath(stateFrom);
+  /** Поля кабинета подрядчика — только при входе из кабинета подрядчика (/page4). */
+  const showContractorCabinetSection = isContractorCabinetPath(fromPath);
   /** Должность в профиле не редактируется для школьника и студента — роль задаётся категорией входа. */
   const showRoleLabelField =
     portalRole !== "0" &&
     portalRole !== "1" &&
     stateFrom !== "/cabinet-school" &&
     stateFrom !== "/cabinet-spo";
+  const showStudentSpecialization = portalRole === "1" || stateFrom === "/cabinet-spo";
 
   const [form, setForm] = useState<ProfileSettingsData>(() => loadProfileSettings());
   const [savedFlash, setSavedFlash] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
+  const isV2 = usePortalDesign() === "v2";
   /** Тема берётся из того же хранилища, что и переключатель в кабинете (Page5 / Page6). */
-  const isDark = loadCabinetTheme() === "dark";
+  const cabinetTheme = loadCabinetTheme();
+  const isDark = cabinetTheme === "dark";
 
-  const styles = useMemo(
-    () => ({
+  const styles = useMemo((): CabinetChromeStyles => {
+    if (isV2) return buildCabinetChromeThemeV2("/profile", isDark);
+    return {
       pageBg: isDark ? "#0f172a" : "#e8edf5",
       text: isDark ? "#f8fafc" : "#1c2b45",
       muted: isDark ? "#a9bfe0" : "#5f728f",
@@ -61,16 +69,52 @@ function ProfileSettings() {
       insetShadow: isDark
         ? "inset 8px 8px 18px rgba(0, 0, 0, 0.24)"
         : "inset 8px 8px 18px rgba(142, 154, 178, 0.16), inset -8px -8px 18px rgba(255, 255, 255, 0.8)",
-    }),
-    [isDark]
-  );
+      plaqueButtonBg: "",
+      plaqueButtonText: "",
+      plaqueButtonMuted: "",
+      plaqueButtonBorder: "",
+      plaqueButtonShadow: "",
+      plaqueAccentGlow: "",
+      plaqueAccentStripe: "",
+      plaqueNavActiveBg: "",
+      plaqueNavActiveText: "",
+      plaqueNavActiveBorder: "",
+      plaqueBadgeBg: "",
+      plaqueBadgeText: "",
+      heroScrimFrom: "",
+      heroScrimTo: "",
+      headerProfileBg: isDark ? "#14263b" : "#2d4366",
+      panelBorder: "",
+      tileBorder: "",
+      progressTrack: "",
+      progressFill: "",
+      surfaceHighlight: "",
+      controlBorder: "",
+    };
+  }, [isDark, isV2]);
 
   useEffect(() => {
+    if (isV2) {
+      syncCabinetThemeDocument(cabinetTheme);
+      return;
+    }
     document.body.style.backgroundColor = styles.pageBg;
-  }, [styles.pageBg]);
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, [isV2, cabinetTheme, styles.pageBg]);
+
+  useEffect(() => {
+    const base = resolveCabinetBase(fromPath);
+    if (base === "/page4") void import("./Page4");
+    else if (base === "/page5") void import("./Page5");
+    else if (base === "/page6") void import("./Page6");
+    else if (base === "/cabinet-school") void import("./CabinetSchool");
+    else if (base === "/cabinet-spo") void import("./CabinetSpo");
+  }, [fromPath]);
 
   const goBack = useCallback(() => {
-    navigate(fromPath);
+    navigate(fromPath, { preventScrollReset: true });
   }, [navigate, fromPath]);
 
   const showReturnToAdmin = shouldShowReturnToAdminDashboard();
@@ -98,90 +142,120 @@ function ProfileSettings() {
 
   return (
     <div
-      style={{
-        minHeight: "100vh",
-        background: styles.pageBg,
-        color: styles.text,
-        fontFamily: "Inter, sans-serif",
-        padding: "24px",
-      }}
+      className={cx(isV2 && "profile-v2 profile-v2__page")}
+      style={
+        isV2
+          ? { color: styles.text }
+          : {
+              minHeight: "100vh",
+              background: styles.pageBg,
+              color: styles.text,
+              fontFamily: "Inter, sans-serif",
+              padding: "24px",
+            }
+      }
     >
-      <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
+      <div className={cx(isV2 && "profile-v2__inner")} style={isV2 ? undefined : { maxWidth: 720, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
         <header
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            gap: 16,
-            padding: "20px 24px",
-            borderRadius: 28,
-            background: styles.surfaceBg,
-            boxShadow: styles.cardShadow,
-          }}
+          className={cx(isV2 && "profile-v2__header")}
+          style={
+            isV2
+              ? undefined
+              : {
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  gap: 16,
+                  padding: "20px 24px",
+                  borderRadius: 28,
+                  background: styles.surfaceBg,
+                  boxShadow: styles.cardShadow,
+                }
+          }
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div className={cx(isV2 && "profile-v2__header-row")} style={isV2 ? undefined : { display: "flex", alignItems: "center", gap: 16 }}>
             <button
               type="button"
+              className={cx(isV2 && "profile-v2__ghost")}
               onClick={goBack}
-              style={{
-                border: "none",
-                cursor: "pointer",
-                borderRadius: 18,
-                padding: "12px 18px",
-                fontWeight: 700,
-                fontSize: 14,
-                color: styles.text,
-                background: styles.sectionBg,
-                boxShadow: styles.cardShadow,
-                fontFamily: "inherit",
-              }}
+              style={
+                isV2
+                  ? { color: styles.text, cursor: "pointer", fontFamily: "inherit" }
+                  : {
+                      border: "none",
+                      cursor: "pointer",
+                      borderRadius: 18,
+                      padding: "12px 18px",
+                      fontWeight: 700,
+                      fontSize: 14,
+                      color: styles.text,
+                      background: styles.sectionBg,
+                      boxShadow: styles.cardShadow,
+                      fontFamily: "inherit",
+                    }
+              }
             >
               ← В кабинет
             </button>
             {showReturnToAdmin ? (
               <button
                 type="button"
+                className={cx(isV2 && "profile-v2__admin-back")}
                 onClick={goToAdminCabinet}
-                style={{
-                  border: "none",
-                  cursor: "pointer",
-                  borderRadius: 18,
-                  padding: "12px 18px",
-                  fontWeight: 700,
-                  fontSize: 14,
-                  color: styles.buttonText,
-                  background: styles.buttonBg,
-                  boxShadow: styles.cardShadow,
-                  fontFamily: "inherit",
-                }}
+                style={
+                  isV2
+                    ? undefined
+                    : {
+                        border: "none",
+                        cursor: "pointer",
+                        borderRadius: 18,
+                        padding: "12px 18px",
+                        fontWeight: 700,
+                        fontSize: 14,
+                        color: styles.buttonText,
+                        background: styles.buttonBg,
+                        boxShadow: styles.cardShadow,
+                        fontFamily: "inherit",
+                      }
+                }
               >
                 ← Кабинет администратора
               </button>
             ) : null}
-            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800 }}>Настройки профиля</h1>
+            <h1 className={cx(isV2 && "profile-v2__title")} style={isV2 ? undefined : { margin: 0, fontSize: 22, fontWeight: 800 }}>
+              Настройки профиля
+            </h1>
           </div>
         </header>
 
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 18,
-            padding: 22,
-            borderRadius: 28,
-            background: isDark ? "#14263b" : "#2d4366",
-            color: "#f8fafc",
-            boxShadow: styles.cardShadow,
-          }}
+          className={cx(isV2 && "profile-v2__banner")}
+          style={
+            isV2
+              ? { boxShadow: styles.cardShadow }
+              : {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 18,
+                  padding: 22,
+                  borderRadius: 28,
+                  background: isDark ? "#14263b" : "#2d4366",
+                  color: "#f8fafc",
+                  boxShadow: styles.cardShadow,
+                }
+          }
         >
-          <img
-            src={ICON_AVATAR}
-            alt=""
-            width={56}
-            height={56}
-            style={{ borderRadius: 14, objectFit: "cover" }}
-            decoding="async"
-            fetchPriority="high"
+          <EditableProfileAvatar
+            emailNorm={form.email.trim().toLowerCase() || undefined}
+            fallbackSrc={ICON_AVATAR}
+            wrapClassName={isV2 ? "profile-v2__avatar-wrap" : "editable-profile-avatar__wrap"}
+            rootClassName={isV2 ? "profile-v2__avatar" : "profile-legacy-avatar"}
+            photoImgClassName="profile-v2__avatar-img--photo"
+            imgClassName={isV2 ? "profile-v2__avatar-img" : "profile-legacy-avatar__img"}
+            showFallbackWhenEmpty={!isV2}
+            displayName={form.firstName.trim() || "Профиль"}
+            showHint
+            imgSize={72}
           />
           <div>
             <div style={{ fontSize: 18, fontWeight: 800 }}>
@@ -197,12 +271,17 @@ function ProfileSettings() {
 
         {showContractorCabinetSection ? (
           <section
-            style={{
-              padding: 26,
-              borderRadius: 28,
-              background: styles.sectionBg,
-              boxShadow: styles.cardShadow,
-            }}
+            className={cx(isV2 && "profile-v2__card")}
+            style={
+              isV2
+                ? undefined
+                : {
+                    padding: 26,
+                    borderRadius: 28,
+                    background: styles.sectionBg,
+                    boxShadow: styles.cardShadow,
+                  }
+            }
           >
             <h2 style={{ margin: "0 0 18px", fontSize: 16, fontWeight: 800, letterSpacing: "0.06em", color: styles.muted }}>
               КАБИНЕТ ПОДРЯДЧИКА
@@ -232,13 +311,58 @@ function ProfileSettings() {
           </section>
         ) : null}
 
-        <section
-          style={{
-            padding: 26,
-            borderRadius: 28,
-            background: styles.sectionBg,
-            boxShadow: styles.cardShadow,
-          }}
+        {showStudentSpecialization ? (
+          <section
+            className={cx(isV2 && "profile-v2__card")}
+            style={
+              isV2
+                ? undefined
+                : {
+                    padding: 26,
+                    borderRadius: 28,
+                    background: styles.sectionBg,
+                    boxShadow: styles.cardShadow,
+                  }
+            }
+          >
+            <h2
+              style={{
+                margin: "0 0 8px",
+                fontSize: 16,
+                fontWeight: 800,
+                letterSpacing: "0.06em",
+                color: styles.muted,
+              }}
+            >
+              СПЕЦИФИКАЦИЯ
+            </h2>
+            <p style={{ margin: "0 0 16px", fontSize: 13, lineHeight: 1.5, color: styles.muted }}>
+              Текущая: <strong>{specializationTitle(form.specializationId)}</strong>. Можно сменить
+              направление — вы останетесь в своей подгруппе распределения.
+            </p>
+            <div style={{ color: styles.text }}>
+              <SpecializationPicker
+                value={form.specializationId ?? ""}
+                onChange={(id) => patch({ specializationId: id })}
+                label="Направление"
+                hint="Выбор влияет на подгруппу студентов и предложения подрядчикам."
+              />
+            </div>
+          </section>
+        ) : null}
+
+          <section
+            className={cx(isV2 && "profile-v2__card")}
+            style={
+              isV2
+                ? undefined
+                : {
+                    padding: 26,
+                    borderRadius: 28,
+                    background: styles.sectionBg,
+                    boxShadow: styles.cardShadow,
+                  }
+            }
         >
           <h2 style={{ margin: "0 0 18px", fontSize: 16, fontWeight: 800, letterSpacing: "0.06em", color: styles.muted }}>
             ЛИЧНЫЕ ДАННЫЕ
@@ -303,13 +427,18 @@ function ProfileSettings() {
           </div>
         </section>
 
-        <section
-          style={{
-            padding: 26,
-            borderRadius: 28,
-            background: styles.sectionBg,
-            boxShadow: styles.cardShadow,
-          }}
+          <section
+            className={cx(isV2 && "profile-v2__card")}
+            style={
+              isV2
+                ? undefined
+                : {
+                    padding: 26,
+                    borderRadius: 28,
+                    background: styles.sectionBg,
+                    boxShadow: styles.cardShadow,
+                  }
+            }
         >
           <h2 style={{ margin: "0 0 18px", fontSize: 16, fontWeight: 800, letterSpacing: "0.06em", color: styles.muted }}>
             КОНТАКТЫ
@@ -357,13 +486,18 @@ function ProfileSettings() {
           </div>
         </section>
 
-        <section
-          style={{
-            padding: 26,
-            borderRadius: 28,
-            background: styles.sectionBg,
-            boxShadow: styles.cardShadow,
-          }}
+          <section
+            className={cx(isV2 && "profile-v2__card")}
+            style={
+              isV2
+                ? undefined
+                : {
+                    padding: 26,
+                    borderRadius: 28,
+                    background: styles.sectionBg,
+                    boxShadow: styles.cardShadow,
+                  }
+            }
         >
           <h2 style={{ margin: "0 0 18px", fontSize: 16, fontWeight: 800, letterSpacing: "0.06em", color: styles.muted }}>
             УВЕДОМЛЕНИЯ
@@ -391,6 +525,7 @@ function ProfileSettings() {
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 14 }}>
           <button
             type="button"
+            className={cx(isV2 && "profile-v2__save")}
             onClick={handleSave}
             style={{
               border: "none",
@@ -401,7 +536,7 @@ function ProfileSettings() {
               fontSize: 15,
               color: styles.buttonText,
               background: styles.buttonBg,
-              boxShadow: styles.insetShadow,
+              boxShadow: isV2 ? undefined : styles.insetShadow,
               fontFamily: "inherit",
             }}
           >

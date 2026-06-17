@@ -1,0 +1,15 @@
+/**
+ * Статичный фон карты (режим data-page2-bg="off").
+ */
+body.route-page2 .page2-ambient--static .page2-ambient__staticBg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--pv2-white);
+  background-image: linear-gradient(180deg, var(--pv2-white) 0%, var(--pv2-white) 100%);
+}
+
+html[data-page2-bg="off"] body.route-page2 .page2-ambient__video,
+html[data-portal-motion="paused"] body.route-page2 .page2-ambient__video {
+  display: none !important;
+  visibility: hidden !important;
+}

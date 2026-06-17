@@ -1,24 +1,25 @@
-﻿.pageRoot {
+.pageRoot {
   position: relative;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   width: 100%;
-  height: 100svh;
-  max-height: 100svh;
+  height: auto;
+  max-height: none;
   min-height: 100vh;
   min-height: 100svh;
+  min-height: 100dvh;
   padding: 40px 24px 60px;
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-ui);
   background: linear-gradient(165deg, #e6eaf1 0%, #dfe5ef 38%, #d8dfea 100%);
   cursor: default;
 }
 
-/* Шаг входа/регистрации: без вертикальной прокрутки страницы */
+/* Шаг входа/регистрации: прокрутка при длинной форме на узком экране */
 .pageRoot:has(.heroAuthStep) {
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 /* Неоморф + дорожная отрасль */
@@ -92,7 +93,7 @@
 /* Период штриха = dash + gap — смещение ровно на него, цикл без шва */
 .neoRoadCenterLine {
   stroke-dasharray: 16 22;
-  animation: page3DashMain 3.5s linear infinite;
+  animation: none;
   filter: drop-shadow(0 0 0.8px rgba(255, 255, 255, 0.9));
   will-change: stroke-dashoffset;
 }
@@ -108,7 +109,7 @@
 
 .neoRoadCenterLineFar {
   stroke-dasharray: 10 16;
-  animation: page3DashFar 5.5s linear infinite;
+  animation: none;
   opacity: 0.82;
   filter: drop-shadow(0 0 0.5px rgba(255, 255, 255, 0.7));
   will-change: stroke-dashoffset;
@@ -273,6 +274,8 @@
   /* без лишнего отступа сверху — «Назад» у верхнего края области контента под padding hero */
   margin-top: 0;
   align-items: stretch;
+  width: 100%;
+  max-width: 100%;
 }
 
 .rolePickMain {
@@ -590,7 +593,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: linear-gradient(160deg, #3558a3 0%, #243b74 100%);
+  background: linear-gradient(160deg, #2b64fd 0%, #5a86fd 100%);
   color: #ffffff;
   font-size: 10px;
   font-weight: 800;
@@ -664,10 +667,14 @@
 
 /* После клика (роль 4): второе состояние, без «прыжка» при уходе к «Далее». */
 .roleCardInstitutionsExpanded {
+  flex: 0 0 432px;
   width: 432px;
+  height: 332px;
   min-height: 332px;
+  max-width: none;
   padding: 0;
   border-radius: 34px;
+  box-sizing: border-box;
 }
 
 .roleCardInstitutionsExpanded .cardContent {
@@ -691,11 +698,10 @@
 
 .institutionsHoverPanel {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 432px;
-  height: 332px;
-  border-radius: 40px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
@@ -714,11 +720,10 @@
   inset: 0;
   background-image: var(--institutions-hover-overlay);
   background-size: cover;
-  background-position: center 42%;
+  background-position: var(--institutions-bg-position, center 42%);
   background-repeat: no-repeat;
-  /* Чуть крупнее кадр во втором состоянии (обрезка по краям за счёт overflow панели). */
-  transform: scale(1.12);
-  transform-origin: center 42%;
+  transform: scale(var(--institutions-bg-scale, 1.12));
+  transform-origin: var(--institutions-bg-position, center 42%);
 }
 
 .institutionsHoverShade {
@@ -856,11 +861,15 @@
 }
 
 .roleIconStudent {
-  width: 29px;
-  height: 24px;
+  transform: scale(1.14);
+  transform-origin: center center;
 }
 
-/* Кнопка «Далее» — только стрелка */
+.institutionsHoverIcon.roleIconStudent {
+  transform: scale(1.14);
+}
+
+/* Кнопка «Далее» — только стрелка; место зарезервировано, чтобы плашка не прыгала */
 .nextSection {
   display: flex;
   justify-content: center;
@@ -976,7 +985,7 @@
 .loginCard {
   width: 100%;
   border: 0;
-  border-radius: 22px;
+  border-radius: 24px;
   overflow: hidden;
   box-shadow:
     12px 16px 40px rgba(25, 42, 74, 0.12),
@@ -1004,11 +1013,11 @@
 }
 
 .loginCardHeader {
-  padding: 22px 26px 24px;
-  background: linear-gradient(165deg, #2a4580 0%, #1e3568 42%, #243b74 100%);
-  border-radius: 22px 22px 0 0;
+  padding: 24px 28px 26px;
+  background: linear-gradient(165deg, #2a4580 0%, #1a2b56 48%, #243b74 100%);
+  border-radius: 24px 24px 0 0;
   box-sizing: border-box;
-  min-height: 112px;
+  min-height: 104px;
   height: auto;
 }
 
@@ -1026,9 +1035,9 @@
 }
 
 .loginTitle {
-  margin: 0 0 12px;
+  margin: 0;
   color: #ffffff;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   line-height: 1.28;
   letter-spacing: -0.02em;
@@ -1141,6 +1150,23 @@
   width: 100%;
 }
 
+/* Спецификация: много вкладок — ширина по тексту, перенос на следующую строку */
+.loginProfileRowSpec {
+  composes: loginProfileRow;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.loginProfileRowSpec .loginProfileBtn {
+  flex: 0 1 auto;
+  min-width: max-content;
+  max-width: 100%;
+  white-space: normal;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+  text-align: center;
+}
+
 .loginProfileBtn {
   flex: 1;
   min-width: 0;
@@ -1154,7 +1180,7 @@
     inset 1px 1px 2px rgba(255, 255, 255, 0.9),
     inset -1px -1px 3px rgba(108, 123, 162, 0.05);
   color: #5a6b8a;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1247,11 +1273,11 @@
   box-sizing: border-box;
   margin-bottom: 18px;
   padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(120, 90, 75, 0.28);
-  background: #f5f0ea;
+  border-radius: 12px;
+  border: 1px solid rgba(36, 59, 116, 0.1);
+  background: #f0f4f8;
   color: #1a2a52;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-ui);
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -1285,7 +1311,6 @@
   transition: color 0.2s ease, background 0.2s ease;
 }
 
-/* Нейтральный серый ховер; фон — перекрытие глобального button:hover из App.css */
 button.loginEyeBtn:hover,
 button.loginEyeBtn:focus-visible {
   background: rgba(90, 102, 124, 0.1);
@@ -1307,33 +1332,112 @@ button.loginEyeBtn:active {
   width: 100%;
   padding: 14px 20px;
   border: 0;
-  border-radius: 14px;
-  background: #243b74;
-  color: #f8fafc;
-  font-family: 'Montserrat', sans-serif;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #4a7dff 0%, #2b64fd 52%, #2558e8 100%);
+  color: #ffffff;
+  font-family: var(--font-ui);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease, filter 0.15s ease;
+  box-shadow: 0 10px 24px rgba(43, 100, 253, 0.28);
+  transition: background 0.2s ease, filter 0.15s ease, box-shadow 0.2s ease;
 }
 
 .loginSubmit:hover {
-  background: #1a2f5c;
+  background: linear-gradient(180deg, #4277ff 0%, #2558e8 52%, #1f4fd4 100%);
+  box-shadow: 0 12px 28px rgba(43, 100, 253, 0.34);
 }
 
 .loginSubmit:active {
   filter: brightness(0.94);
 }
 
+.loginBetaPreview {
+  margin-top: 10px;
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(66, 119, 255, 0.34);
+  background: linear-gradient(180deg, #f8faff 0%, #eef4ff 100%);
+  color: #4277ff;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.loginBetaPreview:hover {
+  border-color: rgba(66, 119, 255, 0.48);
+  background: linear-gradient(180deg, #f3f7ff 0%, #e6efff 100%);
+  box-shadow: 0 6px 16px rgba(43, 100, 253, 0.12);
+}
+
+.loginBetaPreview:active {
+  transform: scale(0.995);
+}
+
+.loginAuthSecondaryRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.loginBetaPreview,
+.loginRegisterBtn {
+  margin-top: 0;
+  width: 100%;
+}
+
+.loginRegisterBtn {
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(36, 59, 116, 0.22);
+  background: #ffffff;
+  color: #243b74;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.loginRegisterBtn:hover {
+  border-color: rgba(36, 59, 116, 0.34);
+  background: #f8faff;
+  box-shadow: 0 4px 14px rgba(36, 59, 116, 0.08);
+}
+
+.loginBetaHint {
+  margin: 8px 0 4px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #8a96ad;
+}
+
+@media (max-width: 420px) {
+  .loginAuthSecondaryRow {
+    grid-template-columns: 1fr;
+  }
+}
+
 .loginForgot {
   display: block;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 14px;
   padding: 0;
   border: 0;
   background: none;
-  color: #8b4a5c;
-  font-family: 'Montserrat', sans-serif;
+  color: #5c6b8a;
+  font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -1343,20 +1447,19 @@ button.loginEyeBtn:active {
   transition: color 0.22s ease;
 }
 
-/* Перекрываем глобальный button:hover из App.css (бордовый фон) */
 button.loginForgot:hover {
   background: transparent;
-  color: #7a4552;
+  color: #243b74;
 }
 
 button.loginForgot:focus-visible {
   background: transparent;
-  color: #7a4552;
+  color: #243b74;
 }
 
 button.loginForgot:active {
   background: transparent;
-  color: #6b3e49;
+  color: #1a2f5c;
 }
 
 .loginBack {
@@ -1365,7 +1468,7 @@ button.loginForgot:active {
   border-radius: 999px;
   background: transparent;
   color: #5a667a;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -1421,7 +1524,199 @@ button.loginForgot:active {
     }
 
     .cardsRow {
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+      gap: clamp(10px, 2.5vw, 20px);
+      padding-bottom: 12px;
+      max-width: 100%;
     }
   }
+
+/* Карточки ролей — вертикальные «пилюли» как на десктопе, ряд + свайп */
+@media (max-width: 900px) {
+  .cardsRow {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 14px;
+    max-width: 100%;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding: 4px 4px 14px;
+    scrollbar-width: thin;
+  }
+
+  .roleCard {
+    --page3-role-card-w: 136px;
+    --page3-role-card-h: min(320px, 56dvh);
+    flex: 0 0 var(--page3-role-card-w);
+    width: var(--page3-role-card-w);
+    min-width: var(--page3-role-card-w);
+    max-width: var(--page3-role-card-w);
+    min-height: var(--page3-role-card-h);
+    height: var(--page3-role-card-h);
+    padding: 0 12px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    border-radius: 40px;
+    scroll-snap-align: center;
+    transform: none !important;
+  }
+
+  .roleCard:not(.roleCardSelected):hover {
+    transform: none !important;
+  }
+
+  .roleCardSelected {
+    transform: none !important;
+    animation: none;
+  }
+
+  .cardOverlay {
+    inset: 0;
+    border-radius: inherit;
+    background-position: center top;
+  }
+
+  .cardContent {
+    position: relative;
+    margin-top: 0;
+    padding: 0 0 4px;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
+  /*
+   * Только телефон: без второй развёртки (432px + текст) — не влезает.
+   * На десктопе (>900px) широкая карточка после выбора остаётся.
+   */
+  .roleCard.roleCardInstitutionsExpanded {
+    width: var(--page3-role-card-w);
+    min-height: var(--page3-role-card-h);
+    padding: 0 12px 16px;
+  }
+
+  .roleCardInstitutions.roleCardSelected .institutionsHoverPanel,
+  .roleCardInstitutionsExpanded .institutionsHoverPanel {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .roleCardInstitutions.roleCardSelected .cardOverlayInstitutions,
+  .roleCardInstitutions.roleCardSelected .cardContent,
+  .roleCardInstitutionsExpanded .cardOverlayInstitutions,
+  .roleCardInstitutionsExpanded .cardContent {
+    display: flex !important;
+  }
+
+  .roleCardInstitutions.roleCardSelected .cardOverlay,
+  .roleCardInstitutionsExpanded .cardOverlay {
+    display: block !important;
+  }
+}
+
+/* Десктоп: широкая развёртка 432×332, на телефоне — только пилюля (см. блок выше) */
+@media (min-width: 901px) {
+  .roleCard.roleCardInstitutionsExpanded {
+    flex: 0 0 432px;
+    width: 432px;
+    height: 332px;
+    min-height: 332px;
+    max-width: none;
+  }
+
+  .roleCard.roleCardInstitutionsExpanded .institutionsHoverPanel {
+    border-radius: 34px;
+  }
+}
+
+@media (max-width: 720px) {
+  .pageRoot {
+    height: auto;
+    max-height: none;
+    min-height: 100dvh;
+    min-height: 100svh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+    padding:
+      max(8px, env(safe-area-inset-top, 0))
+      max(8px, env(safe-area-inset-right, 0))
+      max(24px, env(safe-area-inset-bottom, 0))
+      max(8px, env(safe-area-inset-left, 0));
+  }
+
+  .pageRoot:has(.heroAuthStep) {
+    overflow-y: auto;
+  }
+
+  .hero {
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+    min-height: 0;
+    overflow: visible;
+    padding: 20px 14px 28px;
+    border-radius: 24px;
+    align-items: stretch;
+  }
+
+  .heroRolePick {
+    min-height: unset;
+    align-items: stretch;
+  }
+
+  .content,
+  .content.contentRolePick {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 0;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .contentRolePick .backToPage2Wrap,
+  .contentAuthStep .backToPage2Wrap {
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .rolePickMain {
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .titleBlock {
+    width: 100%;
+  }
+
+  .title {
+    font-size: clamp(1.5rem, 6.5vw, 1.75rem);
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .rolePickMain {
+    align-items: center;
+  }
+
+  .nextSection {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}

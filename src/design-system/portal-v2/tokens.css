@@ -1,0 +1,214 @@
+/**
+ * ТрассА v2 — строго 5 цветов макета (других HEX нет).
+ * #2B64FD · #5A86FD (конец брендового градиента) · #FFFFFF · #1C1C1C · #F6F6F6 · #6B6B6B
+ * Прозрачность — только rgba() от этих RGB. Градиенты — только между ними.
+ * Шрифты — из legacy (не задаём здесь).
+ */
+html[data-portal-design="v2"] {
+  /* —— Единственные solid-цвета —— */
+  --pv2-primary: #2b64fd;
+  --pv2-brand-end: #5a86fd;
+  --pv2-white: #ffffff;
+  --pv2-ink: #1c1c1c;
+  --pv2-surface: #f6f6f6;
+  --pv2-muted: #6b6b6b;
+
+  /* RGB для rgba (не добавляет новых оттенков) */
+  --pv2-r-primary: 43, 100, 253;
+  --pv2-r-brand-end: 90, 134, 253;
+  --pv2-r-white: 255, 255, 255;
+  --pv2-r-ink: 28, 28, 28;
+  --pv2-r-surface: 246, 246, 246;
+  --pv2-r-muted: 107, 107, 107;
+
+  /* Алиасы (без новых HEX) */
+  --pv2-primary-soft: var(--pv2-white);
+  /* F6F6F6 — только мелкие зоны (трек, chip, hover), не фон страницы */
+  --pv2-fill-subtle: var(--pv2-surface);
+  --pv2-primary-muted: var(--pv2-fill-subtle);
+  --pv2-bg-page: var(--pv2-white);
+  --pv2-deep: var(--pv2-ink);
+  --pv2-frost: var(--pv2-white);
+  --pv2-teal: var(--pv2-primary);
+  --pv2-cyan: var(--pv2-primary);
+
+  --pv2-success: var(--pv2-primary);
+  --pv2-warning: var(--pv2-muted);
+  --pv2-danger: var(--pv2-primary);
+  --pv2-info: var(--pv2-primary);
+
+  --pv2-on-brand: var(--pv2-white);
+  --pv2-on-deep: var(--pv2-white);
+
+  /* Градиенты — только из 5 цветов */
+  --pv2-gradient-brand: linear-gradient(135deg, var(--pv2-primary) 0%, var(--pv2-brand-end) 100%);
+  --pv2-gradient-brand-h: linear-gradient(90deg, var(--pv2-primary) 0%, var(--pv2-brand-end) 100%);
+  --pv2-gradient-brand-v: linear-gradient(180deg, var(--pv2-primary) 0%, var(--pv2-brand-end) 100%);
+  --pv2-gradient-deep: linear-gradient(165deg, var(--pv2-ink) 0%, var(--pv2-muted) 100%);
+  --pv2-gradient-mesh-a: radial-gradient(
+    110% 90% at 8% -5%,
+    rgba(var(--pv2-r-primary), 0.28) 0%,
+    transparent 52%
+  );
+  --pv2-gradient-mesh-b: radial-gradient(
+    95% 75% at 100% 12%,
+    rgba(var(--pv2-r-white), 0.22) 0%,
+    transparent 48%
+  );
+  --pv2-gradient-mesh-c: radial-gradient(
+    85% 70% at 50% 108%,
+    rgba(var(--pv2-r-primary), 0.14) 0%,
+    transparent 54%
+  );
+  --pv2-gradient-glass: linear-gradient(
+    145deg,
+    rgba(var(--pv2-r-white), 0.14) 0%,
+    rgba(var(--pv2-r-primary), 0.08) 100%
+  );
+  --pv2-gradient-glass-light: linear-gradient(
+    180deg,
+    rgba(var(--pv2-r-white), 0.98) 0%,
+    rgba(var(--pv2-r-white), 0.96) 100%
+  );
+  --pv2-gradient-page-light: radial-gradient(
+    120% 85% at 92% -8%,
+    rgba(var(--pv2-r-primary), 0.08) 0%,
+    transparent 55%
+  ),
+  linear-gradient(180deg, var(--pv2-white) 0%, var(--pv2-white) 100%);
+  --pv2-gradient-glow: radial-gradient(
+    80% 80% at 50% 50%,
+    rgba(var(--pv2-r-primary), 0.35) 0%,
+    transparent 72%
+  );
+
+  /* Поверхности */
+  --pv2-bg-base: var(--pv2-ink);
+  --pv2-bg-elevated: rgba(var(--pv2-r-ink), 0.88);
+  --pv2-bg-glass: rgba(var(--pv2-r-white), 0.08);
+  --pv2-bg-glass-strong: rgba(var(--pv2-r-white), 0.12);
+  --pv2-bg-glass-hover: rgba(var(--pv2-r-primary), 0.12);
+  --pv2-bg-input: var(--pv2-white);
+  --pv2-bg-input-dark: rgba(var(--pv2-r-ink), 0.72);
+
+  /* Текст */
+  --pv2-text: var(--pv2-white);
+  --pv2-text-muted: rgba(var(--pv2-r-white), 0.72);
+  --pv2-text-subtle: var(--pv2-muted);
+  --pv2-text-inverse: var(--pv2-ink);
+
+  /* Акцент */
+  --pv2-accent: var(--pv2-primary);
+  --pv2-accent-bright: var(--pv2-white);
+  --pv2-accent-glow: rgba(var(--pv2-r-primary), 0.42);
+  --pv2-accent-glow-soft: rgba(var(--pv2-r-white), 0.38);
+
+  /* Границы */
+  --pv2-border: rgba(var(--pv2-r-white), 0.16);
+  --pv2-border-strong: rgba(var(--pv2-r-white), 0.28);
+  --pv2-border-accent: rgba(var(--pv2-r-primary), 0.45);
+  --pv2-border-focus: rgba(var(--pv2-r-primary), 0.55);
+
+  /* Radius */
+  --pv2-radius-xs: 10px;
+  --pv2-radius-sm: 14px;
+  --pv2-radius-md: 18px;
+  --pv2-radius-lg: 24px;
+  --pv2-radius-xl: 32px;
+  --pv2-radius-2xl: 40px;
+  --pv2-radius-pill: 9999px;
+
+  /* Blur */
+  --pv2-blur-xs: 8px;
+  --pv2-blur-sm: 14px;
+  --pv2-blur-md: 22px;
+  --pv2-blur-lg: 36px;
+  --pv2-blur-xl: 48px;
+  --pv2-glass-saturate: 140%;
+
+  /* Тени — только ink / primary */
+  --pv2-shadow-xs: 0 4px 16px rgba(var(--pv2-r-ink), 0.35);
+  --pv2-shadow-sm: 0 10px 32px rgba(var(--pv2-r-ink), 0.42);
+  --pv2-shadow-md: 0 20px 52px rgba(var(--pv2-r-ink), 0.52);
+  --pv2-shadow-lg: 0 28px 64px rgba(var(--pv2-r-ink), 0.58);
+  --pv2-shadow-glow: 0 0 36px rgba(var(--pv2-r-primary), 0.42), 0 0 64px rgba(var(--pv2-r-white), 0.2);
+  --pv2-shadow-inset-glass: inset 0 1px 0 rgba(var(--pv2-r-white), 0.14),
+    inset 0 -1px 0 rgba(var(--pv2-r-ink), 0.1);
+
+  /* Space */
+  --pv2-space-1: 4px;
+  --pv2-space-2: 8px;
+  --pv2-space-3: 12px;
+  --pv2-space-4: 16px;
+  --pv2-space-5: 20px;
+  --pv2-space-6: 24px;
+  --pv2-space-8: 32px;
+  --pv2-space-10: 40px;
+  --pv2-space-12: 48px;
+
+  /* Type scale */
+  --pv2-font-xs: 0.75rem;
+  --pv2-font-sm: 0.8125rem;
+  --pv2-font-base: 0.9375rem;
+  --pv2-font-md: 1rem;
+  --pv2-font-lg: 1.125rem;
+  --pv2-font-xl: 1.375rem;
+  --pv2-font-2xl: 1.75rem;
+  --pv2-font-3xl: 2.125rem;
+  --pv2-font-display: clamp(1.75rem, 3vw, 2.35rem);
+  --pv2-font-kpi: clamp(1.5rem, 2.5vw, 2rem);
+  --pv2-leading-tight: 1.15;
+  --pv2-leading-normal: 1.5;
+
+  /* Motion */
+  --pv2-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --pv2-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --pv2-dur-fast: 0.16s;
+  --pv2-dur: 0.26s;
+  --pv2-dur-slow: 0.42s;
+
+  /* Layout */
+  --pv2-rail-width: 72px;
+  --pv2-topbar-height: 64px;
+  --pv2-content-max: 1280px;
+  --pv2-dock-height: 72px;
+
+  /* Z-index (DS v2) */
+  --pv2-z-base: 0;
+  --pv2-z-rail: 20;
+  --pv2-z-sticky: 40;
+  --pv2-z-dock: 60;
+  --pv2-z-overlay: 100;
+  --pv2-z-modal: 200;
+
+  /* Focus (a11y, только primary) */
+  --pv2-focus-ring: 0 0 0 3px rgba(var(--pv2-r-primary), 0.35);
+
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] :focus-visible {
+  outline: none;
+  box-shadow: var(--pv2-focus-ring);
+}
+
+html[data-portal-design="v2"] body {
+  background: var(--pv2-gradient-mesh-a), var(--pv2-gradient-mesh-b), var(--pv2-gradient-mesh-c),
+    var(--pv2-gradient-deep);
+  background-color: var(--pv2-bg-base);
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] {
+  --pv2-bg-base: var(--pv2-white);
+  --pv2-text: var(--pv2-ink);
+  --pv2-text-muted: var(--pv2-muted);
+  --pv2-text-subtle: var(--pv2-muted);
+  --pv2-bg-glass: rgba(var(--pv2-r-white), 0.78);
+  --pv2-bg-glass-strong: rgba(var(--pv2-r-white), 0.9);
+  --pv2-bg-glass-hover: rgba(var(--pv2-r-primary), 0.08);
+  --pv2-border: rgba(var(--pv2-r-primary), 0.14);
+  --pv2-border-strong: rgba(var(--pv2-r-primary), 0.24);
+  --pv2-shadow-sm: 0 12px 36px rgba(var(--pv2-r-ink), 0.1);
+  --pv2-shadow-md: 0 20px 48px rgba(var(--pv2-r-ink), 0.14);
+}

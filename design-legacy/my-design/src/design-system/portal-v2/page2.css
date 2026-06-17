@@ -1,0 +1,61 @@
+/**
+ * Page2 — карта /services (glass v2 поверх существующей палитры).
+ */
+html[data-portal-design="v2"] .pageRoot {
+  --p2-teal: var(--pv2-teal);
+  --p2-cyan: var(--pv2-cyan);
+}
+
+html[data-portal-design="v2"] body.route-page2 {
+  background-color: #e8f7fc !important;
+  background-image:
+    radial-gradient(120% 80% at 90% -10%, rgba(103, 232, 249, 0.28) 0%, transparent 50%),
+    radial-gradient(90% 70% at 0% 100%, rgba(0, 212, 165, 0.1) 0%, transparent 45%),
+    linear-gradient(180deg, #f4fbff 0%, #e8f7fc 58%, #dff4fc 100%) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__header {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(232, 247, 252, 0.82)) !important;
+  backdrop-filter: blur(var(--pv2-blur-md));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md));
+  border: 1px solid rgba(103, 232, 249, 0.4) !important;
+  box-shadow: var(--pv2-shadow-sm) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__overview {
+  border: 1px solid rgba(103, 232, 249, 0.35) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__overview::before,
+html[data-portal-design="v2"] .page2-v2__overview::after {
+  opacity: 0.55;
+}
+
+html[data-portal-design="v2"] .page2-v2__map-panel {
+  border: 1px solid rgba(103, 232, 249, 0.32) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__subject-panel {
+  border: 1px solid rgba(103, 232, 249, 0.35) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(232, 247, 252, 0.88)) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+  box-shadow: var(--pv2-shadow-sm) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__about-sheet {
+  border: 1px solid var(--pv2-border-strong) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__about-tab--active {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border-color: transparent !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__btn-primary {
+  box-shadow: 0 8px 24px rgba(0, 212, 165, 0.28) !important;
+}

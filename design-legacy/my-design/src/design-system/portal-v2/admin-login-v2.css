@@ -1,0 +1,43 @@
+/**
+ * Вход администратора на карте (Page2) при portal v2.
+ */
+html[data-portal-design="v2"] .admin-login-v2 input[type="email"],
+html[data-portal-design="v2"] .admin-login-v2 input[type="password"] {
+  border: 1px solid var(--pv2-border) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: var(--pv2-deep) !important;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 input:focus-visible {
+  outline: 2px solid var(--pv2-teal);
+  outline-offset: 0;
+  box-shadow: 0 0 0 3px rgba(0, 212, 165, 0.28);
+}
+
+html[data-portal-design="v2"] .admin-login-v2 button[type="submit"] {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border: none !important;
+  box-shadow: 0 6px 18px rgba(0, 212, 165, 0.28) !important;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .loginLead {
+  color: rgba(10, 37, 64, 0.72);
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .hintNeo {
+  border: 1px solid var(--pv2-border);
+  border-radius: var(--pv2-radius-md);
+  background: rgba(232, 247, 252, 0.65);
+  padding: 12px 14px;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .btnNeoGhost {
+  border: 1px solid var(--pv2-border-strong) !important;
+  color: var(--pv2-deep) !important;
+  background: rgba(255, 255, 255, 0.55) !important;
+}
+
+html[data-portal-design="v2"] .admin-login-v2 .btnNeoGhost:hover {
+  background: rgba(0, 212, 165, 0.12) !important;
+}

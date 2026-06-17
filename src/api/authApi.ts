@@ -1,22 +1,15 @@
 import type { ProfileSettingsData } from "../profileSettingsStorage";
 import { fetchWithTimeout } from "./fetchWithTimeout";
 import { getAdminApiToken } from "./adminApi";
+import { DEVICE_BAN_CODE, LEGACY_DEVICE_BAN_CODE, notifyDeviceBanned } from "./deviceAccessApi";
+
+import { resolveApiBase } from "../config/apiBase";
 
 const TOKEN_KEY = "trassa_api_access_token";
-const DESKTOP_FALLBACK_API_BASE = "https://trassa-api.duckdns.org";
-
-function envApiBase(): string {
-  return (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ?? "";
-}
 
 /** База URL API: в браузере с Vite — пусто (прокси /api). В desktop (file://) — общий сервер. */
 export function getApiBase(): string {
-  const env = envApiBase();
-  if (env) return env;
-  if (typeof window !== "undefined" && window.location.protocol === "file:") {
-    return DESKTOP_FALLBACK_API_BASE;
-  }
-  return "";
+  return resolveApiBase();
 }
 
 export function getStoredAccessToken(): string | null {
@@ -41,6 +34,26 @@ function applyTokenFromBody(data: unknown): void {
   if (o?.accessToken && typeof o.accessToken === "string") {
     setStoredAccessToken(o.accessToken);
   }
+}
+
+const ADMIN_TOKEN_MISSING =
+  "Нет токена администратора. Выйдите из админки и войдите снова.";
+
+async function adminJsonFetch<T>(
+  path: string,
+  init?: RequestInit
+): Promise<{ ok: true; data: T } | { ok: false; status: number; error: string }> {
+  const adminToken = getAdminApiToken();
+  if (!adminToken) {
+    return { ok: false, status: 401, error: ADMIN_TOKEN_MISSING };
+  }
+  return jsonFetch<T>(path, {
+    ...init,
+    headers: {
+      ...(init?.headers as Record<string, string>),
+      "X-Trassa-Admin-Token": adminToken,
+    },
+  });
 }
 
 async function jsonFetch<T>(
@@ -69,10 +82,21 @@ async function jsonFetch<T>(
     } catch {
       return { ok: false, status: res.status, error: "Некорректный ответ сервера." };
     }
-    const o = body as { ok?: boolean; error?: string; profile?: ProfileSettingsData };
+    const o = body as {
+      ok?: boolean;
+      error?: string;
+      profile?: ProfileSettingsData;
+      code?: string;
+    };
     if (!res.ok) {
       if (res.status === 401) {
         setStoredAccessToken(null);
+      }
+      if (
+        res.status === 403 &&
+        (o?.code === DEVICE_BAN_CODE || o?.code === LEGACY_DEVICE_BAN_CODE)
+      ) {
+        notifyDeviceBanned(o.error);
       }
       return { ok: false, status: res.status, error: o?.error ?? res.statusText };
     }
@@ -163,17 +187,9 @@ export async function authPatchProfile(profile: ProfileSettingsData): Promise<Au
 }
 
 export async function authListUsers(): Promise<{ ok: true; users: ServerUserRecord[] } | AuthErr> {
-  const extra: Record<string, string> = {};
-  const adminToken = getAdminApiToken();
-  if (adminToken) {
-    extra["X-Trassa-Admin-Token"] = adminToken;
-  }
-  const r = await jsonFetch<{ ok?: boolean; users?: ServerUserRecord[]; error?: string }>(
+  const r = await adminJsonFetch<{ ok?: boolean; users?: ServerUserRecord[]; error?: string }>(
     `/api/auth/users`,
-    {
-      method: "GET",
-      headers: extra,
-    }
+    { method: "GET" }
   );
   if (!r.ok) return { ok: false, error: r.error };
   const d = r.data;
@@ -187,7 +203,7 @@ export async function authAdminUpdateUser(
   emailNorm: string,
   profile: ProfileSettingsData
 ): Promise<{ ok: true; user: ServerUserRecord } | AuthErr> {
-  const r = await jsonFetch<{ ok?: boolean; user?: ServerUserRecord; error?: string }>(
+  const r = await adminJsonFetch<{ ok?: boolean; user?: ServerUserRecord; error?: string }>(
     `/api/auth/users/${encodeURIComponent(emailNorm)}`,
     {
       method: "PATCH",
@@ -203,12 +219,29 @@ export async function authAdminUpdateUser(
 }
 
 export async function authAdminDeleteUser(emailNorm: string): Promise<{ ok: true } | AuthErr> {
-  const r = await jsonFetch<{ ok?: boolean; error?: string }>(
+  const r = await adminJsonFetch<{ ok?: boolean; error?: string }>(
     `/api/auth/users/${encodeURIComponent(emailNorm)}`,
     { method: "DELETE" }
   );
   if (!r.ok) return { ok: false, error: r.error };
   const d = r.data;
   if (!d?.ok) return { ok: false, error: d?.error ?? "Не удалось удалить пользователя." };
+  return { ok: true };
+}
+
+export async function authAdminResetUserPassword(
+  emailNorm: string,
+  newPassword: string
+): Promise<{ ok: true } | AuthErr> {
+  const r = await adminJsonFetch<{ ok?: boolean; error?: string }>(
+    `/api/auth/users/${encodeURIComponent(emailNorm)}/password`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ newPassword }),
+    }
+  );
+  if (!r.ok) return { ok: false, error: r.error };
+  const d = r.data;
+  if (!d?.ok) return { ok: false, error: d?.error ?? "Не удалось сменить пароль." };
   return { ok: true };
 }

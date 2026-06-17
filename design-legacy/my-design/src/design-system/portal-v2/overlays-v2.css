@@ -1,0 +1,55 @@
+/**
+ * Плавающие виджеты v2: Т-бот, заметки.
+ */
+html[data-portal-design="v2"] .floating-widget-v2__panel {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong) !important;
+  backdrop-filter: blur(var(--pv2-blur-md));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md));
+  box-shadow: var(--pv2-shadow-md) !important;
+  color: var(--pv2-text) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .floating-widget-v2__panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(232, 247, 252, 0.9)) !important;
+  color: var(--pv2-deep) !important;
+}
+
+html[data-portal-design="v2"] .floating-widget-v2__panel textarea,
+html[data-portal-design="v2"] .floating-widget-v2__panel input {
+  border: 1px solid var(--pv2-border) !important;
+  color: var(--pv2-text) !important;
+}
+
+html[data-portal-design="v2"] .floating-widget-v2__panel textarea::placeholder,
+html[data-portal-design="v2"] .floating-widget-v2__panel input::placeholder {
+  color: var(--pv2-text-subtle);
+  opacity: 1;
+}
+
+html[data-portal-design="v2"] .floating-widget-v2__fab-tbot {
+  box-shadow: var(--pv2-shadow-glow), 0 0 0 2px rgba(103, 232, 249, 0.35) inset !important;
+  background: linear-gradient(160deg, var(--pv2-deep) 0%, #0c3352 50%, #061a2e 100%) !important;
+}
+
+html[data-portal-design="v2"] .floating-widget-v2__fab-notes {
+  box-shadow: 0 10px 28px rgba(0, 212, 165, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  background: var(--pv2-gradient-brand) !important;
+}
+
+html[data-portal-design="v2"] .floating-widget-v2__fab-notes svg path {
+  stroke: var(--pv2-deep) !important;
+  fill: rgba(255, 255, 255, 0.2) !important;
+}
+
+html[data-portal-design="v2"] .floating-widget-v2__header {
+  border-bottom-color: var(--pv2-border) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .floating-widget-v2__header--notes {
+  background: linear-gradient(135deg, rgba(232, 247, 252, 0.95), rgba(103, 232, 249, 0.25)) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .floating-widget-v2__header--notes span {
+  color: var(--pv2-deep) !important;
+}

@@ -1,0 +1,218 @@
+/* Карточки и контролы — glass (#0A2540, #00D4A5, #67E8F9) */
+
+.glassCard {
+  padding: 18px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(103, 232, 249, 0.2);
+  background: linear-gradient(
+    160deg,
+    rgba(10, 37, 64, 0.55) 0%,
+    rgba(6, 24, 40, 0.48) 100%
+  );
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 8px 24px rgba(6, 18, 32, 0.25);
+}
+
+.glassCardWide {
+  grid-column: 1 / -1;
+}
+
+.glassCardLabel {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.glassCardHint {
+  margin: 12px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(103, 232, 249, 0.65);
+}
+
+/* Toggle */
+.glassToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.glassToggleText {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.glassToggleLabel {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.glassToggleSub {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: rgba(103, 232, 249, 0.62);
+}
+
+.glassToggleTrack {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 28px;
+}
+
+.glassToggleInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.glassToggleThumb {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.glassToggleThumb::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.glassToggleInput:checked + .glassToggleThumb {
+  background: linear-gradient(135deg, #00d4a5 0%, #67e8f9 100%);
+  border-color: rgba(0, 212, 165, 0.5);
+  box-shadow:
+    0 0 16px rgba(0, 212, 165, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.glassToggleInput:checked + .glassToggleThumb::after {
+  transform: translateX(24px);
+}
+
+.glassToggleInput:focus-visible + .glassToggleThumb {
+  box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.4);
+}
+
+/* Segment */
+.glassSegmentBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.glassSegment {
+  display: flex;
+  padding: 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(103, 232, 249, 0.18);
+  background: rgba(6, 24, 40, 0.5);
+  gap: 4px;
+}
+
+.glassSegmentBtn {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 16px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.glassSegmentBtn:hover:not(.glassSegmentBtnActive) {
+  color: #ffffff;
+  background: rgba(103, 232, 249, 0.08);
+}
+
+.glassSegmentBtnActive {
+  background: linear-gradient(135deg, #00d4a5 0%, #67e8f9 100%);
+  color: #0a2540;
+  box-shadow:
+    0 4px 18px rgba(0, 212, 165, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.glassSegmentBtnActive:hover {
+  color: #0a2540;
+}
+
+/* Тон «карта» — полупрозрачные плашки /services */
+.glassCardMap {
+  border: 1px solid rgba(10, 37, 64, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 4px 14px rgba(10, 37, 64, 0.08);
+}
+
+.glassCardLabelMap,
+.glassToggleRowMap .glassToggleLabel {
+  color: #0a2540;
+  font-weight: 700;
+}
+
+.glassToggleRowMap .glassToggleSub {
+  color: #4a5f78;
+  font-weight: 500;
+}
+
+.glassCardMap .glassCardHint {
+  color: #4a5f78;
+  font-weight: 500;
+}
+
+.glassSegmentMap {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(10, 37, 64, 0.12);
+}
+
+.glassSegmentMap .glassSegmentBtn {
+  color: #3d5068;
+  font-weight: 600;
+}
+
+.glassSegmentMap .glassSegmentBtn:hover:not(.glassSegmentBtnActive) {
+  color: #0a2540;
+  background: rgba(103, 232, 249, 0.2);
+}
+
+.glassToggleRowMap .glassToggleThumb {
+  background: rgba(10, 37, 64, 0.12);
+  border-color: rgba(10, 37, 64, 0.14);
+}

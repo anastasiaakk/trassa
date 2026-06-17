@@ -17,6 +17,8 @@ import {
   getInvitePayloadFromProfile,
 } from "../utils/messengerInvite";
 import type { Page5ThemeStyles } from "./Page5EventsView";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { usePortalDesign } from "../design-system/usePortalDesign";
 import {
   MESSENGER_PEERS_KEY,
   MESSENGER_STORE_KEY,
@@ -196,6 +198,7 @@ function computeInitialMessengerState(): ReturnType<typeof readMessengerStateFro
 }
 
 export const Page5MessengerView = memo(function Page5MessengerView({ styles, isDark, cabinetPath }: Props) {
+  const isV2 = usePortalDesign() === "v2";
   const narrow = useNarrowMessenger();
   const tooltipPreset = useMemo(() => getHoverTooltipPreset(isDark), [isDark]);
 
@@ -548,6 +551,7 @@ export const Page5MessengerView = memo(function Page5MessengerView({ styles, isD
 
   return (
     <section
+      className={cx(isV2 && "messenger-v2")}
       style={{
         ...neoPlate,
         padding: 0,
@@ -816,8 +820,8 @@ export const Page5MessengerView = memo(function Page5MessengerView({ styles, isD
                         borderRadius: mine ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
                         background: mine
                           ? isDark
-                            ? "linear-gradient(145deg, #243b74 0%, #1e3460 100%)"
-                            : "linear-gradient(145deg, #3b5cad 0%, #243b74 100%)"
+                            ? "linear-gradient(145deg, #2b64fd 0%, #5a86fd 100%)"
+                            : "linear-gradient(145deg, #2b64fd 0%, #5a86fd 100%)"
                           : isDark
                             ? "rgba(148, 163, 184, 0.14)"
                             : "rgba(100, 116, 139, 0.12)",
@@ -1195,6 +1199,7 @@ export const Page5MessengerView = memo(function Page5MessengerView({ styles, isD
       {forwardPickMsg ? (
         <div
           role="presentation"
+          className={cx(isV2 && "messenger-v2__overlay")}
           style={{
             position: "fixed",
             inset: 0,
@@ -1213,6 +1218,7 @@ export const Page5MessengerView = memo(function Page5MessengerView({ styles, isD
             role="dialog"
             aria-modal
             aria-labelledby="messenger-forward-title"
+            className={cx(isV2 && "messenger-v2__dialog")}
             onClick={(e) => e.stopPropagation()}
             style={{
               width: "min(400px, 100%)",
@@ -1307,6 +1313,7 @@ export const Page5MessengerView = memo(function Page5MessengerView({ styles, isD
       {peerSettingsOpen ? (
         <div
           role="presentation"
+          className={cx(isV2 && "messenger-v2__overlay")}
           style={{
             position: "fixed",
             inset: 0,
@@ -1325,6 +1332,7 @@ export const Page5MessengerView = memo(function Page5MessengerView({ styles, isD
             role="dialog"
             aria-modal
             aria-labelledby="messenger-peer-settings-title"
+            className={cx(isV2 && "messenger-v2__dialog")}
             onClick={(e) => e.stopPropagation()}
             style={{
               width: "min(440px, 100%)",

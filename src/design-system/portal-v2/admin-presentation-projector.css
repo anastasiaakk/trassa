@@ -1,0 +1,116 @@
+/**
+ * Презентация: крупная типографика для проектора (последний слой).
+ */
+
+html[data-portal-design="v2"] .trassa-presentation-slide {
+  --tpr-fs-base: 17px;
+  --tpr-fs-sm: 15px;
+  --tpr-fs-md: 18px;
+  --tpr-fs-lg: 22px;
+  --tpr-fs-xl: 48px;
+  --tpr-fs-kpi: 64px;
+  /* Компактная шапка на всех слайдах */
+  --tpr-fs-header-kicker: 11px;
+  --tpr-fs-header-title: 30px;
+  --tpr-fs-header-desc: 13px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-top .tpr-kicker {
+  font-size: var(--tpr-fs-header-kicker);
+  letter-spacing: 0.1em;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-top .tpr-title {
+  font-size: var(--tpr-fs-header-title);
+  line-height: 1.08;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-top .tpr-top-desc,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-top .tpr-subtitle {
+  font-size: var(--tpr-fs-header-desc);
+  line-height: 1.4;
+  max-width: 520px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-top .tpr-logo {
+  width: 52px;
+  height: 52px;
+  padding: 8px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-top .tpr-index {
+  font-size: 11px;
+  padding: 4px 10px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-top .tpr-url {
+  font-size: 11px;
+  padding: 5px 10px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-top--compact {
+  padding-top: 14px;
+  padding-bottom: 4px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-cover__headline {
+  font-size: 72px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-cover__lead {
+  font-size: 22px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-kpi__value {
+  font-size: var(--tpr-fs-kpi);
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-kpi--compact .tpr-kpi__value {
+  font-size: 44px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-kpi__label {
+  font-size: 17px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-kpi__sub {
+  font-size: var(--tpr-fs-sm);
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-service h3,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpi__actor-body h3,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-gov-strip__body strong,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-journey-step strong,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-value-card strong {
+  font-size: 17px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-principle-pill strong {
+  font-size: 16px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-strip__text,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-slide-foot__url {
+  font-size: 16px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpi__service-chip,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-cover__chip,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-gov-strip__tags span,
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-qr-badges span {
+  font-size: 14px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide .tpr-core-head strong {
+  font-size: 15px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide--ecosystem .tpi__core-map-wrap {
+  height: 148px;
+  min-height: 148px;
+}
+
+html[data-portal-design="v2"] .trassa-presentation-slide--ecosystem .tpi__core-map,
+html[data-portal-design="v2"] .trassa-presentation-slide--ecosystem .presentation-russia-map--lg {
+  min-height: 148px;
+}

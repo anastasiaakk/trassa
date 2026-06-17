@@ -1,0 +1,112 @@
+/**
+ * Page3 — мобильные карточки ролей (вертикальные пилюли, ряд как на десктопе).
+ */
+@media (max-width: 900px) {
+  html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab {
+    width: 100% !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 12px !important;
+    border-radius: var(--pv2-radius-xl) !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentRolePick"] {
+    padding: 16px 12px 20px !important;
+    border-radius: calc(var(--pv2-radius-xl) - 6px) !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 [class*="heroRolePick"]:not(.page3-v2__role-tab) {
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 [class*="heroRolePick"] {
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 [class*="rolePickMain"] {
+    align-items: center !important;
+    gap: 14px;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="cardsRow"] {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    width: 100% !important;
+    gap: 14px !important;
+    padding: 4px 4px 14px !important;
+    scroll-padding-inline: 4px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    min-height: 0 !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2__role-card,
+  html[data-portal-design="v2"] .page3-v2 [class*="roleCard"] {
+    --page3-role-card-w: 136px;
+    --page3-role-card-h: min(320px, 56dvh);
+    flex: 0 0 var(--page3-role-card-w) !important;
+    width: var(--page3-role-card-w) !important;
+    min-width: var(--page3-role-card-w) !important;
+    max-width: var(--page3-role-card-w) !important;
+    min-height: var(--page3-role-card-h) !important;
+    height: var(--page3-role-card-h) !important;
+    padding: 0 12px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    box-sizing: border-box !important;
+    border-radius: 40px !important;
+    aspect-ratio: auto !important;
+    scroll-snap-align: center;
+    transform: none !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 [class*="cardOverlay"] {
+    inset: 0 !important;
+    border-radius: inherit !important;
+    background-position: center top !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 [class*="cardContent"] {
+    margin-top: 0 !important;
+    padding: 0 0 4px !important;
+    flex-shrink: 0;
+  }
+
+  html[data-portal-design="v2"] .page3-v2__role-card--selected,
+  html[data-portal-design="v2"] .page3-v2 [class*="roleCardSelected"] {
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* Телефон: без второй развёртки — только пилюля (как просили) */
+  html[data-portal-design="v2"] .page3-v2 [class*="institutionsHoverPanel"] {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 [class*="roleCardInstitutionsExpanded"] {
+    width: var(--page3-role-card-w) !important;
+    min-height: var(--page3-role-card-h) !important;
+    padding: 0 12px 16px !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 [class*="roleCardSelected"] [class*="cardOverlay"],
+  html[data-portal-design="v2"] .page3-v2 [class*="roleCardInstitutionsExpanded"] [class*="cardOverlay"] {
+    display: block !important;
+  }
+
+  html[data-portal-design="v2"] .page3-v2 [class*="roleCardSelected"] [class*="cardContent"],
+  html[data-portal-design="v2"] .page3-v2 [class*="roleCardInstitutionsExpanded"] [class*="cardContent"] {
+    display: flex !important;
+  }
+}

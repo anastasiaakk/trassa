@@ -2,6 +2,7 @@
 # Dependencies
 /node_modules
 /server/node_modules
+/server/dist
 /setup-wizard/node_modules
 /setup-wizard/payload-app
 /packaged-app
@@ -10,6 +11,8 @@
 /build
 /dist
 /release
+/dist-web.tar.gz
+/exports
 # Сборочный установщик (CI кладёт в Releases; в репозиторий не коммитить — лимит GitHub 100 МБ)
 /public/downloads/trassa-setup.exe
 
@@ -23,6 +26,12 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
+.env.web.production
+.trassa-deploy.local
+
+# Python / probes
+scripts/__pycache__/
 
 # Logs
 npm-debug.log*

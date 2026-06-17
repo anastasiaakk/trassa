@@ -1,0 +1,96 @@
+/**
+ * Плавающий dock кабинетов v2.
+ */
+html[data-portal-design="v2"] .cabinet-chrome--with-dock .cabinet-chrome__container,
+html[data-portal-design="v2"] .cabinet-chrome--with-dock > div[style] {
+  padding-bottom: 96px;
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  transform: translateX(-50%);
+  z-index: 1200;
+  pointer-events: none;
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid var(--pv2-border-strong);
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong);
+  backdrop-filter: blur(var(--pv2-blur-md));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md));
+  box-shadow: var(--pv2-shadow-md);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 56px;
+  padding: 8px 10px 6px;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--pv2-text-muted);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background var(--pv2-dur-fast),
+    color var(--pv2-dur-fast),
+    transform var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__btn:hover {
+  background: var(--pv2-bg-glass-hover);
+  color: var(--pv2-text);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__btn--active {
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-deep);
+  box-shadow: 0 4px 16px rgba(0, 212, 165, 0.28);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__badge {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff5c7a;
+  box-shadow: 0 0 0 2px var(--pv2-deep);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-quick-dock__badge {
+  box-shadow: 0 0 0 2px #e8f7fc;
+}
+
+@media (max-width: 720px) {
+  html[data-portal-design="v2"] .cabinet-quick-dock__inner {
+    max-width: calc(100vw - 24px);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  html[data-portal-design="v2"] .cabinet-quick-dock__inner::-webkit-scrollbar {
+    display: none;
+  }
+}

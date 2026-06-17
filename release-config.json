@@ -1,5 +1,5 @@
 {
   "publicBaseUrl": "",
   "manifestUrl": "https://github.com/anastasiaakk/trassa/releases/latest/download/app-update.json",
-  "apiUrl": "https://trassa-api.duckdns.org"
+  "apiUrl": "https://trassa.duckdns.org"
 }

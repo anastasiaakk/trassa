@@ -1,0 +1,365 @@
+/**
+ * Админка и конструктор таблиц на смартфонах.
+ */
+
+@media (max-width: 720px) {
+  /* —— Soft admin: меню сверху (горизонтальная лента), контент ниже —— */
+  html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout > .admin-glass-sidebar {
+    order: 1;
+    position: sticky;
+    top: max(0px, env(safe-area-inset-top, 0));
+    z-index: 30;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto;
+    padding: 8px 10px !important;
+    align-self: stretch !important;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout > .admin-glass-panel {
+    order: 2;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft-sidebar-brand,
+  html[data-portal-design="v2"] .admin-v2-soft-sidebar-foot {
+    display: none !important;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft-nav {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft-nav-group {
+    flex-direction: row;
+    flex: 0 0 auto;
+    gap: 6px;
+    margin-top: 0 !important;
+    padding-right: 8px;
+    border-right: 1px solid rgba(var(--pv2-r-ink), 0.08);
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft-nav-group:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft-nav-label {
+    display: none;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn,
+  html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn {
+    flex: 0 0 auto;
+    width: auto !important;
+    min-width: 44px;
+    max-width: none;
+    height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    padding: 0 12px !important;
+    box-shadow: inset 0 0 0 transparent !important;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn.glassNavBtnActive,
+  html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn.glassNavBtnActive {
+    box-shadow: inset 0 -3px 0 var(--pv2-primary) !important;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft-nav-text {
+    overflow: visible;
+    text-overflow: unset;
+    white-space: nowrap;
+    max-width: 11rem;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .glassPanelScroll,
+  html[data-portal-design="v2"] .admin-v2-soft [class*="glassPanelScroll"] {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-content-card .tableWrap {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-content-card .table {
+    min-width: 540px;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-content-card [class*="tableSpecList"] {
+    table-layout: auto;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-content-card [class*="tableSpecList"] th:first-child,
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-content-card [class*="tableSpecList"] td:first-child {
+    width: auto;
+    min-width: 8.5rem;
+    max-width: 11rem;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-content-card [class*="tableColCenter"] {
+    width: 4.25rem !important;
+    min-width: 4.25rem !important;
+    max-width: 4.25rem !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-content-card [class*="specActionsCol"] {
+    width: 7.5rem;
+    min-width: 7.5rem;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-topbar__title {
+    font-size: 1.35rem;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-topbar__actions {
+    display: grid;
+    grid-template-columns: 1fr 44px 44px auto;
+    gap: 8px;
+    width: 100%;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-topbar__icon-btn--text {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-toolbar__search-wrap {
+    max-width: none;
+    flex: 1 1 auto;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-soft-toolbar__aside {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Встраивание в карту (Page2) */
+  html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed .admin-glass-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  html[data-portal-design="v2"] body.route-page2 .admin-v2-soft.admin-dashboard-embed {
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* —— Конструктор таблиц (CSS modules → [class*="…"]) —— */
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="topBar"] {
+    align-items: stretch;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="nav"]:not([class*="navBtn"]):not([class*="navGlyph"]) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    width: 100%;
+    padding-bottom: 4px;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="navBtn"],
+  html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-nav-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    max-width: none;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="tablesWorkspace"],
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="workspace"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    grid-template-columns: none !important;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-aside,
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="sidebar"]:not([class*="sidebar-action"]) {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: min(42vh, 320px) !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding: 10px;
+    position: relative !important;
+    z-index: 1;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-action {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-action-label {
+    flex: 0 0 auto !important;
+    text-align: center !important;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="templateList"] {
+    display: block !important;
+    flex: 1 1 auto !important;
+    min-height: 80px !important;
+    max-height: min(28vh, 200px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="templateItem"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="search"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: none !important;
+    box-sizing: border-box;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="editor"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="editorTabs"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+    padding-bottom: 10px !important;
+    position: relative;
+    z-index: 3;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="tabBtn"],
+  html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-tab-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    min-height: 44px !important;
+    padding: 10px 14px !important;
+    flex: 1 1 calc(50% - 4px);
+    max-width: 100%;
+    touch-action: manipulation;
+    white-space: normal;
+    line-height: 1.25;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="columnsToolbar"] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="columnsToolbarSelect"] {
+    width: 100%;
+    max-width: none;
+  }
+
+  /* Таблица: один общий горизонтальный скролл, без «липкой» # (иначе колонки едут друг на друга) */
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="dataGrid"] {
+    overflow: visible !important;
+    width: 100%;
+    min-width: 0;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridWrap {
+    width: 100%;
+    min-width: 0;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridScroll {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: auto !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridStickyCol,
+  html[data-portal-design="v2"] .admin-tables-v2 [class*="formGridStickyCol"],
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable th:first-child,
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable td:first-child {
+    position: static !important;
+    left: auto !important;
+    z-index: auto !important;
+    min-width: 2.75rem;
+    box-shadow: none !important;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable th {
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable {
+    min-width: 520px;
+    width: max-content;
+  }
+
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable th,
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable td {
+    white-space: normal !important;
+    word-break: break-word;
+    min-width: 7.5rem;
+  }
+}

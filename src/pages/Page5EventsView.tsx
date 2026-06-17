@@ -8,6 +8,8 @@ import {
   type SetStateAction,
 } from "react";
 import { getHoverTooltipPreset, HoverTooltip } from "../components/HoverTooltip";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { usePortalDesign } from "../design-system/usePortalDesign";
 
 export type Page5ThemeStyles = {
   pageBg: string;
@@ -122,6 +124,12 @@ export const Page5EventsView = memo(function Page5EventsView({
   events,
   onEventsChange,
 }: Props) {
+  const isV2 = usePortalDesign() === "v2";
+  const todayStr = useMemo(() => {
+    const t = new Date();
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+  }, []);
+
   const [cursor, setCursor] = useState(() => {
     const d = new Date();
     return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -249,6 +257,7 @@ export const Page5EventsView = memo(function Page5EventsView({
 
   return (
     <section
+      className={cx(isV2 && "page5-events-v2")}
       style={{
         ...neoPlate,
         padding: 28,
@@ -339,10 +348,12 @@ export const Page5EventsView = memo(function Page5EventsView({
           }
           const key = toDateKey(year, monthIndex, day);
           const dayEvents = eventsByDate.get(key) ?? [];
+          const isToday = key === todayStr;
           return (
             <button
               key={key}
               type="button"
+              className={cx(isV2 && isToday && "page5-events-v2__day--today")}
               onClick={() => openCreate(key)}
               style={{
                 minHeight: 92,
@@ -467,7 +478,7 @@ export const Page5EventsView = memo(function Page5EventsView({
                             fontWeight: 400,
                             color: styles.muted,
                             background: isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.65)",
-                            fontFamily: "\"Montserrat\", \"Segoe UI\", Roboto, Arial, sans-serif",
+                            fontFamily: "var(--font-ui)",
                             display: "inline-flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -501,7 +512,7 @@ export const Page5EventsView = memo(function Page5EventsView({
                             fontWeight: 700,
                             color: isDark ? "rgba(248,113,113,0.9)" : "#b91c1c",
                             background: isDark ? "rgba(127,29,29,0.25)" : "rgba(254,226,226,0.9)",
-                            fontFamily: "\"Montserrat\", \"Segoe UI\", Roboto, Arial, sans-serif",
+                            fontFamily: "var(--font-ui)",
                             display: "inline-flex",
                             alignItems: "center",
                             justifyContent: "center",

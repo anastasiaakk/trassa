@@ -1,7 +1,7 @@
 /**
  * Проверка обновлений для кастомного установщика (не NSIS auto-updater):
  * HTTPS JSON-манифест + ссылка на новый trassa-setup.exe
- * См. deploy/app-update-manifest.example.json и DESKTOP.md
+ * См. docs/desktop/DESKTOP.md и deploy/app-update-manifest.example.json
  */
 const fs = require("fs");
 const path = require("path");

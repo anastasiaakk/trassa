@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import type { CabinetChromeStyles } from "./CabinetChromeLayout";
+import type { CabinetChromeClassNames } from "../design-system/cabinetChromeClasses";
 import { BRAND } from "../theme/cabinetPalettes";
 import {
   listProforientationResults,
@@ -13,16 +14,21 @@ import {
   saveContractorTalentFilters,
   type ContractorTalentFilters,
 } from "../utils/contractorTalentStorage";
+import { page4V2PanelStyle } from "../utils/page4V2PanelStyle";
 
 type PanelStyles = {
   styles: CabinetChromeStyles;
   layoutStyles: Record<string, CSSProperties>;
+  cn?: CabinetChromeClassNames;
+  isV2?: boolean;
 };
 
 /** Таблица результатов профориентации для подрядчика и РАДОР/АДО */
 export const ProforientationResultsTable = memo(function ProforientationResultsTable({
   styles,
   layoutStyles,
+  cn,
+  isV2 = false,
 }: PanelStyles) {
   const [rows, setRows] = useState<ProforientationResult[]>(() => listProforientationResults());
 
@@ -33,22 +39,32 @@ export const ProforientationResultsTable = memo(function ProforientationResultsT
   }, []);
 
   return (
-    <div style={layoutStyles.recentPanel}>
-      <div style={layoutStyles.recentTitle}>Результаты профориентационного теста</div>
-      <p style={{ fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 8 }}>
+    <div
+      className={isV2 ? "page4-v2__panel" : cn?.recentPanel}
+      style={page4V2PanelStyle(layoutStyles, isV2)}
+    >
+      <div className={isV2 ? "page4-v2__section-title" : cn?.recentTitle} style={isV2 ? undefined : layoutStyles.recentTitle}>
+        Результаты профориентационного теста
+      </div>
+      <p className={isV2 ? "page4-v2__section-lede" : undefined} style={isV2 ? undefined : { fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 8 }}>
         Обучающиеся из кабинетов школьника и студента (СПО/ВО). Отображаются ведущие направления по итогам теста.
       </p>
       {rows.length === 0 ? (
         <div
-          style={{
-            padding: 18,
-            borderRadius: 24,
-            background: styles.sectionBg,
-            color: styles.muted,
-            fontSize: 13,
-            lineHeight: 1.5,
-            boxShadow: styles.insetShadow,
-          }}
+          className={isV2 ? "page4-v2__empty-hint" : undefined}
+          style={
+            isV2
+              ? undefined
+              : {
+                  padding: 18,
+                  borderRadius: 24,
+                  background: styles.sectionBg,
+                  color: styles.muted,
+                  fontSize: 13,
+                  lineHeight: 1.5,
+                  boxShadow: styles.insetShadow,
+                }
+          }
         >
           Пока нет сохранённых результатов. После прохождения теста в кабинетах школьника и студента данные появятся здесь.
         </div>
@@ -86,6 +102,8 @@ export const ProforientationResultsTable = memo(function ProforientationResultsT
 export const ContractorTalentMatcherPanel = memo(function ContractorTalentMatcherPanel({
   styles,
   layoutStyles,
+  cn,
+  isV2 = false,
   contractorEmail,
 }: PanelStyles & { contractorEmail: string }) {
   const emailNorm = contractorEmail.trim().toLowerCase();
@@ -133,35 +151,49 @@ export const ContractorTalentMatcherPanel = memo(function ContractorTalentMatche
   );
 
   return (
-    <div style={layoutStyles.recentPanel}>
-      <div style={layoutStyles.recentTitle}>Потенциальные кадры</div>
-      <p style={{ fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 12 }}>
+    <div
+      className={isV2 ? "page4-v2__panel" : cn?.recentPanel}
+      style={page4V2PanelStyle(layoutStyles, isV2)}
+    >
+      <div className={isV2 ? "page4-v2__section-title" : cn?.recentTitle} style={isV2 ? undefined : layoutStyles.recentTitle}>
+        Потенциальные кадры
+      </div>
+      <p className={isV2 ? "page4-v2__section-lede" : undefined} style={isV2 ? undefined : { fontSize: 13, lineHeight: 1.45, color: styles.muted, marginTop: -8, marginBottom: 12 }}>
         Отметьте направления, которые ищет организация. Показываются школьники и студенты, у которых ведущий или второй
         профиль совпадает с выбранными запросами.
       </p>
       {!emailNorm ? (
-        <p style={{ fontSize: 13, color: BRAND.burgundy, fontWeight: 600 }}>
+        <p style={{ fontSize: 13, color: isV2 ? styles.buttonBg : BRAND.burgundy, fontWeight: 600 }}>
           Укажите e-mail в настройках профиля — по нему сохраняется запрос подбора.
         </p>
       ) : null}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 14 }}>
+      <div className={isV2 ? "page4-v2__tag-grid" : undefined} style={isV2 ? undefined : { display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 14 }}>
         {PROF_ORIENTATION_TAGS.map((tag) => (
           <label
             key={tag}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 13,
-              color: styles.text,
-              cursor: emailNorm ? "pointer" : "not-allowed",
-              padding: "6px 10px",
-              borderRadius: 12,
-              background: filters.selectedTags.includes(tag) ? styles.sectionBg : styles.inputBg,
-              boxShadow: filters.selectedTags.includes(tag) ? styles.insetShadow : "none",
-              border: `1px solid rgba(36,59,116,0.15)`,
-              opacity: emailNorm ? 1 : 0.5,
-            }}
+            className={
+              isV2
+                ? `page4-v2__tag-chip${filters.selectedTags.includes(tag) ? " page4-v2__tag-chip--active" : ""}`
+                : undefined
+            }
+            style={
+              isV2
+                ? { cursor: emailNorm ? "pointer" : "not-allowed", opacity: emailNorm ? 1 : 0.5 }
+                : {
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    fontSize: 13,
+                    color: styles.text,
+                    cursor: emailNorm ? "pointer" : "not-allowed",
+                    padding: "6px 10px",
+                    borderRadius: 12,
+                    background: filters.selectedTags.includes(tag) ? styles.sectionBg : styles.inputBg,
+                    boxShadow: filters.selectedTags.includes(tag) ? styles.insetShadow : "none",
+                    border: `1px solid rgba(36,59,116,0.15)`,
+                    opacity: emailNorm ? 1 : 0.5,
+                  }
+            }
           >
             <input
               type="checkbox"
@@ -174,9 +206,10 @@ export const ContractorTalentMatcherPanel = memo(function ContractorTalentMatche
           </label>
         ))}
       </div>
-      <label style={{ display: "grid", gap: 6, marginBottom: 16, fontSize: 13, color: styles.muted }}>
+      <label className={isV2 ? "page4-v2__field" : undefined} style={isV2 ? undefined : { display: "grid", gap: 6, marginBottom: 16, fontSize: 13, color: styles.muted }}>
         Комментарий к запросу
         <textarea
+          className={isV2 ? "page4-v2__textarea" : undefined}
           value={filters.note}
           onChange={(e) => setFilters((p) => ({ ...p, note: e.target.value }))}
           onBlur={(e) => {
@@ -187,31 +220,42 @@ export const ContractorTalentMatcherPanel = memo(function ContractorTalentMatche
             });
           }}
           rows={2}
-          style={{
-            borderRadius: 16,
-            border: "none",
-            padding: 12,
-            fontFamily: "inherit",
-            fontSize: 14,
-            color: styles.text,
-            background: styles.inputBg,
-            boxShadow: styles.insetShadow,
-            resize: "vertical",
-          }}
+          style={
+            isV2
+              ? undefined
+              : {
+                  borderRadius: 16,
+                  border: "none",
+                  padding: 12,
+                  fontFamily: "inherit",
+                  fontSize: 14,
+                  color: styles.text,
+                  background: styles.inputBg,
+                  boxShadow: styles.insetShadow,
+                  resize: "vertical",
+                }
+          }
         />
       </label>
       {filters.selectedTags.length === 0 ? (
-        <div style={{ fontSize: 13, color: styles.muted }}>Выберите хотя бы одно направление, чтобы увидеть совпадения.</div>
+        <div className={isV2 ? "page4-v2__empty-hint page4-v2__empty-hint--inline" : undefined} style={isV2 ? undefined : { fontSize: 13, color: styles.muted }}>
+          Выберите хотя бы одно направление, чтобы увидеть совпадения.
+        </div>
       ) : matches.length === 0 ? (
         <div
-          style={{
-            padding: 18,
-            borderRadius: 24,
-            background: styles.sectionBg,
-            color: styles.muted,
-            fontSize: 13,
-            boxShadow: styles.insetShadow,
-          }}
+          className={isV2 ? "page4-v2__empty-hint" : undefined}
+          style={
+            isV2
+              ? undefined
+              : {
+                  padding: 18,
+                  borderRadius: 24,
+                  background: styles.sectionBg,
+                  color: styles.muted,
+                  fontSize: 13,
+                  boxShadow: styles.insetShadow,
+                }
+          }
         >
           Пока нет обучающихся с подходящим профилем по запросу.
         </div>

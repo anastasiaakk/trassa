@@ -1,0 +1,143 @@
+/**
+ * Нижняя навигация кабинетов v2 (только мобильный).
+ */
+html[data-portal-design="v2"] .cabinet-chrome--with-dock .cabinet-v2-layout,
+html[data-portal-design="v2"] .page5-chrome.page5-chrome--with-dock .cabinet-v2-layout {
+  padding-bottom: max(96px, calc(84px + env(safe-area-inset-bottom, 0)));
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock {
+  position: fixed;
+  left: 50%;
+  bottom: max(14px, env(safe-area-inset-bottom, 14px));
+  transform: translateX(-50%);
+  z-index: 1200;
+  pointer-events: none;
+  width: min(calc(100vw - 28px), 440px);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid rgba(var(--pv2-r-primary), 0.1);
+  background: rgba(var(--pv2-r-white), 0.98);
+  box-shadow:
+    0 10px 36px rgba(var(--pv2-r-ink), 0.14),
+    0 2px 8px rgba(var(--pv2-r-ink), 0.06);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__btn {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 6px 6px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: rgba(var(--pv2-r-ink), 0.62);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  cursor: pointer;
+  transition:
+    background var(--pv2-dur-fast),
+    color var(--pv2-dur-fast),
+    transform var(--pv2-dur-fast),
+    box-shadow var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__btn:hover {
+  color: rgba(var(--pv2-r-ink), 0.88);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__btn--active {
+  background: var(--pv2-primary);
+  color: var(--pv2-white);
+  box-shadow: 0 6px 18px rgba(var(--pv2-r-primary), 0.34);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__icon svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__badge {
+  position: absolute;
+  top: 5px;
+  right: calc(50% - 18px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pv2-primary);
+  box-shadow: 0 0 0 2px rgba(var(--pv2-r-white), 0.98);
+}
+
+html[data-portal-design="v2"] .cabinet-quick-dock__btn--active .cabinet-quick-dock__badge {
+  background: var(--pv2-white);
+  box-shadow: 0 0 0 2px var(--pv2-primary);
+}
+
+/* Только мобильный — на десктопе боковое меню */
+@media (min-width: 961px) {
+  html[data-portal-design="v2"] .cabinet-quick-dock {
+    display: none !important;
+  }
+
+  html[data-portal-design="v2"] .cabinet-chrome--with-dock .cabinet-v2-layout,
+  html[data-portal-design="v2"] .page5-chrome.page5-chrome--with-dock .cabinet-v2-layout {
+    padding-bottom: 24px;
+  }
+}
+
+@media (max-width: 960px) {
+  html[data-portal-design="v2"] .cabinet-quick-dock {
+    display: block;
+  }
+}
+
+@media (max-width: 380px) {
+  html[data-portal-design="v2"] .cabinet-quick-dock__btn {
+    font-size: 9px;
+    padding: 7px 4px 5px;
+  }
+
+  html[data-portal-design="v2"] .cabinet-quick-dock__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  html[data-portal-design="v2"] .cabinet-quick-dock__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}

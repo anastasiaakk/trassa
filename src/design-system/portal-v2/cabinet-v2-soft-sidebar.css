@@ -1,0 +1,428 @@
+/**
+ * Кабинеты ролей — боковое меню в стиле admin-v2-soft.
+ */
+
+html[data-portal-design="v2"] .cabinet-v2-layout {
+  grid-template-columns: min(220px, 34vw) minmax(0, 1fr);
+  gap: 16px;
+  max-width: 1520px;
+  padding: 16px 20px 24px;
+  align-items: stretch;
+  min-height: 100svh;
+  box-sizing: border-box;
+}
+
+/* pv2-layout из shell.css не должен сужать кабинет (1280px) */
+html[data-portal-design="v2"] .cabinet-v2-layout.pv2-layout {
+  width: 100%;
+  max-width: 1520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 960px) {
+  html[data-portal-design="v2"] .cabinet-v2-body {
+    scrollbar-gutter: auto;
+  }
+
+  html[data-portal-design="v2"] .cabinet-v2-layout {
+    grid-template-columns: 1fr;
+    padding: 12px 14px 24px;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  html[data-portal-design="v2"] .cabinet-v2-layout--mobile-nav {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-portal-design="v2"] .cabinet-v2-soft-sidebar {
+    display: none !important;
+  }
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  padding: clamp(16px, 2vw, 22px) clamp(12px, 1.4vw, 16px);
+  border-radius: var(--pv2-radius-xl);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.72);
+  backdrop-filter: blur(var(--pv2-blur-lg)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-lg)) saturate(150%);
+  box-shadow: var(--pv2-shadow-md);
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--pv2-r-white), 0.5) 0%,
+    rgba(var(--pv2-r-white), 0.04) 42%,
+    transparent 58%
+  );
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(var(--pv2-r-primary), 0.1);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__logo {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(var(--pv2-r-primary), 0.22);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__kicker {
+  margin: 0 0 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__role {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__group-label {
+  margin: 0 0 6px;
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(var(--pv2-r-primary), 0.55);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__list > li {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--pv2-radius-md);
+  background: transparent;
+  color: var(--pv2-ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--pv2-dur-fast),
+    border-color var(--pv2-dur-fast),
+    box-shadow var(--pv2-dur-fast),
+    color var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn:hover {
+  background: rgba(var(--pv2-r-primary), 0.08);
+  border-color: rgba(var(--pv2-r-primary), 0.12);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn--active {
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-white);
+  border-color: transparent;
+  box-shadow: 0 8px 22px rgba(var(--pv2-r-primary), 0.28);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn--active:hover {
+  background: var(--pv2-gradient-brand);
+  border-color: transparent;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  opacity: 0.92;
+  color: inherit;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__icon svg {
+  display: block;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn--active .cabinet-v2-soft-sidebar__icon {
+  opacity: 1;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: var(--pv2-radius-pill);
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(var(--pv2-r-white), 0.22);
+  color: inherit;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-soft-sidebar__btn:not(.cabinet-v2-soft-sidebar__btn--active) .cabinet-v2-soft-sidebar__badge {
+  background: rgba(var(--pv2-r-primary), 0.12);
+  color: var(--pv2-primary);
+}
+
+/* Контентная колонка */
+html[data-portal-design="v2"] .cabinet-v2-body {
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  padding: 0;
+  gap: 14px;
+  scrollbar-gutter: auto;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-topbar.cabinet-chrome__header {
+  padding: 14px 18px !important;
+  border-radius: var(--pv2-radius-xl) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-topbar__title {
+  font-size: 1.35rem !important;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-topbar__meta {
+  font-size: 13px !important;
+  line-height: 1.4;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-page-kpi {
+  flex-shrink: 0;
+}
+
+/* Дашборд на всю ширину — без legacy-сетки 340px + aside */
+html[data-portal-design="v2"] .cabinet-chrome__main.cabinet-v2-main-grid--dashboard {
+  display: block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-main-grid--dashboard > .cabinet-chrome__section {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* /page4 v2: KPI + панель — одна ширина колонки (прямые дети stage) */
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .page4-v2-dashboard,
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .cabinet-v2-page-kpi,
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .page4-v2__main-region,
+html[data-portal-design="v2"] .page4-v2-dashboard > .page4-v2__main-region,
+html[data-portal-design="v2"] .page4-v2-dashboard > .cabinet-v2-page-kpi,
+html[data-portal-design="v2"].route-page4 .cabinet-v2-dashboard-stage > .cabinet-v2-page-kpi,
+html[data-portal-design="v2"].route-page4 .cabinet-v2-dashboard-stage > .page4-v2__main-region {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0;
+  align-self: stretch !important;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard-stage > .page4-v2__main-region,
+html[data-portal-design="v2"] .page4-v2-dashboard > .page4-v2__main-region,
+html[data-portal-design="v2"].route-page4 .cabinet-v2-dashboard-stage > .page4-v2__main-region {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+html[data-portal-design="v2"].route-page4 .cabinet-v2-dashboard-stage {
+  gap: 14px;
+}
+
+/* Без legacy-сетки 340px + aside на подстраницах /page4 */
+html[data-portal-design="v2"].route-page4 .cabinet-chrome__main.cabinet-v2-main-grid {
+  display: block !important;
+  grid-template-columns: none !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__context-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--pv2-radius-lg);
+  background: var(--pv2-surface-1);
+  border: 1px solid var(--pv2-border-soft);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__context-kicker {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .cabinet-v2-dashboard__context-lede {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pv2-text-secondary);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar.pv2-card-l1 {
+  background: rgba(18, 22, 32, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.38) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar.pv2-card-l1::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 38%,
+    transparent 55%
+  ) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar {
+  background: rgba(18, 22, 32, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.38);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 38%,
+    transparent 55%
+  );
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar__brand {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar__kicker {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar__role {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar__group-label {
+  color: rgba(255, 255, 255, 0.44);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar__btn {
+  color: rgba(255, 255, 255, 0.84);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar__btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.98);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar__icon {
+  opacity: 0.9;
+  color: inherit;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"]
+  .cabinet-v2-soft-sidebar__btn:not(.cabinet-v2-soft-sidebar__btn--active)
+  .cabinet-v2-soft-sidebar__badge {
+  background: rgba(var(--pv2-r-primary), 0.32);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(var(--pv2-r-primary), 0.25);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-v2-soft-sidebar__btn--active .cabinet-v2-soft-sidebar__badge {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+

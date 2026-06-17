@@ -1,0 +1,424 @@
+/**
+ * Page5/6 — CentralFlow-style dashboard при v2.
+ */
+
+html[data-portal-design="v2"] .page5-chrome.cabinet-v2-scene {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+html[data-portal-design="v2"] .page5-v2__root {
+  min-height: 100svh;
+  color: var(--pv2-text);
+  font-family: var(--font-ui);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page5-v2__admin-back-btn {
+  border: 1px solid var(--pv2-border-strong);
+  background: var(--pv2-bg-glass);
+  color: var(--pv2-text);
+  border-radius: var(--pv2-radius-pill);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: var(--pv2-shadow-sm);
+  white-space: nowrap;
+}
+
+html[data-portal-design="v2"] .page5-v2__search-icon {
+  width: 18px;
+  height: 18px;
+}
+
+html[data-portal-design="v2"] .page5-v2__search-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--pv2-text);
+  font-size: 14px;
+  line-height: 18px;
+  height: 100%;
+}
+
+html[data-portal-design="v2"] .page5-v2__tooltip-nowrap,
+html[data-portal-design="v2"] .page5-v2-dashboard__tooltip-nowrap {
+  white-space: nowrap;
+}
+
+html[data-portal-design="v2"] .page5-v2__msgr-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+html[data-portal-design="v2"] .page5-v2__msgr-unread-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+html[data-portal-design="v2"] .page5-v2__profile-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 22px;
+}
+
+html[data-portal-design="v2"] .page5-v2__topbar-icon-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .page5-v2__profile-trigger {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
+  font-family: inherit;
+}
+
+html[data-portal-design="v2"] .page5-v2__profile-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html[data-portal-design="v2"] .page5-v2__icon-22 {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+html[data-portal-design="v2"] .page5-v2__icon-16 {
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .page5-v2__avatar-30 {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .page5-v2__main-region {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page5-v2__main-region--flush-top {
+  margin-top: -14px;
+  padding-top: 0;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__intro {
+  padding: 22px 24px;
+  border-radius: var(--pv2-radius-xl);
+  border: 1px solid var(--pv2-border-strong);
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass);
+  backdrop-filter: blur(var(--pv2-blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) saturate(140%);
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__kicker {
+  margin: 0 0 10px;
+  font-size: var(--pv2-font-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__headline {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  color: var(--pv2-ink);
+  max-width: 42rem;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__lede {
+  margin: 14px 0 0;
+  max-width: 40rem;
+  font-size: var(--pv2-font-sm);
+  line-height: 1.7;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  html[data-portal-design="v2"] .page5-v2-dashboard__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (min-width: 1200px) {
+  html[data-portal-design="v2"] .page5-v2-dashboard__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__widgets {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__gauge {
+  padding: 20px;
+  border-radius: var(--pv2-radius-lg);
+  border: 1px solid var(--pv2-border-strong);
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong);
+  backdrop-filter: blur(var(--pv2-blur-md));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md));
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__gauge-title {
+  margin: 0 0 12px;
+  font-size: var(--pv2-font-sm);
+  font-weight: 800;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__gauge-meta {
+  margin: 0 0 14px;
+  font-size: var(--pv2-font-xs);
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__gauge-track {
+  height: 10px;
+  border-radius: var(--pv2-radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__gauge-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--pv2-gradient-brand);
+  box-shadow: 0 0 12px rgba(0, 212, 165, 0.35);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__gauge-pct {
+  margin: 10px 0 0;
+  font-size: var(--pv2-font-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__proforientation {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--pv2-ink);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--pv2-dur-fast),
+    border-color var(--pv2-dur-fast),
+    box-shadow var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__proforientation:hover {
+  background: var(--pv2-bg-glass-hover);
+  border-color: var(--pv2-border-strong);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__proforientation--active {
+  border-color: var(--pv2-primary);
+  box-shadow: 0 0 0 1px rgba(0, 212, 165, 0.35);
+}
+
+html[data-portal-design="v2"] .page5-v2__section-card {
+  min-height: 260px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  padding: 18px 20px 18px 24px;
+}
+
+html[data-portal-design="v2"] .page5-v2__section-card .page5-v2__card-accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: var(--pv2-radius-lg) 0 0 var(--pv2-radius-lg);
+  opacity: 0.9;
+}
+
+html[data-portal-design="v2"] .page5-v2__section-card .page5-v2__card-title {
+  margin: 0 0 8px;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--pv2-ink);
+  line-height: 1.2;
+}
+
+html[data-portal-design="v2"] .page5-v2__section-card .page5-v2__card-desc {
+  margin: 0;
+  font-size: var(--pv2-font-sm);
+  line-height: 1.5;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .page5-v2__card-body,
+html[data-portal-design="v2"] .page5-v2__card-footer {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-portal-design="v2"] .page5-v2__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+html[data-portal-design="v2"] .page5-v2__card-footer {
+  margin-top: 18px;
+}
+
+html[data-portal-design="v2"] .page5-v2__card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+  flex-shrink: 0;
+  border: 1px solid var(--pv2-border);
+  background: var(--pv2-bg-glass);
+  color: var(--pv2-primary);
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__event-row {
+  display: flex;
+  gap: 10px;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__event-link {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+  padding: 0;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__event-cancel {
+  flex-shrink: 0;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 6px 10px;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--pv2-text-muted);
+  background: rgba(255, 255, 255, 0.08);
+  font-family: inherit;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__proforientation-kicker {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--pv2-text-muted);
+  margin-bottom: 4px;
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__proforientation-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page5-v2-dashboard__proforientation-desc {
+  font-size: 13px;
+  margin-top: 6px;
+  line-height: 1.4;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2-dashboard__intro,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2-dashboard__gauge {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2__topbar-icon-btn {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2-dashboard__headline,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-v2__section-card .page5-v2__card-title {
+  color: var(--pv2-ink);
+}

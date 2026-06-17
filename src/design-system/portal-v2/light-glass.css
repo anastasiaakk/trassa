@@ -1,0 +1,45 @@
+/**
+ * Светлая glass-тема v2 (Credifyx-подобная) — кабинеты и ассоциации.
+ */
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__header::after,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-chrome .cabinet-chrome__header::after {
+  background: linear-gradient(90deg, rgba(var(--pv2-r-primary), 0.52), rgba(var(--pv2-r-white), 0.72));
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-chrome {
+  background: radial-gradient(115% 85% at 92% -8%, rgba(var(--pv2-r-white), 0.34) 0%, transparent 52%),
+    radial-gradient(80% 60% at 4% 100%, rgba(var(--pv2-r-primary), 0.12) 0%, transparent 48%),
+    var(--pv2-gradient-glass-light) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-chrome .page5-v2__hero-panel,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-chrome .page5-v2__metrics-wrap {
+  border: 1px solid rgba(var(--pv2-r-primary), 0.24) !important;
+  background: var(--pv2-gradient-glass-light) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+  box-shadow: 0 14px 36px rgba(var(--pv2-r-ink), 0.08), inset 0 1px 0 rgba(var(--pv2-r-white), 0.95) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-chrome .page5-v2__metric {
+  background: rgba(var(--pv2-r-white), 0.72);
+  border: 1px solid rgba(var(--pv2-r-primary), 0.2);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-bento-metric {
+  box-shadow: 0 8px 24px rgba(var(--pv2-r-ink), 0.06), inset 0 1px 0 rgba(var(--pv2-r-white), 0.9);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-quick-dock__inner {
+  background: linear-gradient(180deg, rgba(var(--pv2-r-white), 0.95), rgba(var(--pv2-r-surface), 0.9)),
+    var(--pv2-bg-glass-strong);
+  border-color: rgba(var(--pv2-r-primary), 0.24);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-quick-dock__btn {
+  color: rgba(var(--pv2-r-ink), 0.72);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-quick-dock__btn--active {
+  color: var(--pv2-white);
+}

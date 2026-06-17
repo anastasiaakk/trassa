@@ -1,0 +1,66 @@
+/**
+ * Формы подрядчика и общие поля в кабинетах v2 (WCAG-контраст).
+ */
+html[data-portal-design="v2"] .contractor-forms-v2:not(.page4-v2__page) {
+  border: 1px solid var(--pv2-border-strong) !important;
+}
+
+html[data-portal-design="v2"] .contractor-forms-v2 .contractor-forms__templateBtn,
+html[data-portal-design="v2"] .contractor-forms-v2 [class*="templateBtn"] {
+  box-sizing: border-box !important;
+  border-width: 1px !important;
+}
+
+html[data-portal-design="v2"] .contractor-forms-v2 .contractor-forms__templateBtn--active,
+html[data-portal-design="v2"] .contractor-forms-v2 [class*="templateBtn"][class*="active"] {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border-width: 1px !important;
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+  box-shadow:
+    0 0 0 1px rgba(var(--pv2-r-primary), 0.2),
+    0 4px 14px rgba(var(--pv2-r-primary), 0.24) !important;
+}
+
+html[data-portal-design="v2"] .contractor-forms-v2 input,
+html[data-portal-design="v2"] .contractor-forms-v2 select,
+html[data-portal-design="v2"] .contractor-forms-v2 textarea {
+  border: 1px solid var(--pv2-border) !important;
+  color: var(--pv2-text) !important;
+}
+
+html[data-portal-design="v2"] .contractor-forms-v2 input::placeholder,
+html[data-portal-design="v2"] .contractor-forms-v2 textarea::placeholder {
+  color: var(--pv2-text-subtle);
+  opacity: 1;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .contractor-forms-v2 input,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .contractor-forms-v2 select,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .contractor-forms-v2 textarea {
+  background: rgba(var(--pv2-r-white), 0.94) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.22) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-tables-v2 .form-grid-v2 .formGridTable th {
+  color: var(--pv2-deep) !important;
+  background: rgba(var(--pv2-r-primary), 0.14) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-tables-v2 .form-grid-v2 .formGridTable td {
+  color: var(--pv2-deep) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-tables-v2 .form-grid-v2 input[type="text"],
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-tables-v2 .form-grid-v2 input[type="number"],
+html[data-portal-design="v2"][data-cabinet-theme="light"] .admin-tables-v2 .form-grid-v2 input[type="date"] {
+  background: rgba(var(--pv2-r-white), 0.95) !important;
+  color: var(--pv2-deep) !important;
+}
+
+@media (prefers-contrast: more) {
+  html[data-portal-design="v2"] .contractor-forms-v2 .contractor-forms__templateBtn--active {
+    outline: 2px solid var(--pv2-deep);
+    outline-offset: 2px;
+  }
+}

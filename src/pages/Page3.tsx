@@ -1,4 +1,4 @@
-﻿import {
+import {
   useCallback,
   useEffect,
   useMemo,
@@ -24,6 +24,7 @@ import {
 } from "../utils/localAuth";
 import { isAuthApiEnabled } from "../utils/authMode";
 import { PASSWORD_RULES_SHORT, validatePasswordPolicy } from "../utils/passwordPolicy";
+import SpecializationPicker from "../components/SpecializationPicker";
 import {
   loadContractorOrganizations,
   normalizeOrgName,
@@ -34,7 +35,13 @@ import {
   ADMIN_CABINET_SEARCH,
   shouldShowReturnToAdminDashboard,
 } from "../utils/adminReturnNavigation";
+import {
+  clearCabinetBetaPreview,
+  startCabinetBetaPreview,
+} from "../utils/cabinetBetaPreview";
 import ContractorOrgPicker from "../components/ContractorOrgPicker";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { usePortalDesign } from "../design-system/usePortalDesign";
 import styles from "./Page3.module.css";
 import {
   ROLE_ICON_CONTRACTOR,
@@ -62,8 +69,8 @@ const firstCardPhoto = new URL("../assets/школьник.png", import.meta.url
 const secondCardPhoto = new URL("../assets/студент.png", import.meta.url).href;
 const thirdCardPhoto = new URL("../assets/подрядчик.png", import.meta.url).href;
 const fourthCardPhoto = new URL("../assets/админ.png", import.meta.url).href;
-const fourthCardHoverPhoto = new URL("../assets/admin-photo.png", import.meta.url).href;
-/** Второе состояние (выбрана карточка): отдельные кадры Group 37225 / 37226 / 37227. Референсы макетов: /page3-refs/*.png */
+/** Второе состояние карточки «Институты» — широкий кадр, как у остальных ролей */
+const fourthCardExpandedPhoto = new URL("../assets/admin-photo.png", import.meta.url).href;
 const firstCardExpandedPhoto = new URL("../assets/page3-expanded-role1.png", import.meta.url).href;
 const secondCardExpandedPhoto = new URL("../assets/page3-expanded-role2.png", import.meta.url).href;
 const thirdCardExpandedPhoto = new URL("../assets/page3-expanded-role3.png", import.meta.url).href;
@@ -73,25 +80,33 @@ const ROLE_HOVER_OVERLAY_SRC = [
   firstCardExpandedPhoto,
   secondCardExpandedPhoto,
   thirdCardExpandedPhoto,
-  fourthCardHoverPhoto,
+  fourthCardExpandedPhoto,
+] as const;
+
+/** Кадр фона во второй развёртке */
+const ROLE_EXPAND_BG = [
+  { position: "center 42%", scale: "1.12" },
+  { position: "center 42%", scale: "1.12" },
+  { position: "center 42%", scale: "1.12" },
+  { position: "center 42%", scale: "1.12" },
 ] as const;
 
 const ROLE_FEATURE_COPY = [
   {
     title: "Школьник",
-    subtitle: "Строительство карьерного пути и помощь от родителей",
+    subtitle: "Строительство дорожного дела и помощь от родителей",
   },
   {
     title: "Студент",
-    subtitle: "Углубленное понимание своей будущей профессии и поддержка",
+    subtitle: "Республиканские олимпиады, своё портфолио и наставники",
   },
   {
     title: "Подрядчик",
-    subtitle: "Поддержка и популяризация в дорожной отрасли",
+    subtitle: "Поддержка в реализации и дорожные проекты",
   },
   {
     title: "Государственные институты",
-    subtitle: "Мониторинг состояния и поддержка федеральных, Государственных учреждений",
+    subtitle: "Мониторинг состояния и поддержка федеральных программ",
   },
 ] as const;
 
@@ -121,7 +136,7 @@ const PAGE3_PRELOAD_IMAGES = [
   secondCardExpandedPhoto,
   thirdCardExpandedPhoto,
   fourthCardPhoto,
-  fourthCardHoverPhoto,
+  fourthCardExpandedPhoto,
 ] as const;
 
 const roleIcons = [
@@ -157,15 +172,23 @@ type RoleCardProps = {
   icon: RoleIcon;
   index: number;
   isSelected: boolean;
+  isV2?: boolean;
   onSelect: (index: number) => void;
   /** После снятия выбора — сброс «ховер-блока» при уходе курсора с карточки */
   onLeave?: () => void;
 };
 
-const RoleCard = memo(({ icon, index, isSelected, onSelect, onLeave }: RoleCardProps) => {
+const RoleCard = memo(({ icon, index, isSelected, isV2 = false, onSelect, onLeave }: RoleCardProps) => {
   const hoverOverlaySrc = ROLE_HOVER_OVERLAY_SRC[index];
+  const expandBg = ROLE_EXPAND_BG[index];
   const featureCopy = ROLE_FEATURE_COPY[index];
   const isExpanded = isSelected;
+  const expandPanelStyle = {
+    ["--institutions-hover-overlay" as string]: `url(${hoverOverlaySrc})`,
+    ["--institutions-bg-position" as string]: expandBg.position,
+    ["--institutions-bg-scale" as string]: expandBg.scale,
+  };
+
   const handleDivClick = useCallback(
     () => onSelect(index),
     [index, onSelect]
@@ -191,7 +214,15 @@ const RoleCard = memo(({ icon, index, isSelected, onSelect, onLeave }: RoleCardP
 
   return (
     <div
-      className={`${styles.roleCard} ${isSelected ? styles.roleCardSelected : ""} ${styles.roleCardInstitutions} ${isExpanded ? styles.roleCardInstitutionsExpanded : ""}`}
+      className={cx(
+        styles.roleCard,
+        isSelected && styles.roleCardSelected,
+        styles.roleCardInstitutions,
+        isExpanded && styles.roleCardInstitutionsExpanded,
+        isV2 && "page3-v2__role-card",
+        isV2 && isSelected && "page3-v2__role-card--selected"
+      )}
+      data-role-index={index}
       onClick={handleDivClick}
       onMouseLeave={onLeave}
       role="button"
@@ -200,7 +231,11 @@ const RoleCard = memo(({ icon, index, isSelected, onSelect, onLeave }: RoleCardP
     >
       {icon.overlay && (
         <div
-          className={`${styles.cardOverlay} ${isSelected ? styles.cardOverlaySelected : ""} ${styles.cardOverlayInstitutions}`}
+          className={cx(
+            styles.cardOverlay,
+            isSelected && styles.cardOverlaySelected,
+            styles.cardOverlayInstitutions
+          )}
           style={{
             backgroundImage: `url(${icon.overlaySrc})`,
             ["--institutions-hover-overlay" as string]: `url(${hoverOverlaySrc})`,
@@ -222,11 +257,8 @@ const RoleCard = memo(({ icon, index, isSelected, onSelect, onLeave }: RoleCardP
           />
         </button>
       </div>
-      <div
-        className={styles.institutionsHoverPanel}
-        style={{ ["--institutions-hover-overlay" as string]: `url(${hoverOverlaySrc})` }}
-      >
-        <div className={styles.institutionsHoverShade} />
+      <div className={styles.institutionsHoverPanel} style={expandPanelStyle}>
+        <div className={cx(styles.institutionsHoverShade, isV2 && "page3-v2__institutions-shade")} />
         <div className={styles.institutionsHoverMeta}>
           <span className={styles.institutionsHoverIconWrap}>
             <img decoding="async" src={icon.iconSrc} alt="" className={styles.institutionsHoverIcon} />
@@ -238,7 +270,7 @@ const RoleCard = memo(({ icon, index, isSelected, onSelect, onLeave }: RoleCardP
         </div>
       </div>
       {isSelected && (
-        <span className={styles.selectedBadge}>
+        <span className={cx(styles.selectedBadge, isV2 && "page3-v2__selected-badge")}>
           <span className={styles.selectedBadgeMark} aria-hidden>
             ✓
           </span>
@@ -249,112 +281,18 @@ const RoleCard = memo(({ icon, index, isSelected, onSelect, onLeave }: RoleCardP
   );
 });
 
-/** Главная кривая «полотна» (асфальт + разметка). */
-const NEO_ROAD_MAIN =
-  "M -100 520 C 180 400 380 460 620 430 S 980 360 1280 390";
-
-/** Второй слой — дальняя дорога (глубина сцены). */
-const NEO_ROAD_FAR =
-  "M -80 220 C 320 300 520 200 780 260 S 1080 180 1240 240";
-
-/** Неоморф + дорожная отрасль: асфальт, разметка, знак. */
-const RoadIndustryNeoBackground = memo(() => (
+/** Фоновая подложка без дорожной графики. */
+const RoadIndustryNeoBackground = memo(({ isV2 = false }: { isV2?: boolean }) => (
   <div className={styles.roadIndustryBg} aria-hidden>
-    <div className={styles.neoAmbientWash} />
-    <div className={styles.neoAtmosphereGlow} />
-    <svg
-      className={styles.neoRoadSvg}
-      viewBox="0 0 1200 800"
-      preserveAspectRatio="xMidYMid slice"
-    >
-      <defs>
-        <filter id="page3NeoEmboss" x="-35%" y="-35%" width="170%" height="170%">
-          <feDropShadow dx="4" dy="5" stdDeviation="4.5" floodColor="#7d8aa0" floodOpacity="0.32" />
-          <feDropShadow dx="-3" dy="-3" stdDeviation="3.5" floodColor="#ffffff" floodOpacity="0.9" />
-        </filter>
-        <filter id="page3NeoSoft" x="-40%" y="-40%" width="180%" height="180%">
-          <feDropShadow dx="3" dy="3" stdDeviation="2.5" floodColor="#8899b0" floodOpacity="0.35" />
-          <feDropShadow dx="-2" dy="-2" stdDeviation="2" floodColor="#ffffff" floodOpacity="0.92" />
-        </filter>
-        <linearGradient id="page3Asphalt" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#6f7a8f" />
-          <stop offset="40%" stopColor="#545c70" />
-          <stop offset="100%" stopColor="#454c5e" />
-        </linearGradient>
-        <linearGradient id="page3AsphaltFar" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#9aa4b5" />
-          <stop offset="100%" stopColor="#7a8498" />
-        </linearGradient>
-      </defs>
-
-      <path
-        d={NEO_ROAD_FAR}
-        fill="none"
-        stroke="url(#page3AsphaltFar)"
-        strokeWidth={28}
-        strokeLinecap="round"
-        opacity={0.45}
-        filter="url(#page3NeoSoft)"
-      />
-      <path
-        d={NEO_ROAD_FAR}
-        fill="none"
-        stroke="#f0f4fa"
-        strokeWidth={2}
-        strokeLinecap="round"
-        className={styles.neoRoadCenterLineFar}
-        pathLength={100}
-      />
-
-      <path
-        d={NEO_ROAD_MAIN}
-        fill="none"
-        stroke="url(#page3Asphalt)"
-        strokeWidth={54}
-        strokeLinecap="round"
-        filter="url(#page3NeoEmboss)"
-      />
-      <path
-        d={NEO_ROAD_MAIN}
-        fill="none"
-        stroke="rgba(255,255,255,0.22)"
-        strokeWidth={4}
-        strokeLinecap="round"
-        transform="translate(0, -14)"
-      />
-      <path
-        d={NEO_ROAD_MAIN}
-        fill="none"
-        stroke="rgba(255,255,255,0.22)"
-        strokeWidth={4}
-        strokeLinecap="round"
-        transform="translate(0, 14)"
-      />
-      <path
-        d={NEO_ROAD_MAIN}
-        fill="none"
-        stroke="#f4f6fb"
-        strokeWidth={3.2}
-        strokeLinecap="round"
-        className={styles.neoRoadCenterLine}
-        pathLength={100}
-      />
-
-      <g transform="translate(380, 340)">
-        <g className={styles.neoSignGroup}>
-          <circle r="42" fill="#dde3ee" filter="url(#page3NeoSoft)" />
-          <circle cx="0" cy="-1" r="36" fill="#e8ecf4" filter="url(#page3NeoEmboss)" />
-          <circle r="30" fill="#f2d45c" stroke="#c9a020" strokeWidth="2.5" />
-          <circle r="22" fill="#e8ecf4" opacity={0.95} />
-        </g>
-      </g>
-    </svg>
+    <div className={cx(styles.neoAmbientWash, isV2 && "page3-v2__wash")} />
+    <div className={cx(styles.neoAtmosphereGlow, isV2 && "page3-v2__glow")} />
   </div>
 ));
 
 type AuthMode = "login" | "register" | "forgot";
 
 const Page3 = () => {
+  const isV2 = usePortalDesign() === "v2";
   const [selectedRole, setSelectedRole] = useState<number | null>(null);
   /** После снятия выбора кликом: первый заход курсора без эффекта hover, пока не уйдёт с карточки */
   const [roleHoverSuppressed, setRoleHoverSuppressed] = useState(false);
@@ -387,6 +325,9 @@ const Page3 = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   /** Роль «Подрядчик» (2): выбор организации из справочника */
   const [contractorOrgName, setContractorOrgName] = useState("");
+  const [specializationId, setSpecializationId] = useState("");
+  const [regRegisterTab, setRegRegisterTab] = useState<"profile" | "spec">("profile");
+  const needsSpecialization = selectedRole === 1 || selectedRole === 2;
   const [contractorOrgs, setContractorOrgs] = useState<string[]>(() => loadContractorOrganizations());
   const navigate = useNavigate();
   /** Вход через API (JWT cookie); см. `VITE_USE_AUTH_API` и прокси `/api`. */
@@ -438,6 +379,10 @@ const Page3 = () => {
 
   useEffect(() => {
     if (selectedRole !== 2) setContractorOrgName("");
+    if (selectedRole !== 1 && selectedRole !== 2) {
+      setSpecializationId("");
+      setRegRegisterTab("profile");
+    }
   }, [selectedRole]);
 
   const handleRoleSelect = useCallback((index: number) => {
@@ -460,6 +405,7 @@ const Page3 = () => {
   }, [selectedRole]);
 
   const handleBackToRoles = useCallback(() => {
+    clearCabinetBetaPreview();
     setShowLogin(false);
     setSelectedRole(null);
     setRoleHoverSuppressed(false);
@@ -522,6 +468,27 @@ const Page3 = () => {
     navigate(institutionProfile === "ado" ? "/page6" : "/page5");
   }, [selectedRole, institutionProfile, navigate]);
 
+  const goCabinetBetaPreview = useCallback(() => {
+    const role = selectedRole;
+    if (role === null) return;
+    setFormError(null);
+
+    let contractorOrg: string | undefined;
+    if (role === 2) {
+      if (contractorOrgs.length === 0) {
+        setFormError(
+          "Бета-просмотр подрядчика недоступен: администратор ещё не добавил организации."
+        );
+        return;
+      }
+      contractorOrg =
+        resolveOrganizationFromInput(contractorOrgName, contractorOrgs) ?? contractorOrgs[0];
+    }
+
+    startCabinetBetaPreview(role, { institutionProfile, contractorOrg });
+    goCabinet();
+  }, [selectedRole, institutionProfile, contractorOrgs, contractorOrgName, goCabinet]);
+
   const handleLoginSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -537,6 +504,8 @@ const Page3 = () => {
         setFormError(orgErr);
         return;
       }
+
+      clearCabinetBetaPreview();
 
       if (authApiMode) {
         const res = await authLogin(email, p);
@@ -603,6 +572,7 @@ const Page3 = () => {
   const handleRegisterSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      clearCabinetBetaPreview();
       setFormError(null);
       setRegPasswordError(null);
       if (reg.password !== reg.password2) {
@@ -617,6 +587,11 @@ const Page3 = () => {
       const orgErr = contractorOrgValidationMessage(selectedRole, contractorOrgs, contractorOrgName);
       if (orgErr) {
         setFormError(orgErr);
+        return;
+      }
+      if (needsSpecialization && !specializationId.trim()) {
+        setFormError("Выберите спецификацию (вкладка «Спецификация»).");
+        setRegRegisterTab("spec");
         return;
       }
       const roleLabelResolved =
@@ -638,6 +613,7 @@ const Page3 = () => {
         phone: reg.phone.trim(),
         notifyEmail: true,
         notifyPush: false,
+        specializationId: needsSpecialization ? specializationId.trim() : "",
       };
       if (authApiMode) {
         const result = await authRegister(reg.email.trim(), reg.password, profile);
@@ -656,7 +632,7 @@ const Page3 = () => {
       }
       goCabinet();
     },
-    [reg, goCabinet, selectedRole, contractorOrgs, contractorOrgName, authApiMode]
+    [reg, goCabinet, selectedRole, contractorOrgs, contractorOrgName, authApiMode, needsSpecialization, specializationId]
   );
 
   const handleForgotEmailNext = useCallback(
@@ -714,22 +690,27 @@ const Page3 = () => {
           icon={icon}
           index={index}
           isSelected={selectedRole === index}
+          isV2={isV2}
           onSelect={handleRoleSelect}
           onLeave={handleRoleCardLeave}
         />
       )),
-    [selectedRole, handleRoleSelect, handleRoleCardLeave]
+    [selectedRole, handleRoleSelect, handleRoleCardLeave, isV2]
   );
 
   return (
     <div
-      className={`${styles.pageRoot} ${isNavigating ? styles.pageRootNavigating : ""}`}
+      className={cx(styles.pageRoot, isNavigating && styles.pageRootNavigating, isV2 && "page3-v2")}
     >
-      <RoadIndustryNeoBackground />
+      <RoadIndustryNeoBackground isV2={isV2} />
       <div
-        className={`${styles.hero} ${showLogin ? styles.heroAuthStep : styles.heroRolePick}`}
+        className={cx(
+          styles.hero,
+          showLogin ? styles.heroAuthStep : styles.heroRolePick,
+          isV2 && "page3-v2__role-tab page3-v2__role-panel"
+        )}
       >
-        <div className={styles.decorLeft} />
+        <div className={cx(styles.decorLeft, isV2 && "page3-v2__decor")} />
 
         <div
           className={`${styles.content} ${showLogin ? styles.contentAuthStep : styles.contentRolePick}`}
@@ -740,11 +721,15 @@ const Page3 = () => {
                 className={styles.backToPage2Wrap}
                 style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}
               >
-                <button type="button" className={styles.backToPage2} onClick={goToPage2}>
+                <button type="button" className={cx(styles.backToPage2, isV2 && "page3-v2__back")} onClick={goToPage2}>
                   ← Назад
                 </button>
                 {shouldShowReturnToAdminDashboard() ? (
-                  <button type="button" className={styles.backToPage2} onClick={goToAdminCabinet}>
+                  <button
+                    type="button"
+                    className={cx(styles.backToPage2, isV2 && "page3-v2__back")}
+                    onClick={goToAdminCabinet}
+                  >
                     ← Кабинет администратора
                   </button>
                 ) : null}
@@ -752,14 +737,17 @@ const Page3 = () => {
 
               <div className={styles.rolePickMain}>
                 <div className={styles.titleBlock}>
-                  <h1 className={styles.title}>Выберите Роль</h1>
-                  <p className={styles.subtitle}>
+                  <h1 className={cx(styles.title, isV2 && "page3-v2__title")}>Выберите Роль</h1>
+                  <p className={cx(styles.subtitle, isV2 && "page3-v2__subtitle")}>
                     Выберите категорию, соответствующую вашей деятельности
                   </p>
                 </div>
 
                 <div
-                  className={`${styles.cardsRow} ${roleHoverSuppressed ? styles.cardsRowHoverSuppressed : ""}`}
+                  className={cx(
+                    styles.cardsRow,
+                    roleHoverSuppressed && styles.cardsRowHoverSuppressed
+                  )}
                 >
                   {cards}
                 </div>
@@ -767,7 +755,7 @@ const Page3 = () => {
                   {selectedRole !== null && (
                     <button
                       type="button"
-                      className={styles.nextArrow}
+                      className={cx(styles.nextArrow, isV2 && "page3-v2__next")}
                       onClick={handleNext}
                       aria-label="Далее"
                     >
@@ -788,18 +776,31 @@ const Page3 = () => {
                 className={styles.backToPage2Wrap}
                 style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}
               >
-                <button type="button" className={styles.backToPage2} onClick={handleBackToRoles}>
+                <button
+                  type="button"
+                  className={cx(styles.backToPage2, isV2 && "page3-v2__back")}
+                  onClick={handleBackToRoles}
+                >
                   ← К выбору роли
                 </button>
                 {shouldShowReturnToAdminDashboard() ? (
-                  <button type="button" className={styles.backToPage2} onClick={goToAdminCabinet}>
+                  <button
+                    type="button"
+                    className={cx(styles.backToPage2, isV2 && "page3-v2__back")}
+                    onClick={goToAdminCabinet}
+                  >
                     ← Кабинет администратора
                   </button>
                 ) : null}
               </div>
               <div className={styles.loginCardWrap}>
+                <div className={cx(isV2 && "page3-v2__login-shell")}>
                 <div
-                  className={`${styles.loginCard} ${authMode === "register" ? styles.loginCardTallForm : ""}`}
+                  className={cx(
+                    styles.loginCard,
+                    authMode === "register" && styles.loginCardTallForm,
+                    isV2 && "page3-v2__login-card"
+                  )}
                 >
                 <div className={styles.loginCardHeader}>
                   <span className={styles.loginBadge}>
@@ -811,15 +812,16 @@ const Page3 = () => {
                     {authMode === "forgot" && forgotStep === "email" && "Восстановление пароля"}
                     {authMode === "forgot" && forgotStep === "password" && "Новый пароль"}
                   </h2>
-                  <p className={styles.loginSubtitle}>
-                    {authMode === "login" && "Введите e-mail и пароль учётной записи"}
-                    {authMode === "register" &&
-                      "Эти данные сохранятся в личном кабинете в разделе «Настройки профиля»"}
-                    {authMode === "forgot" && forgotStep === "email" && "Укажите e-mail, с которым вы регистрировались"}
-                    {authMode === "forgot" &&
-                      forgotStep === "password" &&
-                      "Задайте новый пароль для входа в портал"}
-                  </p>
+                  {authMode !== "login" ? (
+                    <p className={styles.loginSubtitle}>
+                      {authMode === "register" &&
+                        "Эти данные сохранятся в личном кабинете в разделе «Настройки профиля»"}
+                      {authMode === "forgot" && forgotStep === "email" && "Укажите e-mail, с которым вы регистрировались"}
+                      {authMode === "forgot" &&
+                        forgotStep === "password" &&
+                        "Задайте новый пароль для входа в портал"}
+                    </p>
+                  ) : null}
                 </div>
                 <div
                   className={`${styles.loginCardBody} ${authMode === "register" ? styles.loginCardBodyScroll : ""}`}
@@ -844,7 +846,12 @@ const Page3 = () => {
                           type="button"
                           role="radio"
                           aria-checked={institutionProfile === "ado"}
-                          className={`${styles.loginProfileBtn} ${institutionProfile === "ado" ? styles.loginProfileBtnActive : ""}`}
+                          className={cx(
+                            styles.loginProfileBtn,
+                            isV2 && "page3-v2__profile-btn",
+                            institutionProfile === "ado" && styles.loginProfileBtnActive,
+                            isV2 && institutionProfile === "ado" && "page3-v2__profile-btn--active"
+                          )}
                           onClick={() => setInstitutionProfile("ado")}
                         >
                           АДО
@@ -853,7 +860,12 @@ const Page3 = () => {
                           type="button"
                           role="radio"
                           aria-checked={institutionProfile === "rador"}
-                          className={`${styles.loginProfileBtn} ${institutionProfile === "rador" ? styles.loginProfileBtnActive : ""}`}
+                          className={cx(
+                            styles.loginProfileBtn,
+                            isV2 && "page3-v2__profile-btn",
+                            institutionProfile === "rador" && styles.loginProfileBtnActive,
+                            isV2 && institutionProfile === "rador" && "page3-v2__profile-btn--active"
+                          )}
                           onClick={() => setInstitutionProfile("rador")}
                         >
                           РАДОР
@@ -937,9 +949,29 @@ const Page3 = () => {
                         </button>
                       </div>
 
-                      <button type="submit" className={styles.loginSubmit}>
+                      <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
                         Войти
                       </button>
+                      <div className={styles.loginAuthSecondaryRow}>
+                        <button
+                          type="button"
+                          className={cx(styles.loginBetaPreview, isV2 && "page3-v2__beta-btn")}
+                          onClick={goCabinetBetaPreview}
+                        >
+                          Бета-просмотр
+                        </button>
+                        <button
+                          type="button"
+                          className={cx(styles.loginRegisterBtn, isV2 && "page3-v2__register-btn")}
+                          onClick={() => {
+                            setAuthMode("register");
+                            setFormError(null);
+                            setRegPasswordError(null);
+                          }}
+                        >
+                          Регистрация
+                        </button>
+                      </div>
                       <button
                         type="button"
                         className={styles.loginForgot}
@@ -952,25 +984,59 @@ const Page3 = () => {
                       >
                         Забыли пароль?
                       </button>
-                      <div className={styles.loginLinkRow}>
-                        Нет аккаунта?{" "}
-                        <button
-                          type="button"
-                          className={styles.loginLinkBtn}
-                          onClick={() => {
-                            setAuthMode("register");
-                            setFormError(null);
-                            setRegPasswordError(null);
-                          }}
-                        >
-                          Зарегистрируйтесь
-                        </button>
-                      </div>
                     </form>
                   ) : null}
 
                   {authMode === "register" ? (
                     <form onSubmit={(e) => void handleRegisterSubmit(e)} noValidate>
+                      {needsSpecialization ? (
+                        <div
+                          className={styles.loginProfileRow}
+                          style={{ marginBottom: 14 }}
+                          role="tablist"
+                          aria-label="Шаги регистрации"
+                        >
+                          <button
+                            type="button"
+                            role="tab"
+                            aria-selected={regRegisterTab === "profile"}
+                            className={cx(
+                              styles.loginProfileBtn,
+                              isV2 && "page3-v2__profile-btn",
+                              regRegisterTab === "profile" && styles.loginProfileBtnActive,
+                              isV2 && regRegisterTab === "profile" && "page3-v2__profile-btn--active"
+                            )}
+                            onClick={() => setRegRegisterTab("profile")}
+                          >
+                            Данные
+                          </button>
+                          <button
+                            type="button"
+                            role="tab"
+                            aria-selected={regRegisterTab === "spec"}
+                            className={cx(
+                              styles.loginProfileBtn,
+                              isV2 && "page3-v2__profile-btn",
+                              regRegisterTab === "spec" && styles.loginProfileBtnActive,
+                              isV2 && regRegisterTab === "spec" && "page3-v2__profile-btn--active"
+                            )}
+                            onClick={() => setRegRegisterTab("spec")}
+                          >
+                            Спецификация
+                          </button>
+                        </div>
+                      ) : null}
+
+                      {regRegisterTab === "spec" && needsSpecialization ? (
+                        <SpecializationPicker
+                          value={specializationId}
+                          onChange={setSpecializationId}
+                          required
+                        />
+                      ) : null}
+
+                      {regRegisterTab === "profile" || !needsSpecialization ? (
+                        <>
                       <label className={styles.loginLabel} htmlFor="page3-reg-first">
                         Имя
                       </label>
@@ -1115,9 +1181,42 @@ const Page3 = () => {
                           {regPasswordError}
                         </p>
                       ) : null}
-                      <button type="submit" className={styles.loginSubmit}>
-                        Зарегистрироваться и войти
-                      </button>
+
+                      {needsSpecialization ? (
+                        <button
+                          type="button"
+                          className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}
+                          onClick={() => {
+                            setFormError(null);
+                            setRegRegisterTab("spec");
+                          }}
+                        >
+                          Далее: спецификация →
+                        </button>
+                      ) : (
+                        <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
+                          Зарегистрироваться и войти
+                        </button>
+                      )}
+                        </>
+                      ) : null}
+
+                      {regRegisterTab === "spec" && needsSpecialization ? (
+                        <>
+                          <button
+                            type="button"
+                            className={styles.loginLinkBtn}
+                            style={{ marginBottom: 12 }}
+                            onClick={() => setRegRegisterTab("profile")}
+                          >
+                            ← Назад к данным
+                          </button>
+                          <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
+                            Зарегистрироваться и войти
+                          </button>
+                        </>
+                      ) : null}
+
                       <div className={styles.loginLinkRow}>
                         Уже есть аккаунт?{" "}
                         <button
@@ -1152,7 +1251,7 @@ const Page3 = () => {
                         onChange={(e) => setForgotEmail(e.target.value)}
                         autoComplete="email"
                       />
-                      <button type="submit" className={styles.loginSubmit}>
+                      <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
                         Продолжить
                       </button>
                       <button
@@ -1224,7 +1323,7 @@ const Page3 = () => {
                         onChange={(e) => setForgotPassword2(e.target.value)}
                         autoComplete="new-password"
                       />
-                      <button type="submit" className={styles.loginSubmit}>
+                      <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
                         Сохранить новый пароль
                       </button>
                       <button
@@ -1241,6 +1340,7 @@ const Page3 = () => {
                   ) : null}
                 </div>
                 </div>
+              </div>
               </div>
             </>
           )}

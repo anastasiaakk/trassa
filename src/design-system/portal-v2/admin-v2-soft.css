@@ -1,0 +1,566 @@
+/**
+ * Soft UI admin — две плашки (меню + контент) на градиентной сцене, как Flowly.
+ */
+
+html[data-portal-design="v2"] .admin-v2-soft {
+  /* Frosted glass — светлое стекло */
+  --admin-soft-panel-fill: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.38) 42%,
+    rgba(248, 250, 255, 0.48) 100%
+  );
+  --admin-soft-panel-border: rgba(255, 255, 255, 0.62);
+  --admin-soft-panel-edge: rgba(var(--pv2-r-ink), 0.05);
+  --admin-soft-panel-shadow:
+    0 24px 64px rgba(15, 23, 42, 0.09),
+    0 10px 28px rgba(99, 102, 241, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18);
+  --admin-soft-panel-blur: blur(26px) saturate(185%);
+  --admin-soft-panel-radius: clamp(22px, 2.4vw, 30px);
+  /* Как у .page2-v2__map-panel — зазор между рамкой и белым блоком */
+  --admin-soft-panel-inset: clamp(12px, 1.5vw, 18px);
+  --admin-soft-layout-gap: clamp(14px, 1.8vw, 22px);
+  --admin-soft-layout-pad: clamp(14px, 2vw, 22px);
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-root--admin .main {
+  padding: var(--admin-soft-layout-pad);
+  box-sizing: border-box;
+}
+
+/* Левое и правое поле у плашек одинаковые (см. также scrollbar-gutter ниже) */
+html[data-portal-design="v2"] body.route-page2 .page2-main--admin {
+  padding-left: max(var(--admin-soft-layout-pad), env(safe-area-inset-left, 0)) !important;
+  padding-right: max(var(--admin-soft-layout-pad), env(safe-area-inset-right, 0)) !important;
+}
+
+/* stable на html даёт лишний зазор справа — при админке симметричный gutter */
+html[data-portal-design="v2"] html.route-page2:has(.page2-root--admin),
+html[data-portal-design="v2"] body.route-page2:has(.page2-root--admin) {
+  scrollbar-gutter: stable both-edges;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-main-inner--admin {
+  width: 100%;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  background: transparent !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed.themeGlass {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed .cabinetBg {
+  display: none !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed::before {
+  display: none !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed .glassShell,
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed [class*="glassShell"] {
+  padding: 0 !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed .glassLayout,
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed [class*="glassLayout"] {
+  padding-bottom: 0 !important;
+  overflow: visible !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard-embed .admin-glass-layout {
+  justify-items: stretch !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-shell {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Сетка: меню по содержимому, контент тянется по высоте; верх плашек на одной линии */
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout {
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--admin-soft-layout-gap);
+  align-items: stretch !important;
+  justify-items: start;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  width: 100%;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  overflow: visible;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout > .admin-glass-sidebar,
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout > .admin-glass-panel {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout > .admin-glass-sidebar {
+  align-self: start !important;
+  min-height: 0 !important;
+  height: fit-content !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout > .admin-glass-panel {
+  align-self: stretch !important;
+  justify-self: stretch !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0;
+  min-height: 0 !important;
+  max-height: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout > .admin-glass-sidebar,
+  html[data-portal-design="v2"] .admin-v2-soft .admin-glass-layout > .admin-glass-panel {
+    min-height: auto;
+  }
+}
+
+/* Общий стеклянный слой для обеих плашек (глобальные классы — не хэш CSS Modules) */
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-sidebar,
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-panel {
+  position: relative;
+  isolation: auto !important;
+  border-radius: var(--admin-soft-panel-radius) !important;
+  background: var(--admin-soft-panel-fill) !important;
+  backdrop-filter: var(--admin-soft-panel-blur) !important;
+  -webkit-backdrop-filter: var(--admin-soft-panel-blur) !important;
+  border: 1px solid var(--admin-soft-panel-border) !important;
+  box-shadow: var(--admin-soft-panel-shadow) !important;
+  overflow: hidden;
+}
+
+/* Сброс тёмного/карточного glass из AdminPanelGlass.module.css */
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-panel[class*="glassPanel"] {
+  background: var(--admin-soft-panel-fill) !important;
+  backdrop-filter: var(--admin-soft-panel-blur) !important;
+  -webkit-backdrop-filter: var(--admin-soft-panel-blur) !important;
+  box-shadow: var(--admin-soft-panel-shadow) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft.themeGlassMap .admin-glass-panel,
+html[data-portal-design="v2"] .admin-v2-soft.themeGlassMap .admin-glass-panel[class*="glassPanel"] {
+  border: 1px solid var(--admin-soft-panel-border) !important;
+  border-radius: var(--admin-soft-panel-radius) !important;
+  box-shadow: var(--admin-soft-panel-shadow) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-sidebar::before,
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.06) 36%,
+    transparent 58%
+  );
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-sidebar > *,
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-panel[class*="glassPanel"]::before {
+  display: block !important;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.06) 36%,
+    transparent 58%
+  ) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Плашка меню — высота по пунктам, ширина как раньше (не сжимать без шапки) */
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  position: sticky;
+  top: 0;
+  width: min(220px, 42vw);
+  min-width: min(220px, 42vw);
+  max-width: min(220px, 42vw);
+  height: fit-content;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: clamp(18px, 2.2vw, 26px) clamp(12px, 1.4vw, 16px) clamp(14px, 1.6vw, 18px) !important;
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px 10px;
+  margin-bottom: 2px;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-sidebar-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-white);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  box-shadow: 0 6px 16px rgba(var(--pv2-r-primary), 0.22);
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-sidebar-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pv2-deep);
+  line-height: 1.2;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-sidebar-sub {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: rgba(var(--pv2-r-ink), 0.55);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 160px;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-nav {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: visible;
+  padding-right: 0;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-nav-group + .admin-v2-soft-nav-group {
+  margin-top: 8px;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-nav-label {
+  margin: 0;
+  padding: 0 4px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: #94a3b8;
+  text-align: left;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn {
+  position: relative;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  width: 100%;
+  height: 38px;
+  min-height: 38px;
+  max-height: 38px;
+  box-sizing: border-box;
+  padding: 0 10px !important;
+  border-radius: 14px !important;
+  text-align: left;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  color: #1e293b !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn:hover,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn:hover {
+  background: rgba(var(--pv2-r-white), 0.72) !important;
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn:hover .admin-v2-soft-nav-text,
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn:hover .admin-v2-soft-nav-icon,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn:hover .admin-v2-soft-nav-text,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn:hover .admin-v2-soft-nav-icon {
+  color: var(--pv2-primary) !important;
+}
+
+/* Перебиваем admin-glass-palette на активном пункте */
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard--portal-v2 .admin-v2-soft-nav-btn.glassNavBtnActive,
+html[data-portal-design="v2"] .admin-v2-soft.admin-dashboard--portal-v2 .glassNavBtn.glassNavBtnActive {
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn.glassNavBtnActive,
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn.admin-v2-nav-active,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn.glassNavBtnActive,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn.admin-v2-nav-active {
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+  color: var(--pv2-primary) !important;
+  border-color: transparent !important;
+  box-shadow: inset 3px 0 0 var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-nav-active::before {
+  display: none;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-nav-active .admin-v2-soft-nav-icon {
+  color: var(--pv2-primary);
+  opacity: 1;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-nav-icon-wrap {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-nav-icon {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  display: block;
+  flex-shrink: 0;
+  opacity: 0.92;
+  color: #1e293b;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-nav-icon svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  overflow: visible;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-nav-active .admin-v2-soft-nav-icon {
+  opacity: 1;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-nav-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  line-height: 1.25;
+  color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn.glassNavBtnActive .admin-v2-soft-nav-text,
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn.admin-v2-nav-active .admin-v2-soft-nav-text,
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn.glassNavBtnActive .admin-v2-soft-nav-icon,
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2-soft-nav-btn.admin-v2-nav-active .admin-v2-soft-nav-icon,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn.glassNavBtnActive .admin-v2-soft-nav-text,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn.admin-v2-nav-active .admin-v2-soft-nav-text,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn.glassNavBtnActive .admin-v2-soft-nav-icon,
+html[data-portal-design="v2"] .admin-v2-soft .glassNavBtn.admin-v2-nav-active .admin-v2-soft-nav-icon {
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-sidebar-foot {
+  margin-top: 10px;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-foot-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-white);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(var(--pv2-r-primary), 0.24);
+  transition: filter var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-foot-btn:hover {
+  filter: brightness(1.04);
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-foot-actions {
+  display: flex;
+  gap: 8px;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-foot-icon {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--pv2-r-ink), 0.1);
+  background: rgba(var(--pv2-r-white), 0.88);
+  color: rgba(var(--pv2-r-ink), 0.72);
+  cursor: pointer;
+  transition:
+    background var(--pv2-dur-fast),
+    border-color var(--pv2-dur-fast),
+    color var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-foot-icon:hover {
+  background: var(--pv2-white);
+  border-color: rgba(var(--pv2-r-primary), 0.28);
+  color: var(--pv2-primary);
+}
+
+/* Плашка контента — отступы как у .page2-v2__map-panel (равномерный inset) */
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-panel,
+html[data-portal-design="v2"] .admin-v2-soft .admin-glass-panel[class*="glassPanel"] {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  flex: 1 1 auto;
+  min-height: 0 !important;
+  max-height: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: var(--admin-soft-panel-inset) !important;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] body.route-page2 .admin-v2-soft .admin-glass-panel {
+  border-radius: var(--pv2-radius-2xl) !important;
+}
+
+@media (max-width: 960px) {
+  html[data-portal-design="v2"] .admin-v2-soft {
+    --admin-soft-panel-inset: var(--pv2-space-4);
+  }
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .glassPanelScroll,
+html[data-portal-design="v2"] .admin-v2-soft [class*="glassPanelScroll"] {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: auto;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-soft-content-card {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
+  margin-bottom: 0;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft-section-title {
+  margin: 0 0 18px;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--pv2-deep);
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-v2__kpi-wrap {
+  margin-bottom: 18px;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .glassChartCard,
+html[data-portal-design="v2"] .admin-v2-soft .glassIncidentsBlock,
+html[data-portal-design="v2"] .admin-v2-soft .collapseTrigger {
+  border-radius: var(--pv2-radius-lg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  box-shadow:
+    0 6px 20px rgba(var(--pv2-r-ink), 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .cabinet-v2-kpi {
+  border-radius: var(--pv2-radius-md);
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    0 4px 16px rgba(var(--pv2-r-ink), 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}

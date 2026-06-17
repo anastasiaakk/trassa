@@ -1,0 +1,35 @@
+/**
+ * Экран технических работ при portal v2.
+ */
+html[data-portal-design="v2"] .maintenance-v2 {
+  background: var(--pv2-gradient-deep) !important;
+  color: var(--pv2-frost) !important;
+}
+
+html[data-portal-design="v2"] .maintenance-v2__card {
+  padding: 32px 28px;
+  border-radius: var(--pv2-radius-lg);
+  border: 1px solid var(--pv2-border-strong);
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong);
+  backdrop-filter: blur(var(--pv2-blur-md));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md));
+  box-shadow: var(--pv2-shadow-md);
+  max-width: 520px;
+}
+
+html[data-portal-design="v2"] .maintenance-v2__title {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: var(--pv2-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-portal-design="v2"] .maintenance-v2__hint {
+  margin-top: 24px;
+  font-size: 0.88rem;
+  opacity: 0.78;
+  line-height: 1.45;
+}

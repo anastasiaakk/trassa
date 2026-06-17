@@ -1,0 +1,185 @@
+/**
+ * v2 foundation — паттерны SaaS dashboard (rail, topbar, KPI, tables).
+ */
+
+html[data-portal-design="v2"] .pv2-mesh-scene {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--pv2-gradient-mesh-a), var(--pv2-gradient-mesh-b), var(--pv2-gradient-mesh-c),
+    var(--pv2-gradient-deep);
+}
+
+html[data-portal-design="v2"] .pv2-mesh-scene::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.32;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* KPI / stat card (MediAid, E-Commerce Analytics refs) */
+html[data-portal-design="v2"] .pv2-kpi {
+  position: relative;
+  padding: var(--pv2-space-5);
+  border-radius: var(--pv2-radius-lg);
+  border: 1px solid var(--pv2-border);
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass);
+  backdrop-filter: blur(var(--pv2-blur-md)) saturate(var(--pv2-glass-saturate));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) saturate(var(--pv2-glass-saturate));
+  box-shadow: var(--pv2-shadow-sm), var(--pv2-shadow-inset-glass);
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .pv2-kpi::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pv2-gradient-brand-h);
+  opacity: 0.85;
+}
+
+html[data-portal-design="v2"] .pv2-kpi__value {
+  display: block;
+  font-size: var(--pv2-font-kpi);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--pv2-leading-tight);
+  background: var(--pv2-gradient-brand-v);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-portal-design="v2"] .pv2-kpi__label {
+  display: block;
+  margin-top: var(--pv2-space-2);
+  font-size: var(--pv2-font-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pv2-text-muted);
+}
+
+html[data-portal-design="v2"] .pv2-kpi__tag {
+  display: inline-flex;
+  margin-bottom: var(--pv2-space-2);
+  padding: 4px 10px;
+  border-radius: var(--pv2-radius-pill);
+  font-size: var(--pv2-font-xs);
+  font-weight: 600;
+  color: var(--pv2-primary);
+  background: rgba(var(--pv2-r-primary), 0.14);
+  border: 1px solid var(--pv2-border);
+}
+
+/* Topbar */
+html[data-portal-design="v2"] .pv2-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pv2-space-4);
+  min-height: var(--pv2-topbar-height);
+  padding: 0 var(--pv2-space-5);
+  border-radius: var(--pv2-radius-lg);
+  border: 1px solid var(--pv2-border-strong);
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong);
+  backdrop-filter: blur(var(--pv2-blur-md)) saturate(var(--pv2-glass-saturate));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) saturate(var(--pv2-glass-saturate));
+  box-shadow: var(--pv2-shadow-sm), var(--pv2-shadow-inset-glass);
+}
+
+html[data-portal-design="v2"] .pv2-topbar__title {
+  margin: 0;
+  font-size: var(--pv2-font-lg);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+html[data-portal-design="v2"] .pv2-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--pv2-space-2);
+  flex-wrap: wrap;
+}
+
+/* Data table shell (HRMS / Fintech refs) */
+html[data-portal-design="v2"] .pv2-table-shell {
+  border-radius: var(--pv2-radius-lg);
+  border: 1px solid var(--pv2-border-strong);
+  background: var(--pv2-bg-glass);
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  overflow: hidden;
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+html[data-portal-design="v2"] .pv2-table-shell thead th {
+  padding: var(--pv2-space-3) var(--pv2-space-4);
+  font-size: var(--pv2-font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--pv2-text-muted);
+  background: rgba(var(--pv2-r-primary), 0.08);
+  border-bottom: 1px solid var(--pv2-border);
+}
+
+html[data-portal-design="v2"] .pv2-table-shell tbody td {
+  padding: var(--pv2-space-3) var(--pv2-space-4);
+  font-size: var(--pv2-font-sm);
+  border-bottom: 1px solid var(--pv2-border);
+}
+
+html[data-portal-design="v2"] .pv2-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--pv2-radius-pill);
+  font-size: var(--pv2-font-xs);
+  font-weight: 600;
+  border: 1px solid var(--pv2-border);
+}
+
+html[data-portal-design="v2"] .pv2-badge--brand {
+  color: var(--pv2-on-brand);
+  background: var(--pv2-gradient-brand);
+  border-color: transparent;
+}
+
+
+html[data-portal-design="v2"] .pv2-section-title {
+  margin: 0 0 var(--pv2-space-4);
+  font-size: var(--pv2-font-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pv2-text-muted);
+}
+
+/* Текст на синем градиенте (кнопки, активная навигация) */
+html[data-portal-design="v2"] .cabinet-chrome__nav-active,
+html[data-portal-design="v2"] .page3-v2__next,
+html[data-portal-design="v2"] .page3-v2__profile-btn--active,
+html[data-portal-design="v2"] .page3-v2__login-card button[type="submit"],
+html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__primary-btn,
+html[data-portal-design="v2"] .page2-v2__btn-primary,
+html[data-portal-design="v2"] .admin-v2-nav-active {
+  color: var(--pv2-on-brand) !important;
+}
+
+@media (hover: hover) {
+  html[data-portal-design="v2"] .pv2-kpi:hover {
+    transform: translateY(-2px);
+    border-color: var(--pv2-border-accent);
+    box-shadow: var(--pv2-shadow-md), 0 12px 40px rgba(var(--pv2-r-primary), 0.14), var(--pv2-shadow-inset-glass);
+    transition:
+      transform var(--pv2-dur-fast) var(--pv2-ease-out),
+      box-shadow var(--pv2-dur-fast),
+      border-color var(--pv2-dur-fast);
+  }
+}

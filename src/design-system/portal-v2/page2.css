@@ -1,0 +1,100 @@
+/**
+ * Page2 — карта /services (glass v2 поверх существующей палитры).
+ */
+html[data-portal-design="v2"] body.route-page2 [class*="pageRoot"] {
+  --p2-teal: var(--pv2-primary);
+  --p2-cyan: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] html.route-page2,
+html[data-portal-design="v2"] body.route-page2 {
+  background-color: var(--pv2-white) !important;
+  background-image: var(--pv2-gradient-page-light) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__overview {
+  border: 1px solid rgba(var(--pv2-r-primary), 0.4) !important;
+  box-shadow: 0 16px 36px rgba(var(--pv2-r-primary), 0.32) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__map-panel {
+  border-radius: var(--pv2-radius-2xl) !important;
+  border: 1px solid rgba(var(--pv2-r-primary), 0.32) !important;
+  background: linear-gradient(
+    165deg,
+    rgba(var(--pv2-r-primary), 0.16) 0%,
+    rgba(var(--pv2-r-primary), 0.12) 55%,
+    rgba(var(--pv2-r-primary), 0.09) 100%
+  ) !important;
+  box-shadow:
+    0 12px 40px rgba(var(--pv2-r-primary), 0.12),
+    inset 0 1px 0 rgba(var(--pv2-r-white), 0.55) !important;
+  backdrop-filter: blur(var(--pv2-blur-lg)) saturate(var(--pv2-glass-saturate));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-lg)) saturate(var(--pv2-glass-saturate));
+}
+
+html[data-portal-design="v2"] .page2-v2-map-hint {
+  border: 1px solid rgba(var(--pv2-r-primary), 0.14) !important;
+  background: var(--pv2-fill-subtle) !important;
+  color: var(--pv2-muted) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__subject-panel {
+  border: 1px solid rgba(var(--pv2-r-white), 0.35) !important;
+  background: linear-gradient(180deg, rgba(var(--pv2-r-white), 0.94), rgba(var(--pv2-r-white), 0.88)) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+  box-shadow: var(--pv2-shadow-sm) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__about-sheet {
+  border: 1px solid var(--pv2-border-strong) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__about-tab--active {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border-color: transparent !important;
+}
+
+html[data-portal-design="v2"] .page2-v2__btn-primary {
+  box-shadow: 0 8px 24px rgba(var(--pv2-r-primary), 0.28) !important;
+}
+
+/* Админка на /services — левая колонка (Главная, Карта…) по левому краю */
+/* Админка на /services — на всю ширину контента, без сдвига за край экрана */
+html[data-portal-design="v2"] body.route-page2 .page2-main-inner--admin {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Soft-админка: градиент сцены + две плавающие плашки */
+html[data-portal-design="v2"] body.route-page2 .page2-root--admin.page2-v2-scene {
+  --admin-soft-layout-pad: clamp(14px, 2vw, 22px);
+  --admin-soft-panel-inset: clamp(12px, 1.5vw, 18px);
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  background:
+    radial-gradient(ellipse 80% 60% at 12% 8%, rgba(var(--pv2-r-primary), 0.14), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 88% 92%, rgba(147, 130, 220, 0.12), transparent 50%),
+    linear-gradient(160deg, #e9eef8 0%, #f2f0fa 42%, #eef3fc 100%) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-main--admin {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-main-inner--admin {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-bottom: 0 !important;
+}

@@ -1,0 +1,67 @@
+/**
+ * #F6F6F6 (--pv2-surface) — только точечно: треки, вторичные кнопки, полоски.
+ * Большие фоны — #FFFFFF.
+ */
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] body,
+html[data-portal-design="v2"] body.route-page2,
+html[data-portal-design="v2"] body.route-profile,
+html[data-portal-design="v2"] body.route-cabinet:not([data-cabinet-theme="dark"]),
+html[data-portal-design="v2"] .cabinet-chrome--v2:not([data-cabinet-theme="dark"]),
+html[data-portal-design="v2"] .page2-v2,
+html[data-portal-design="v2"] .routes-v2-bg,
+html[data-portal-design="v2"] .profile-v2,
+html[data-portal-design="v2"] .profile-v2-shell,
+html[data-portal-design="v2"] .cabinet-v2-light-scene,
+html[data-portal-design="v2"] .map-v2,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene {
+  background-color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] body.route-cabinet[data-cabinet-theme="light"],
+html[data-portal-design="v2"] .cabinet-chrome--v2[data-cabinet-theme="light"] {
+  background-image: var(--pv2-gradient-page-light) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-ambient__linesBase {
+  background-color: var(--pv2-white) !important;
+  background-image: linear-gradient(180deg, var(--pv2-white) 0%, var(--pv2-white) 100%) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-ambient__veil--lines {
+  background: linear-gradient(
+    180deg,
+    rgba(var(--pv2-r-white), 0.22) 0%,
+    rgba(var(--pv2-r-white), 0.1) 100%
+  ) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] body.route-page2,
+html[data-portal-design="v2"] body.route-page2 [class*="pageRoot"] {
+  background: transparent !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="mapPanel"]:not(.page2-v2__map-panel),
+html[data-portal-design="v2"] body.route-page2 [class*="subjectAside"]:not([class*="page2-v2"]) {
+  background: linear-gradient(165deg, var(--pv2-white), var(--pv2-white) 55%, var(--pv2-white)) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell {
+  --p5l-surface: var(--pv2-white);
+  --p5l-section: var(--pv2-white);
+  --p5l-button-bg: var(--pv2-fill-subtle);
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__section-card {
+  background:
+    radial-gradient(118% 94% at 14% 98%, rgba(var(--pv2-r-primary), 0.12) 0%, transparent 68%),
+    linear-gradient(155deg, var(--pv2-white) 0%, var(--pv2-white) 100%) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__progress-track {
+  background: var(--pv2-fill-subtle) !important;
+}
+
+html[data-portal-design="v2"] .page5-legacy__shell[data-cabinet-theme="light"] .page5-legacy__scroll-track {
+  background: var(--pv2-fill-subtle) !important;
+}

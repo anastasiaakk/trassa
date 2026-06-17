@@ -1,5 +1,5 @@
 import { PORTAL_KV } from "../config/portalKeys";
-import { pushPortalKv } from "./portalSync";
+import { pushPortalKvWithAck } from "./portalSync";
 
 const STORAGE_KEY = "trassa-map-category-labels-v1";
 
@@ -30,11 +30,13 @@ export function loadMapCategoryLabels(): MapCategoryLabels {
   }
 }
 
-export function saveMapCategoryLabels(labels: MapCategoryLabels): void {
+export async function saveMapCategoryLabels(
+  labels: MapCategoryLabels
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const payload: MapCategoryLabels = {
     education: normalizeLabel(labels.education) || DEFAULT_LABELS.education,
     contractors: normalizeLabel(labels.contractors) || DEFAULT_LABELS.contractors,
   };
-  pushPortalKv(PORTAL_KV.MAP_CATEGORY_LABELS, payload);
+  return pushPortalKvWithAck(PORTAL_KV.MAP_CATEGORY_LABELS, payload);
 }
 

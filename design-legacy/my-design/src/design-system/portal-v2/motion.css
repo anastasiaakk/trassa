@@ -1,0 +1,21 @@
+/**
+ * Уважение prefers-reduced-motion для v2-анимаций.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__logo,
+  html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__stack,
+  html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__progress-fill,
+  html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__progress-glow,
+  html[data-portal-design="v2"] .page3-v2__role-card,
+  html[data-portal-design="v2"] .cabinet-chrome__msgr-btn,
+  html[data-portal-design="v2"] .pv2-btn,
+  html[data-portal-design="v2"] .page1-v2__hero,
+  html[data-portal-design="v2"] .page1-v2__stat {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html[data-portal-design="v2"] .pv2-btn:hover {
+    transform: none !important;
+  }
+}

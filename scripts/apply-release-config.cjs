@@ -106,7 +106,7 @@ function main() {
       "\n[apply-release-config] Для установщика с общей базой укажите apiUrl в release-config.json\n" +
         '  пример: "apiUrl": "https://api.ваш-домен.ru"\n' +
         "  или переменную окружения TRASSA_API_URL при сборке.\n" +
-        "  См. ORG-SERVER.md\n"
+        "  См. docs/deploy/ORG-SERVER.md\n"
     );
     process.exit(1);
   }

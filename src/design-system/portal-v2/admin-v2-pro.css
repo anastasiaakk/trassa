@@ -1,0 +1,238 @@
+/**
+ * Этап 5 — админ-панель и формы (glass v2 pro).
+ */
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 {
+  --ag-teal: var(--pv2-primary);
+  --ag-teal-dim: rgba(var(--pv2-r-primary), 0.55);
+  --ag-cyan: var(--pv2-primary);
+  --ag-cyan-soft: rgba(var(--pv2-r-primary), 0.35);
+  --ag-muted: rgba(var(--pv2-r-white), 0.82);
+  --ag-muted-dim: rgba(var(--pv2-r-muted), 0.55);
+  --ag-border: rgba(var(--pv2-r-white), 0.22);
+  --ag-glow: 0 0 28px rgba(var(--pv2-r-primary), 0.18);
+}
+
+/* Сцена задаётся в admin-v2-light.css (light / dark) */
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .cabinetBg {
+  opacity: 0.25;
+}
+
+html[data-portal-design="v2"] .admin-dashboard-embed .admin-glass-shell {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard-embed .admin-glass-layout {
+  width: 100%;
+  justify-items: stretch;
+}
+
+html[data-portal-design="v2"] .admin-dashboard-embed .admin-glass-sidebar {
+  justify-self: start;
+  margin-left: 0 !important;
+  width: 100%;
+}
+
+html[data-portal-design="v2"] .admin-v2__kpi-wrap {
+  margin-bottom: 18px;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassSidebar {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass) !important;
+  backdrop-filter: blur(var(--pv2-blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) saturate(140%);
+  box-shadow: var(--pv2-shadow-sm);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassNavBtn {
+  border: 1px solid transparent;
+  border-radius: var(--pv2-radius-md);
+  transition:
+    background var(--pv2-dur-fast),
+    color var(--pv2-dur-fast),
+    box-shadow var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassNavBtn:hover {
+  background: var(--pv2-bg-glass-hover);
+  border-color: var(--pv2-border);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .admin-v2-panel {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass) !important;
+  backdrop-filter: blur(var(--pv2-blur-lg)) saturate(145%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-lg)) saturate(145%);
+  box-shadow: var(--pv2-shadow-md);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassPanelTitle {
+  background: var(--pv2-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassPanelGreeting {
+  color: var(--pv2-primary) !important;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: var(--pv2-font-xs);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassStats {
+  display: none;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .glassStats {
+  display: none;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassStatCard,
+html[data-portal-design="v2"] .admin-tables-v2 .glassStatCard {
+  display: none;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassChartCard,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassIncidentsBlock {
+  border: 1px solid var(--pv2-border) !important;
+  background: rgba(var(--pv2-r-white), 0.68) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .collapseTrigger {
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border);
+  background: rgba(var(--pv2-r-white), 0.04);
+  padding: 12px 14px;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .collapseTrigger:hover {
+  background: var(--pv2-bg-glass-hover);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .btnNeoPrimary,
+html[data-portal-design="v2"] .admin-tables-v2 .btnNeoPrimary {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-white) !important;
+  border: none !important;
+  box-shadow: 0 10px 28px rgba(var(--pv2-r-primary), 0.26) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 {
+  border: 1px solid var(--pv2-border);
+  border-radius: var(--pv2-radius-lg);
+  padding: 16px;
+  background: rgba(var(--pv2-r-white), 0.8);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .admin-tables-v2 {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+html[data-portal-design="v2"] .tablesWorkspace .editor,
+html[data-portal-design="v2"] .admin-tables-v2 .tablesWorkspace .editor,
+html[data-portal-design="v2"] .rador-forms-hub-v2 .tablesWorkspace .editor {
+  background: var(--pv2-glass-l2-bg, rgba(var(--pv2-r-white), 0.92));
+  border: 1px solid var(--pv2-glass-l2-border, var(--pv2-border));
+  border-radius: var(--pv2-radius-lg);
+  box-shadow: var(--pv2-glass-l2-shadow, var(--pv2-shadow-sm));
+}
+
+html[data-portal-design="v2"] .tablesWorkspace .sidebar,
+html[data-portal-design="v2"] .admin-tables-v2 .tablesWorkspace .sidebar,
+html[data-portal-design="v2"] .rador-forms-hub-v2 .tablesWorkspace .sidebar {
+  background: var(--pv2-glass-l2-bg, rgba(var(--pv2-r-white), 0.88));
+  border: 1px solid var(--pv2-glass-l2-border, var(--pv2-border));
+  border-radius: var(--pv2-radius-lg);
+  box-shadow: var(--pv2-glass-l2-shadow, var(--pv2-shadow-sm));
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridScroll {
+  border-radius: var(--pv2-radius-md);
+  box-shadow: inset 0 1px 0 rgba(var(--pv2-r-white), 0.06);
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+@media (min-width: 721px) {
+  html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    font-size: 12px;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable tbody tr:hover td {
+  background: rgba(var(--pv2-r-primary), 0.08);
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .navBtn {
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid var(--pv2-border);
+  transition: background var(--pv2-dur-fast), box-shadow var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .admin-v2-panel--light {
+  background:
+    var(--pv2-gradient-glass-light) !important;
+  color: var(--pv2-deep);
+  box-shadow: var(--pv2-shadow-sm), inset 0 1px 0 rgba(var(--pv2-r-white), 0.85) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-panel--light .glassPanelGreeting {
+  color: var(--pv2-deep) !important;
+  text-transform: none;
+  letter-spacing: var(--tracking-tight, -0.02em);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+}
+
+html[data-portal-design="v2"] .admin-v2-panel--light .glassPanelEmail {
+  color: rgba(var(--pv2-r-ink), 0.58) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-panel--light .glassPanelHead {
+  border-bottom-color: rgba(var(--pv2-r-ink), 0.1);
+}
+
+html[data-portal-design="v2"] .admin-v2-panel--light .glassBtnTheme,
+html[data-portal-design="v2"] .admin-v2-panel--light .glassBtnLogout {
+  background: rgba(var(--pv2-r-white), 0.92) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.12) !important;
+  color: var(--pv2-deep);
+  box-shadow: 0 4px 14px rgba(var(--pv2-r-ink), 0.08);
+}
+
+html[data-portal-design="v2"] .admin-v2-panel--light .glassBtnTheme:hover,
+html[data-portal-design="v2"] .admin-v2-panel--light .glassBtnLogout:hover {
+  background: var(--pv2-white) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-panel--light .glassBtnThemeIcon,
+html[data-portal-design="v2"] .admin-v2-panel--light .glassBtnLogoutIcon {
+  opacity: 0.82;
+  filter: none;
+  color: var(--pv2-deep);
+}
+
+html[data-portal-design="v2"] .admin-v2-specs-kpi {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}

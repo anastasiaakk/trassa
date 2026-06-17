@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import type { CSSProperties } from "react";
+import { cx } from "../design-system/cabinetChromeClasses";
 import type { AssociationId } from "../utils/sharedAssociationDocumentsStorage";
 import {
   addBulletin,
@@ -23,12 +24,14 @@ type Props = {
   styles: ThemeStyles;
   association: AssociationId;
   layoutStyles: { recentPanel: CSSProperties; recentTitle: CSSProperties };
+  isV2?: boolean;
 };
 
 const AssociationStudentTeamsView = memo(function AssociationStudentTeamsView({
   styles,
   association,
   layoutStyles,
+  isV2 = false,
 }: Props) {
   const [items, setItems] = useState(() => listBulletins(association));
   const [title, setTitle] = useState("");
@@ -47,8 +50,13 @@ const AssociationStudentTeamsView = memo(function AssociationStudentTeamsView({
   const short = association === "ado" ? "АДО" : "РАДОР";
 
   return (
-    <div style={{ ...layoutStyles.recentPanel, maxWidth: 900 }}>
-      <div style={layoutStyles.recentTitle}>Студенческие дорожные команды</div>
+    <div
+      className={cx(isV2 && "association-v2__shell")}
+      style={isV2 ? { maxWidth: 900 } : { ...layoutStyles.recentPanel, maxWidth: 900 }}
+    >
+      <div className={cx(isV2 && "association-v2__title")} style={isV2 ? undefined : layoutStyles.recentTitle}>
+        Студенческие дорожные команды
+      </div>
       <p style={{ fontSize: 14, lineHeight: 1.55, color: styles.muted, margin: "0 0 20px" }}>
         Публикуйте материалы и напоминания для команд: они отображаются в кабинете подрядчика в режиме просмотра.
       </p>

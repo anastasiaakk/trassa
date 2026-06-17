@@ -1,0 +1,176 @@
+/**
+ * Legacy CSS-модули (Page1/2/3, splash) под v2 — только 5 цветов макета.
+ * Селекторы [class*="pageRoot"] ловят hashed CSS modules.
+ */
+
+/* —— Page2 (/services) —— */
+html[data-portal-design="v2"] body.route-page2 [class*="pageRoot"] {
+  --p2-navy: var(--pv2-ink);
+  --p2-teal: var(--pv2-primary);
+  --p2-cyan: var(--pv2-primary);
+  --p2-text: var(--pv2-ink);
+  --p2-muted: var(--pv2-muted);
+  --p2-surface: var(--pv2-white);
+  --p2-panel: var(--pv2-white);
+  --p2-shadow: 0 10px 32px rgba(var(--pv2-r-ink), 0.08);
+  --p2-shadow-sm: 0 4px 14px rgba(var(--pv2-r-ink), 0.06);
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="headerInner"] {
+  border-color: rgba(var(--pv2-r-primary), 0.28) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="btnOutline"]:hover {
+  background: rgba(var(--pv2-r-primary), 0.12) !important;
+  border-color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="btnGradient"]:not(.page2-v2__btn-primary) {
+  background: var(--pv2-primary) !important;
+  box-shadow: 0 4px 16px rgba(var(--pv2-r-primary), 0.35) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="btnGradient"] [class*="btnText"] {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview[class*="overviewCard"] {
+  background-color: var(--pv2-primary) !important;
+  background-image: linear-gradient(
+    165deg,
+    rgba(var(--pv2-r-white), 0.24) 0%,
+    rgba(var(--pv2-r-primary), 0.9) 32%,
+    var(--pv2-primary) 100%
+  ) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.38) !important;
+  box-shadow: 0 16px 36px rgba(var(--pv2-r-primary), 0.3) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="overviewTitle"] {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="overviewText"] {
+  color: rgba(var(--pv2-r-white), 0.78) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="mapPanel"]:not(.page2-v2__map-panel),
+html[data-portal-design="v2"] body.route-page2 [class*="subjectAside"]:not([class*="page2-v2"]) {
+  background: linear-gradient(165deg, var(--pv2-white), var(--pv2-white) 55%, var(--pv2-white)) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.32) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="mapHint"]:not(.page2-v2-map-hint) {
+  border-color: rgba(var(--pv2-r-primary), 0.35) !important;
+  color: var(--pv2-muted) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="subjectSearch"],
+html[data-portal-design="v2"] body.route-page2 [class*="subjectControlPill"],
+html[data-portal-design="v2"] body.route-page2 [class*="subjectListItem"] {
+  border-color: rgba(var(--pv2-r-primary), 0.28) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="subjectSearch"]:focus {
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(var(--pv2-r-primary), 0.2) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="subjectListItem"]:hover {
+  background: var(--pv2-fill-subtle) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.4) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="aboutOverlay"] {
+  background: rgba(var(--pv2-r-ink), 0.42) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="aboutSheet"]:not(.page2-v2__about-sheet) {
+  background: linear-gradient(165deg, var(--pv2-white), var(--pv2-white)) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.35) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="aboutTabBtnActive"] {
+  color: var(--pv2-primary) !important;
+  background: rgba(var(--pv2-r-primary), 0.12) !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 [class*="pageRootAdminCute"] {
+  background-color: var(--pv2-white) !important;
+  background-image: linear-gradient(180deg, var(--pv2-white), var(--pv2-white) 42%, var(--pv2-white)) !important;
+}
+
+/* —— Page1 (splash flow) —— */
+/* Page1 hero/stat — public-v2-light.css */
+
+html[data-portal-design="v2"] body.route-page1 [class*="statCard"]:not(.page1-v2__stat),
+html[data-portal-design="v2"] .page1-v2 [class*="statCard"]:not(.page1-v2__stat) {
+  background: rgba(var(--pv2-r-white), 0.1) !important;
+  border-color: rgba(var(--pv2-r-white), 0.16) !important;
+}
+
+html[data-portal-design="v2"] body.route-page1 [class*="statValue"]:not(.page1-v2__stat-value),
+html[data-portal-design="v2"] .page1-v2 [class*="statValue"]:not(.page1-v2__stat-value) {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] body.route-page1 [class*="statLabel"]:not(.page1-v2__stat-muted),
+html[data-portal-design="v2"] .page1-v2 [class*="statLabel"]:not(.page1-v2__stat-muted) {
+  color: rgba(var(--pv2-r-white), 0.75) !important;
+}
+
+html[data-portal-design="v2"] body.route-page1 [class*="progressTrack"]:not(.page1-v2__progress-track) {
+  background: rgba(var(--pv2-r-ink), 0.35) !important;
+}
+
+html[data-portal-design="v2"] body.route-page1 [class*="progressFill"]:not(.page1-v2__progress-fill) {
+  background: var(--pv2-primary) !important;
+}
+
+/* —— Entry splash (App.css legacy) —— */
+html[data-portal-design="v2"] .entry-splash {
+  --entry-splash-cyan: var(--pv2-primary);
+  background: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .entry-splash__progress-fill {
+  background: linear-gradient(90deg, var(--pv2-primary) 0%, var(--pv2-white) 100%) !important;
+}
+
+html[data-portal-design="v2"] .entry-splash__progress-glow {
+  background: radial-gradient(circle, rgba(var(--pv2-r-primary), 0.55), transparent 70%) !important;
+}
+
+/* —— App shell —— */
+html[data-portal-design="v2"] .app-shell__bgFill {
+  background: var(--pv2-gradient-deep) !important;
+}
+
+/* Кабинеты v2 — не тёмный deep на bgFill (иначе «чёрная рамка» по краям) */
+html[data-portal-design="v2"] body.route-cabinet .app-shell__bgFill,
+html[data-portal-design="v2"] body.route-profile .app-shell__bgFill {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] body.route-cabinet .app-shell__bgFill,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] body.route-profile .app-shell__bgFill {
+  background: var(--pv2-scene-dark) !important;
+  background-color: var(--pv2-bg-base) !important;
+}
+
+html[data-portal-design="v2"] .app-shell__main [style*="color: #5c6b8a"],
+html[data-portal-design="v2"] .app-shell__main > div[style*="5c6b8a"] {
+  color: var(--pv2-muted) !important;
+}
+
+/* —— Page3 login legacy cards —— */
+html[data-portal-design="v2"] .page3-v2 [class*="card"]:not([class*="page3-v2"]) {
+  border-color: rgba(var(--pv2-r-primary), 0.22) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2 [class*="cardActive"],
+html[data-portal-design="v2"] .page3-v2 [class*="card"][data-active="true"] {
+  border-color: var(--pv2-primary) !important;
+  box-shadow: 0 0 0 2px rgba(var(--pv2-r-primary), 0.25) !important;
+}

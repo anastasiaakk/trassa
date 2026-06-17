@@ -1,0 +1,55 @@
+/**
+ * EntrySplash — v2 glass (сплэш при входе).
+ */
+html[data-portal-design="v2"] .entry-splash--v2 {
+  background: var(--pv2-deep);
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__shade {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 35%, rgba(0, 212, 165, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 45% at 80% 70%, rgba(103, 232, 249, 0.14) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(6, 26, 46, 0.4) 0%, rgba(10, 37, 64, 0.88) 100%) !important;
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__video {
+  filter: saturate(1.05) contrast(1.05) brightness(0.78) hue-rotate(8deg);
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__caption {
+  color: var(--pv2-frost);
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__progress {
+  background: rgba(103, 232, 249, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(0, 212, 165, 0.2);
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__progress-fill {
+  background: var(--pv2-gradient-brand-h) !important;
+  box-shadow: 0 0 20px rgba(0, 212, 165, 0.45);
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__progress-glow {
+  background: radial-gradient(
+    circle,
+    rgba(103, 232, 249, 0.95) 0%,
+    rgba(0, 212, 165, 0.35) 45%,
+    transparent 70%
+  ) !important;
+}
+
+@keyframes entryLogoPulseV2 {
+  from {
+    transform: scale(1);
+    filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.55));
+  }
+  to {
+    transform: scale(1.03);
+    filter: drop-shadow(0 22px 48px rgba(0, 212, 165, 0.35));
+  }
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__logo {
+  animation-name: entryLogoPulseV2;
+}

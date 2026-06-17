@@ -10,9 +10,9 @@ import paramiko
 import datetime
 
 MANIFEST = {
-    "version": "0.2.11",
+    "version": "0.2.12",
     "setupUrl": "https://github.com/anastasiaakk/trassa/releases/latest/download/trassa-setup.exe",
-    "releaseNotes": "Быстрая синхронизация (3 с), исправления админки и установщика.",
+    "releaseNotes": "Кабинет подрядчика: правильные картинки и круглая иконка профиля.",
     "updatedAt": datetime.datetime.utcnow().isoformat() + "Z",
 }
 

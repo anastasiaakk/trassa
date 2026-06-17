@@ -1,0 +1,31 @@
+name: Smoke portal
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  smoke-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: API smoke (production)
+        run: TRASSA_SMOKE_BASE=https://trassa.duckdns.org node scripts/smoke-portal.mjs
+
+  smoke-web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - name: Web smoke (production)
+        run: TRASSA_SMOKE_WEB_BASE=https://trassa.duckdns.org node scripts/smoke-portal-web.mjs

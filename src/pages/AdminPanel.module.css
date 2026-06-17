@@ -72,6 +72,19 @@
   margin-top: 8px;
 }
 
+.orgsFromMapBlock {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(42, 99, 207, 0.14);
+}
+
+.orgsFromMapTitle {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a2744;
+}
+
 .btnPrimary {
   padding: 12px 20px;
   border: none;
@@ -153,6 +166,15 @@
   font-size: 0.82rem;
 }
 
+.tableSpecList {
+  table-layout: fixed;
+}
+
+.tableSpecList th:first-child,
+.tableSpecList td:first-child {
+  width: 34%;
+}
+
 .table th,
 .table td {
   padding: 10px 12px;
@@ -193,7 +215,367 @@
 }
 
 .btnSmallDanger:hover {
-  background: #ffeded;
+  background: #f0f3f8;
+}
+
+.specSelectBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 2px solid rgba(42, 99, 207, 0.35);
+  border-radius: 50%;
+  background: #fff;
+  color: rgba(42, 99, 207, 0.45);
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.specSelectBtn:hover {
+  border-color: #2a63cf;
+  color: #2a63cf;
+}
+
+.specSelectBtn:focus-visible {
+  outline: 2px solid #2a63cf;
+  outline-offset: 2px;
+}
+
+.specSelectBtnActive {
+  border-color: #00a884;
+  background: rgba(0, 212, 165, 0.14);
+  color: #00a884;
+  box-shadow: 0 0 0 3px rgba(0, 212, 165, 0.18);
+}
+
+.specSelectIcon {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.specIconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 2px solid rgba(42, 99, 207, 0.28);
+  border-radius: 10px;
+  background: #fff;
+  color: #2a63cf;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 0;
+  vertical-align: middle;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.specIconBtn:hover {
+  border-color: #2a63cf;
+  background: rgba(42, 99, 207, 0.06);
+}
+
+.specIconBtn:focus-visible {
+  outline: 2px solid #2a63cf;
+  outline-offset: 2px;
+}
+
+.specIconBtnOff {
+  border-color: rgba(110, 118, 135, 0.35);
+  color: #6e7687;
+  background: #f4f5f7;
+}
+
+.specIconBtnOff:hover {
+  border-color: #00a884;
+  color: #00a884;
+  background: rgba(0, 212, 165, 0.1);
+}
+
+.specIconBtnDanger {
+  border-color: rgba(198, 40, 40, 0.35);
+  color: #b71c1c;
+  background: #fff8f8;
+}
+
+.specIconBtnDanger:hover {
+  border-color: #b71c1c;
+  background: #ffebee;
+}
+
+.specIconSvg {
+  width: 1.05rem;
+  height: 1.05rem;
+  display: block;
+}
+
+.table th.tableColCenter,
+.table td.tableColCenter {
+  text-align: center;
+  vertical-align: middle;
+  width: 6.5rem;
+  min-width: 6.5rem;
+  padding-left: 4px;
+  padding-right: 14px;
+}
+
+.tableSpecList .specActionsCol {
+  width: 10.5rem;
+}
+
+@media (max-width: 720px) {
+  .tableWrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .tableSpecList {
+    table-layout: auto;
+    min-width: 540px;
+  }
+
+  .tableSpecList th:first-child,
+  .tableSpecList td:first-child {
+    width: auto;
+    min-width: 8.5rem;
+    max-width: 11rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .table th.tableColCenter,
+  .table td.tableColCenter {
+    width: 4.25rem;
+    min-width: 4.25rem;
+    max-width: 4.25rem;
+    padding-left: 4px;
+    padding-right: 4px;
+    white-space: nowrap;
+  }
+
+  .tableSpecList .specActionsCol {
+    width: 7.5rem;
+    min-width: 7.5rem;
+  }
+}
+
+.specActionsCol {
+  text-align: left;
+  vertical-align: middle;
+  width: 1%;
+  white-space: nowrap;
+}
+
+.specActionGroup {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.formColumnRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  padding: 10px 10px 10px 8px;
+  border-radius: 12px;
+  background: rgba(42, 99, 207, 0.04);
+}
+
+.formColumnDragHandle {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2.35rem;
+  padding: 0;
+  border: 1px solid rgba(42, 99, 207, 0.25);
+  border-radius: 8px;
+  background: #fff;
+  cursor: grab;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #6e7687;
+  font-family: inherit;
+}
+
+.formColumnDragHandle:active {
+  cursor: grabbing;
+}
+
+.formGridWrap {
+  margin-top: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.formGridScroll {
+  overflow: auto;
+  max-height: min(420px, 55vh);
+  border-radius: 8px;
+  border: 1px solid rgba(42, 99, 207, 0.15);
+}
+
+.formGridCellInput {
+  display: block;
+  width: 100%;
+  min-width: 8rem;
+  max-width: 320px;
+  box-sizing: border-box;
+  padding: 5px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(42, 99, 207, 0.22);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.35;
+  background: #fff;
+  color: inherit;
+}
+
+.formGridCellInput:focus {
+  outline: none;
+  border-color: #2a63cf;
+  box-shadow: 0 0 0 2px rgba(42, 99, 207, 0.12);
+}
+
+.cabinetPage .form-grid-v2 .formGridCellInput {
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  background: #fff !important;
+}
+
+.formGridTable {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.formGridTable th,
+.formGridTable td {
+  padding: 6px 8px;
+  border: 1px solid rgba(42, 99, 207, 0.12);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.formGridTable th {
+  background: rgba(42, 99, 207, 0.08);
+  font-weight: 600;
+  font-size: 11px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.formGridStickyCol {
+  position: sticky;
+  left: 0;
+  background: #fff;
+  z-index: 2;
+  min-width: 2.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.formGridResizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.formGridTable th {
+  position: relative;
+}
+
+.formGridResizeHandle {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  width: 10px;
+  height: 100%;
+  cursor: col-resize;
+  touch-action: none;
+  z-index: 6;
+}
+
+.formGridResizeHandle::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 4px;
+  width: 2px;
+  height: 60%;
+  border-radius: 2px;
+  background: rgba(42, 99, 207, 0.2);
+  transition: background-color 0.15s ease;
+}
+
+.formGridResizeHandle:hover::after {
+  background: rgba(42, 99, 207, 0.55);
+}
+
+/* Смартфон: одна прокрутка таблицы, колонка # не «липнет» (иначе текст наезжает) */
+@media (max-width: 720px) {
+  .formGridScroll {
+    overflow: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .formGridStickyCol {
+    position: static;
+    left: auto;
+    z-index: auto;
+    box-shadow: none;
+  }
+
+  .formGridTable th {
+    position: static;
+    top: auto;
+    z-index: auto;
+  }
+
+  .formGridTable th,
+  .formGridTable td {
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .formGridTable {
+    min-width: 520px;
+    width: max-content;
+  }
+}
+
+.tableRowSelected td {
+  background: rgba(0, 212, 165, 0.08);
+}
+
+.tableRowSelected td:first-child {
+  box-shadow: inset 3px 0 0 #00d4a5;
 }
 
 .btnDanger {
@@ -222,7 +604,7 @@
 .okMsg {
   margin: 8px 0 0;
   font-size: 0.88rem;
-  color: #2e7d32;
+  color: #2a6b52;
 }
 
 .links {
@@ -248,15 +630,15 @@
 .cabinetPage {
   position: relative;
   min-height: 100%;
-  font-family: "Montserrat", "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: var(--font-ui);
   overflow-x: hidden;
 }
 
 .themeLogin {
   --cab-surface: linear-gradient(180deg, #dfe6f1 0%, #e9eff8 55%, #f1f5fb 100%);
   --cab-elevated: rgba(248, 251, 255, 0.95);
-  --cab-accent: #243b74;
-  --cab-accent2: #3d5a9e;
+  --cab-accent: #2b64fd;
+  --cab-accent2: #5a86fd;
   --cab-text: #1f2f4e;
   --cab-muted: #5f728f;
   --cab-shadow-dark: rgba(121, 137, 163, 0.2);
@@ -266,8 +648,8 @@
 .themeKsenia {
   --cab-surface: linear-gradient(180deg, #dfe6f1 0%, #e9eff8 55%, #f1f5fb 100%);
   --cab-elevated: rgba(248, 251, 255, 0.95);
-  --cab-accent: #243b74;
-  --cab-accent2: #3d5a9e;
+  --cab-accent: #2b64fd;
+  --cab-accent2: #5a86fd;
   --cab-text: #1f2f4e;
   --cab-muted: #5f728f;
   --cab-shadow-dark: rgba(121, 137, 163, 0.2);
@@ -277,8 +659,8 @@
 .themeAnastasia {
   --cab-surface: linear-gradient(180deg, #dfe6f1 0%, #e9eff8 55%, #f1f5fb 100%);
   --cab-elevated: rgba(248, 251, 255, 0.95);
-  --cab-accent: #243b74;
-  --cab-accent2: #3d5a9e;
+  --cab-accent: #2b64fd;
+  --cab-accent2: #5a86fd;
   --cab-text: #1f2f4e;
   --cab-muted: #5f728f;
   --cab-shadow-dark: rgba(121, 137, 163, 0.2);
@@ -331,6 +713,39 @@
   flex-direction: column;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Glass-админка: overflow-x:hidden у .cabinetPage даёт overflow-y:auto и режет тени */
+.cabinetPage.themeGlass,
+.cabinetPageEmbed.themeGlass {
+  overflow: visible;
+}
+
+/* Встроенная админка на карте — тёмный текст (не --cab-* из светлой темы входа) */
+.cabinetPageEmbed.themeGlassMap .sectionTitle,
+.cabinetPageEmbed.themeGlassMap .collapseTitle {
+  color: #0a2540;
+}
+
+.cabinetPageEmbed.themeGlassMap .subtitle,
+.cabinetPageEmbed.themeGlassMap .subtitleNeo {
+  color: #3d5068;
+}
+
+.cabinetPageEmbed.themeGlassMap .collapseMeta {
+  color: #4a5f78;
+}
+
+.cabinetPageEmbed.themeGlassMap .label {
+  color: #0a2540;
+}
+
+.cabinetPageEmbed.themeGlassMap .okMsg {
+  color: #2a6b52;
+}
+
+.cabinetPageEmbed.themeGlassMap .error {
+  color: #c62828;
 }
 
 .loginShell {
@@ -458,7 +873,7 @@
   margin-bottom: 22px;
   padding: 20px 22px;
   border-radius: 24px;
-  background: linear-gradient(145deg, #3d5a9e 0%, #2d4366 52%, #243b74 100%);
+  background: linear-gradient(145deg, #2b64fd 0%, #5a86fd 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
     0 10px 24px rgba(36, 59, 116, 0.28);
@@ -786,7 +1201,7 @@
   font-size: 0.88rem;
   font-weight: 600;
   color: #f8fafc;
-  background: linear-gradient(145deg, #2e4b84, #243b74);
+  background: linear-gradient(145deg, #2b64fd 0%, #5a86fd 100%);
   border: 1px solid rgba(255, 255, 255, 0.24);
   box-shadow:
     3px 3px 10px var(--cab-shadow-dark),
@@ -839,8 +1254,8 @@
 }
 
 .cabinetDashboard .btnSmallDanger:hover {
-  background: rgba(255, 236, 236, 0.98);
-  box-shadow: 2px 2px 9px rgba(180, 60, 60, 0.15);
+  background: rgba(240, 244, 250, 0.98);
+  box-shadow: 2px 2px 9px rgba(10, 37, 64, 0.1);
 }
 
 .cabinetPage .btnDanger {
@@ -875,15 +1290,15 @@
   border-bottom-color: rgba(120, 90, 130, 0.1);
 }
 
-.cabinetPage .links a {
+.cabinetPage:not(.themeGlass) .links a {
   color: var(--cab-accent);
 }
 
-.cabinetDashboard .links a {
+.cabinetDashboard:not(.themeGlass) .links a {
   transition: color 0.2s ease, opacity 0.2s ease;
 }
 
-.cabinetDashboard .links a:hover {
+.cabinetDashboard:not(.themeGlass) .links a:hover {
   color: var(--cab-text);
   opacity: 0.88;
   text-decoration: underline;

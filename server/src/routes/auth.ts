@@ -14,6 +14,12 @@ import {
   signAccessToken,
   type JwtPayload,
 } from "../middleware/auth.js";
+import { requireAdmin } from "../middleware/adminAuth.js";
+import {
+  authLoginLimiter,
+  authRegisterLimiter,
+  authSessionLimiter,
+} from "../middleware/rateLimit.js";
 
 const profileSchema = z.object({
   firstName: z.string().max(200).optional(),
@@ -25,6 +31,7 @@ const profileSchema = z.object({
   phone: z.string().max(80).optional(),
   notifyEmail: z.boolean().optional(),
   notifyPush: z.boolean().optional(),
+  specializationId: z.string().max(80).optional(),
 });
 
 const registerSchema = z.object({
@@ -54,7 +61,7 @@ function parseProfile(json: string): ProfileSettingsData {
 
 export const authRouter = Router();
 
-authRouter.post("/register", async (req: Request, res: Response) => {
+authRouter.post("/register", authRegisterLimiter, async (req: Request, res: Response) => {
   const parsed = registerSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ ok: false, error: "Некорректные данные." });
@@ -93,7 +100,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
   res.status(201).json({ ok: true, profile, accessToken: token });
 });
 
-authRouter.post("/login", async (req: Request, res: Response) => {
+authRouter.post("/login", authLoginLimiter, async (req: Request, res: Response) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ ok: false, error: "Некорректные данные." });
@@ -121,6 +128,8 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   setAuthCookie(res, token);
   res.json({ ok: true, profile, accessToken: token });
 });
+
+authRouter.use(authSessionLimiter);
 
 authRouter.post("/logout", (_req: Request, res: Response) => {
   clearAuthCookie(res);
@@ -192,7 +201,11 @@ authRouter.patch("/profile", requireAuth, async (req: Request, res: Response) =>
   });
 });
 
-authRouter.get("/users", (_req: Request, res: Response) => {
+const adminResetPasswordSchema = z.object({
+  newPassword: z.string().min(1).max(500),
+});
+
+authRouter.get("/users", requireAdmin, (_req: Request, res: Response) => {
   const rows = db
     .prepare("SELECT email_norm, profile_json, created_at FROM users ORDER BY created_at DESC")
     .all() as Array<{ email_norm: string; profile_json: string; created_at: string }>;
@@ -214,7 +227,35 @@ authRouter.get("/users", (_req: Request, res: Response) => {
   res.json({ ok: true, users });
 });
 
-authRouter.patch("/users/:emailNorm", (req: Request, res: Response) => {
+authRouter.patch("/users/:emailNorm/password", requireAdmin, async (req: Request, res: Response) => {
+  const emailNorm = normalizeEmail(String(req.params.emailNorm ?? ""));
+  if (!emailNorm) {
+    res.status(400).json({ ok: false, error: "Не указан пользователь." });
+    return;
+  }
+  const parsed = adminResetPasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ ok: false, error: "Некорректные данные." });
+    return;
+  }
+  const pwErr = validatePasswordPolicy(parsed.data.newPassword);
+  if (pwErr) {
+    res.status(400).json({ ok: false, error: pwErr });
+    return;
+  }
+  const row = db.prepare("SELECT id FROM users WHERE email_norm = ?").get(emailNorm) as
+    | { id: string }
+    | undefined;
+  if (!row) {
+    res.status(404).json({ ok: false, error: "Пользователь не найден." });
+    return;
+  }
+  const password_hash = await bcrypt.hash(parsed.data.newPassword, 12);
+  db.prepare("UPDATE users SET password_hash = ? WHERE email_norm = ?").run(password_hash, emailNorm);
+  res.json({ ok: true });
+});
+
+authRouter.patch("/users/:emailNorm", requireAdmin, (req: Request, res: Response) => {
   const emailNorm = normalizeEmail(String(req.params.emailNorm ?? ""));
   if (!emailNorm) {
     res.status(400).json({ ok: false, error: "Не указан пользователь." });
@@ -269,7 +310,7 @@ authRouter.patch("/users/:emailNorm", (req: Request, res: Response) => {
   });
 });
 
-authRouter.delete("/users/:emailNorm", (req: Request, res: Response) => {
+authRouter.delete("/users/:emailNorm", requireAdmin, (req: Request, res: Response) => {
   const emailNorm = normalizeEmail(String(req.params.emailNorm ?? ""));
   if (!emailNorm) {
     res.status(400).json({ ok: false, error: "Не указан пользователь." });

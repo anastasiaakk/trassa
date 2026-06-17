@@ -1,0 +1,91 @@
+/**
+ * Этап E — админ-панель v2, light-first (HRMS / MediAid refs).
+ */
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene--light {
+  background: var(--pv2-scene-light) !important;
+  background-color: var(--pv2-white) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .glassSidebar,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene--light .glassSidebar {
+  background: var(--pv2-glass-l1-bg) !important;
+  border: 1px solid var(--pv2-glass-l1-border) !important;
+  box-shadow: var(--pv2-glass-l1-shadow) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .glassNavBtn,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene--light .glassNavBtn {
+  color: var(--pv2-muted);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .glassNavBtn:hover,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene--light .glassNavBtn:hover {
+  background: rgba(var(--pv2-r-primary), 0.08);
+  color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .admin-v2-nav-active,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene--light .admin-v2-nav-active {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+  box-shadow: 0 6px 20px rgba(var(--pv2-r-primary), 0.28);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .admin-v2-panel,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene--light .admin-v2-panel {
+  background: var(--pv2-glass-l1-bg) !important;
+  border: 1px solid var(--pv2-glass-l1-border) !important;
+  box-shadow: var(--pv2-glass-l1-shadow) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .glassPanelTitle {
+  color: var(--pv2-primary) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--pv2-primary);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .glassPanelGreeting {
+  color: var(--pv2-muted) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .glassPanelEmail {
+  color: var(--pv2-muted) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .glassChartCard,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .glassIncidentsBlock,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .collapseTrigger {
+  background: var(--pv2-glass-l2-bg) !important;
+  border-color: var(--pv2-glass-l2-border) !important;
+  color: var(--pv2-ink) !important;
+  box-shadow: var(--pv2-glass-l2-shadow);
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .btnNeoPrimary,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.pv2-scene--light .admin-dashboard--portal-v2 .btnNeoPrimary {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2.admin-tables-v2--light {
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .admin-tables-v2.admin-tables-v2--light .tablesWorkspace {
+  background: var(--pv2-glass-l1-bg);
+  border: 1px solid var(--pv2-glass-l1-border);
+  border-radius: var(--pv2-radius-xl);
+  box-shadow: var(--pv2-glass-l1-shadow);
+}
+
+/* Тёмная админ-сцена */
+html[data-portal-design="v2"] .admin-dashboard--portal-v2.admin-v2-scene--dark:not(.pv2-scene--light) {
+  background:
+    var(--pv2-gradient-mesh-a),
+    var(--pv2-gradient-mesh-b),
+    var(--pv2-gradient-deep) !important;
+  color: var(--pv2-text);
+}

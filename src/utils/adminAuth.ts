@@ -4,7 +4,12 @@
  * Встроенные учётки: Ксения и Анастасия (добавляются при первом запуске / миграции).
  */
 
-import { adminApiChangePassword, adminApiLogin, setAdminApiToken } from "../api/adminApi";
+import {
+  adminApiChangePassword,
+  adminApiLogin,
+  getAdminApiToken,
+  setAdminApiToken,
+} from "../api/adminApi";
 import { hashPassword } from "./localAuth";
 import { isAuthApiEnabled } from "./authMode";
 import { validatePasswordPolicy } from "./passwordPolicy";
@@ -12,13 +17,16 @@ import { validatePasswordPolicy } from "./passwordPolicy";
 const ADMIN_USERS_KEY = "trassa-admin-users-v1";
 const SESSION_KEY = "trassa-admin-session-v1";
 
-export type AdminCabinetId = "ksenia" | "anastasia";
+export type AdminCabinetId = "ksenia" | "anastasia" | "anna";
 
 export type BuiltinAdminAccount = {
   email: string;
   password: string;
   displayName: string;
   cabinetId: AdminCabinetId;
+  orgLabel?: string;
+  /** null — все вкладки; иначе только перечисленные id разделов. */
+  allowedTabIds?: string[] | null;
 };
 
 /** Учётки по умолчанию (латиница + цифры, ≥8). Смените пароли после входа. */
@@ -34,6 +42,14 @@ export const BUILTIN_ADMIN_ACCOUNTS: BuiltinAdminAccount[] = [
     password: "NastiaAdm8",
     displayName: "Анастасия",
     cabinetId: "anastasia",
+  },
+  {
+    email: "anna@indorsoft.local",
+    password: "AnnaInd8",
+    displayName: "Анна Алеутдинова",
+    orgLabel: "Индорсофт",
+    cabinetId: "anna",
+    allowedTabIds: ["home", "users", "specs", "tables", "map", "orgs"],
   },
 ];
 
@@ -100,50 +116,92 @@ export async function ensureDefaultAdminUser(): Promise<void> {
   await ensureBuiltinAdminUsers();
 }
 
-export function getBuiltinAdminHints(): { email: string; password: string; name: string }[] {
-  return BUILTIN_ADMIN_ACCOUNTS.map((a) => ({
-    email: a.email,
-    password: a.password,
-    name: a.displayName,
-  }));
-}
-
 /** Подсказка для формы входа (первая учётка) */
 export function getDefaultAdminCredentials(): { email: string; password: string } {
   const first = BUILTIN_ADMIN_ACCOUNTS[0];
   return { email: first.email, password: first.password };
 }
 
-export function getAdminCabinetInfo(emailNorm: string | null): {
+export type AdminCabinetInfo = {
   cabinetId: AdminCabinetId;
   displayName: string;
-} {
-  if (!emailNorm) {
-    return { cabinetId: "ksenia", displayName: "Администратор" };
-  }
-  for (const acc of BUILTIN_ADMIN_ACCOUNTS) {
-    if (normalizeEmail(acc.email) === emailNorm) {
-      return { cabinetId: acc.cabinetId, displayName: acc.displayName };
-    }
-  }
-  if (emailNorm === normalizeEmail(LEGACY_ADMIN_EMAIL)) {
-    return { cabinetId: "ksenia", displayName: "Администратор" };
-  }
-  return { cabinetId: "ksenia", displayName: emailNorm };
+  orgLabel?: string;
+  allowedTabIds: string[] | null;
+};
+
+function builtinAccountForEmail(emailNorm: string | null | undefined): BuiltinAdminAccount | null {
+  if (!emailNorm) return null;
+  const norm = normalizeEmail(emailNorm);
+  return BUILTIN_ADMIN_ACCOUNTS.find((acc) => normalizeEmail(acc.email) === norm) ?? null;
 }
 
-function isLikelyNetworkError(message: string): boolean {
+function cabinetInfoFromAccount(acc: BuiltinAdminAccount): AdminCabinetInfo {
+  return {
+    cabinetId: acc.cabinetId,
+    displayName: acc.displayName,
+    orgLabel: acc.orgLabel,
+    allowedTabIds: acc.allowedTabIds ?? null,
+  };
+}
+
+export function getAdminAllowedTabIds(cabinetId: AdminCabinetId): string[] | null {
+  const acc = BUILTIN_ADMIN_ACCOUNTS.find((a) => a.cabinetId === cabinetId);
+  if (!acc || acc.allowedTabIds == null) return null;
+  return acc.allowedTabIds;
+}
+
+export function isAdminTabAllowed(
+  cabinetId: AdminCabinetId,
+  tabId: string,
+  emailNorm?: string | null,
+): boolean {
+  const byEmail = builtinAccountForEmail(emailNorm);
+  const allowed = byEmail?.allowedTabIds ?? getAdminAllowedTabIds(cabinetId);
+  if (!allowed) return true;
+  return allowed.includes(tabId);
+}
+
+export function getAdminCabinetInfo(emailNorm: string | null): AdminCabinetInfo {
+  const acc = builtinAccountForEmail(emailNorm);
+  if (acc) return cabinetInfoFromAccount(acc);
+  if (!emailNorm) {
+    return { cabinetId: "ksenia", displayName: "Администратор", allowedTabIds: null };
+  }
+  if (normalizeEmail(emailNorm) === normalizeEmail(LEGACY_ADMIN_EMAIL)) {
+    return { cabinetId: "ksenia", displayName: "Администратор", allowedTabIds: null };
+  }
+  return { cabinetId: "ksenia", displayName: emailNorm, allowedTabIds: null };
+}
+
+function isLikelyNetworkError(status: number | undefined, message: string): boolean {
+  if (status === 0) return true;
   const m = message.toLowerCase();
   return (
-    m.includes("сеть") ||
-    m.includes("network") ||
-    m.includes("fetch") ||
-    m.includes("timeout") ||
-    m.includes("abort") ||
-    m.includes("не ответил") ||
-    m.includes("failed") ||
-    m.includes("econnrefused")
+    m.includes("failed to fetch") ||
+    m.includes("networkerror") ||
+    m.includes("network request failed") ||
+    message.includes("Сервер не ответил")
   );
+}
+
+function adminLoginNetworkHint(): string {
+  if (typeof window === "undefined") return "";
+  const { protocol, hostname } = window.location;
+  if (protocol === "file:") {
+    return " Проверьте интернет и доступность https://trassa.duckdns.org/api/health.";
+  }
+  if (
+    hostname === "localhost" ||
+    hostname === "127.0.0.1" ||
+    /^192\.168\.\d+\.\d+$/.test(hostname) ||
+    /^10\.\d+\.\d+\.\d+$/.test(hostname)
+  ) {
+    return " Запустите API: npm run dev:all (или npm run server:dev в папке server/).";
+  }
+  if (hostname === "trassa.duckdns.org" || hostname.endsWith(".duckdns.org")) {
+    return " Проверьте интернет или повторите через минуту.";
+  }
+  return " Проверьте, что API доступен по /api на этом же адресе.";
 }
 
 async function loginAdminLocally(emailNorm: string, password: string): Promise<boolean> {
@@ -172,24 +230,27 @@ export async function loginAdmin(
       setAdminApiToken(api.adminToken);
       sessionStorage.setItem(SESSION_KEY, emailNorm);
       void import("./portalSync").then(({ refreshPortalStateFromServer }) =>
-        refreshPortalStateFromServer()
+        refreshPortalStateFromServer({ force: true })
       );
       return { ok: true };
     }
-    if (isLikelyNetworkError(api.error)) {
-      const localOk = await loginAdminLocally(emailNorm, password);
-      if (localOk) {
-        setAdminApiToken(null);
-        return {
-          ok: true,
-        };
-      }
+    if (api.status === 429 || api.error.toLowerCase().includes("слишком много")) {
       return {
         ok: false,
-        error: `${api.error} Локальный вход не удался — проверьте логин и пароль из подсказки ниже.`,
+        error:
+          "Слишком много попыток входа. Подождите 15 минут или перезапустите API (ksenia@trassa.local / KseniaAdm8).",
       };
     }
-    return { ok: false, error: api.error };
+    if (isLikelyNetworkError(api.status, api.error)) {
+      return {
+        ok: false,
+        error: `Не удалось связаться с API (${api.error}).${adminLoginNetworkHint()}`,
+      };
+    }
+    return {
+      ok: false,
+      error: api.error,
+    };
   }
 
   const localOk = await loginAdminLocally(emailNorm, password);
@@ -213,8 +274,19 @@ export function getAdminSessionEmail(): string | null {
   }
 }
 
+/** Сбрасывает устаревшую сессию без API-токена (после старого «локального» входа). */
+export function reconcileAdminSession(): void {
+  if (!isAuthApiEnabled()) return;
+  if (getAdminSessionEmail() && !getAdminApiToken()) {
+    sessionStorage.removeItem(SESSION_KEY);
+  }
+}
+
 export function isAdminLoggedIn(): boolean {
-  return getAdminSessionEmail() !== null;
+  reconcileAdminSession();
+  if (!getAdminSessionEmail()) return false;
+  if (isAuthApiEnabled() && !getAdminApiToken()) return false;
+  return true;
 }
 
 export async function updateAdminPassword(

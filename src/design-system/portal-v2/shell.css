@@ -1,0 +1,104 @@
+/**
+ * Оболочка v2: фоновая сцена (как в референсах smart home / finance).
+ */
+html[data-portal-design="v2"] .pv2-scene {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--pv2-scene-dark, var(--pv2-gradient-mesh-a)), var(--pv2-gradient-mesh-b),
+    var(--pv2-gradient-mesh-c), var(--pv2-gradient-deep);
+}
+
+html[data-portal-design="v2"] .pv2-scene.pv2-scene--light {
+  background: var(--pv2-scene-light);
+  background-color: var(--pv2-white);
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .pv2-scene::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.35;
+  z-index: 0;
+}
+
+html[data-portal-design="v2"] .pv2-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: var(--pv2-space-6);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--pv2-space-6);
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  html[data-portal-design="v2"] .pv2-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+html[data-portal-design="v2"] .pv2-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--pv2-space-3);
+  padding: var(--pv2-space-4) var(--pv2-space-2);
+  border-radius: var(--pv2-radius-pill);
+  border: 1px solid var(--pv2-border);
+  background: var(--pv2-bg-glass);
+  backdrop-filter: blur(var(--pv2-blur-md));
+  height: fit-content;
+  position: sticky;
+  top: var(--pv2-space-6);
+}
+
+html[data-portal-design="v2"] .pv2-rail-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--pv2-text-muted);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  transition: background var(--pv2-dur-fast), color var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .pv2-rail-btn-active {
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-on-brand);
+  border-color: transparent;
+  box-shadow: var(--pv2-shadow-glow);
+}
+
+html[data-portal-design="v2"] .pv2-rail-btn:hover {
+  background: var(--pv2-bg-glass-hover);
+  color: var(--pv2-primary);
+  border-color: var(--pv2-border-accent);
+}
+
+html[data-portal-design="v2"] .pv2-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pv2-space-6);
+}
+
+html[data-portal-design="v2"] .pv2-grid-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: var(--pv2-space-3);
+}
+
+html[data-portal-design="v2"] .pv2-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--pv2-space-4);
+}

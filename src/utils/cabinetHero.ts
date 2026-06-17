@@ -4,6 +4,12 @@ import type { CSSProperties } from "react";
 export const HERO_ROLE_BTN_PX = 48;
 export const HERO_ROLE_IMG_PX = 26;
 
+/** Фиксированная высота плашки героя (не растягивать в dashboard-hero-grid). */
+export const CABINET_HERO_PLAQUE_HEIGHT_PX = 404;
+
+/** Только иллюстрация героя подрядчика (background-position, UI не трогаем). */
+export const CABINET_HERO_BG_POSITION_CONTRACTOR = "center 28%";
+
 export const heroTopRowStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
@@ -13,7 +19,20 @@ export const heroTopRowStyle: CSSProperties = {
   flexWrap: "nowrap",
 };
 
-export function heroRoleButtonStyle(base: CSSProperties): CSSProperties {
+/** Плашка подписи на герое — только оформление, без клика. */
+export function heroTagBadgeStyle(tagStyle: CSSProperties): CSSProperties {
+  return {
+    ...tagStyle,
+    flexShrink: 1,
+    minWidth: 0,
+    cursor: "default",
+    pointerEvents: "none",
+    userSelect: "none",
+  };
+}
+
+/** Белый круг с иконкой роли — только оформление, без клика. */
+export function heroRoleIconBadgeStyle(base: CSSProperties): CSSProperties {
   return {
     ...base,
     background: "#ffffff",
@@ -31,31 +50,38 @@ export function heroRoleButtonStyle(base: CSSProperties): CSSProperties {
     flexShrink: 0,
     boxSizing: "border-box",
     boxShadow: "0 4px 14px rgba(15, 23, 42, 0.26)",
-    cursor: "pointer",
+    cursor: "default",
+    pointerEvents: "none",
+    userSelect: "none",
   };
 }
 
 export function buildCabinetHeroCardStyle(
   heroCard: CSSProperties,
   imageUrl: string,
-  isDark: boolean
+  isDark: boolean,
+  backgroundPosition = "center center"
 ): CSSProperties {
-  const scrimFrom = isDark ? "15,23,42,0.58" : "46,69,108,0.45";
-  const scrimTo = isDark ? "15,23,42,0.72" : "34,56,88,0.52";
+  /** Равномерная серая подложка — без светлого градиента сверху */
+  const scrimRgb = isDark ? "15,23,42" : "42,58,88";
+  const scrimAlpha = isDark ? 0.58 : 0.46;
   const {
-    backgroundImage: _bg,
+    background: _bg,
+    backgroundImage: _bgi,
     backgroundSize: _bs,
     backgroundPosition: _bp,
+    backgroundRepeat: _br,
     filter: _f,
     ...frame
   } = heroCard;
+  const scrim = `linear-gradient(rgba(${scrimRgb},${scrimAlpha}), rgba(${scrimRgb},${scrimAlpha}))`;
   return {
     ...frame,
-    backgroundImage:
-      `linear-gradient(180deg, rgba(${scrimFrom}) 0%, rgba(${scrimTo}) 100%), url('${imageUrl}')`,
-    backgroundSize: "cover",
-    backgroundPosition: "center center",
-    backgroundRepeat: "no-repeat",
-    filter: "none",
+    minHeight: CABINET_HERO_PLAQUE_HEIGHT_PX,
+    height: CABINET_HERO_PLAQUE_HEIGHT_PX,
+    maxHeight: CABINET_HERO_PLAQUE_HEIGHT_PX,
+    alignSelf: "start",
+    boxSizing: "border-box",
+    background: `${scrim}, url("${imageUrl}") ${backgroundPosition} / cover no-repeat`,
   };
 }

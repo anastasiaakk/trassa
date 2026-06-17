@@ -1,0 +1,120 @@
+/**
+ * Этап 4 — публичные экраны (Page1–3, EntrySplash).
+ */
+
+/* —— Page1 —— */
+html[data-portal-design="v2"] .page1-v2-scene.page {
+  height: auto;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+html[data-portal-design="v2"] .page1-v2-scene {
+  background:
+    radial-gradient(ellipse 100% 75% at 12% -8%, rgba(var(--pv2-r-primary), 0.22) 0%, transparent 52%),
+    radial-gradient(ellipse 80% 60% at 100% 20%, rgba(var(--pv2-r-white), 0.16) 0%, transparent 48%),
+    var(--pv2-gradient-deep);
+}
+
+html[data-portal-design="v2"] .page1-v2 .bento {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-rows: unset;
+  gap: clamp(14px, 2vw, 20px);
+  align-content: center;
+  width: min(1180px, calc(100vw - 40px));
+  margin: 0 auto;
+  padding-top: clamp(28px, 5vh, 56px);
+  padding-bottom: clamp(28px, 5vh, 56px);
+  min-height: 100svh;
+  height: auto;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+html[data-portal-design="v2"] .page1-v2__stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: clamp(12px, 1.6vw, 16px);
+  min-height: min(440px, 52vh);
+  width: 100%;
+}
+
+html[data-portal-design="v2"] .page1-v2__hero {
+  min-height: min(440px, 52vh);
+  align-self: stretch;
+  box-shadow: var(--pv2-shadow-md), 0 0 56px rgba(var(--pv2-r-primary), 0.22) !important;
+}
+
+/* heroTag / heroCta — public-v2-light.css */
+
+@media (max-width: 960px) {
+  html[data-portal-design="v2"] .page1-v2 .bento {
+    grid-template-columns: 1fr;
+    width: min(560px, calc(100vw - 24px));
+  }
+
+  html[data-portal-design="v2"] .page1-v2__hero,
+  html[data-portal-design="v2"] .page1-v2__stats-grid {
+    min-height: unset;
+  }
+
+  html[data-portal-design="v2"] .page1-v2__stats-grid {
+    min-height: 340px;
+  }
+}
+
+@media (max-width: 520px) {
+  html[data-portal-design="v2"] .page1-v2__stats-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    min-height: unset;
+    gap: 12px;
+  }
+
+  html[data-portal-design="v2"] .page1-v2__hero {
+    min-height: min(360px, 58dvh);
+  }
+}
+
+/* —— Page2 —— */
+/* Page2 layout — page2-glass-v2.css */
+
+/* —— Page3 —— */
+html[data-portal-design="v2"] .page3-v2 {
+  min-height: 100svh;
+}
+
+/* Выбор роли: оставляем legacy flex-карточки (.cardsRow в Page3.module.css). */
+
+html[data-portal-design="v2"] .page3-v2__login-shell {
+  border-radius: var(--pv2-radius-xl);
+  padding: 4px;
+  background: linear-gradient(135deg, rgba(var(--pv2-r-primary), 0.35), rgba(var(--pv2-r-white), 0.2));
+}
+
+html[data-portal-design="v2"] .page3-v2__login-shell .page3-v2__login-card {
+  border-radius: calc(var(--pv2-radius-xl) - 4px) !important;
+}
+
+/* —— Entry splash —— */
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__glass-panel {
+  padding: 32px 40px 28px;
+  border-radius: var(--pv2-radius-xl);
+  border: 1px solid var(--pv2-border-strong);
+  background: var(--pv2-gradient-glass), rgba(var(--pv2-r-ink), 0.55);
+  backdrop-filter: blur(var(--pv2-blur-lg)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--pv2-blur-lg)) saturate(150%);
+  box-shadow: var(--pv2-shadow-md), 0 0 80px rgba(var(--pv2-r-primary), 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+html[data-portal-design="v2"] .entry-splash--v2 .entry-splash__caption {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}

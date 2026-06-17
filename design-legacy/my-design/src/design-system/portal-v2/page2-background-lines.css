@@ -1,0 +1,121 @@
+/**
+ * Альтернативный фон карты — SVG-линии (режим data-page2-bg="lines").
+ */
+body.route-page2 .page2-ambient--lines .page2-ambient__linesBase {
+  position: absolute;
+  inset: 0;
+  background-color: #e8f2f6;
+  background-image: linear-gradient(180deg, #eef7f9 0%, #e8f2f6 42%, #e2edf2 100%);
+}
+
+body.route-page2 .page2-ambient__linesSvg {
+  position: absolute;
+  inset: -8% -4%;
+  width: 108%;
+  height: 116%;
+  opacity: 0.9;
+  filter: blur(0.4px) saturate(1.08);
+}
+
+body.route-page2 .page2-ambient__line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+body.route-page2 .page2-ambient__line--far {
+  stroke-width: 2.5;
+  stroke-dasharray: 14 22;
+  opacity: 0.55;
+  animation: page2LinesFlowFar 5.5s linear infinite;
+}
+
+body.route-page2 .page2-ambient__line--mid {
+  stroke-width: 3;
+  stroke-dasharray: 18 26;
+  opacity: 0.65;
+  animation: page2LinesFlowMid 4.2s linear infinite;
+}
+
+body.route-page2 .page2-ambient__line--main {
+  stroke-width: 3.5;
+  stroke-dasharray: 16 24;
+  opacity: 0.78;
+  animation: page2LinesFlowMain 3.4s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(0, 212, 165, 0.25));
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-ambient__line--main {
+  filter: drop-shadow(0 0 6px rgba(0, 212, 165, 0.25));
+}
+
+body.route-page2 .page2-ambient__line--accent {
+  stroke-width: 2;
+  stroke-dasharray: 10 18;
+  opacity: 0.4;
+  animation: page2LinesFlowAccent 6.8s linear infinite reverse;
+}
+
+@keyframes page2LinesFlowMain {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+@keyframes page2LinesFlowMid {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -44;
+  }
+}
+
+@keyframes page2LinesFlowFar {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+
+@keyframes page2LinesFlowAccent {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+body.route-page2 .page2-ambient__veil--lines {
+  opacity: 1 !important;
+  background: linear-gradient(
+    180deg,
+    rgba(238, 247, 249, 0.45) 0%,
+    rgba(232, 242, 246, 0.32) 45%,
+    rgba(228, 240, 245, 0.38) 72%,
+    rgba(226, 237, 242, 0.52) 100%
+  ) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.route-page2 .page2-ambient__line {
+    animation: none !important;
+  }
+}
+
+html[data-page2-bg="off"] body.route-page2 .page2-ambient__line,
+html[data-portal-motion="paused"] body.route-page2 .page2-ambient__line {
+  animation: none !important;
+}
+
+/* Стандартная карта: фоновые линии только в палитре бренда (не синий v2). */
+html.route-page2 .page2-ambient__line--main {
+  filter: drop-shadow(0 0 6px rgba(0, 212, 165, 0.22)) !important;
+}

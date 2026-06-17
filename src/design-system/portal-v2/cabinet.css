@@ -1,0 +1,209 @@
+/**
+ * Кабинеты v2 — доп. стили поверх inline layoutStyles.
+ */
+html[data-portal-design="v2"] .cabinet-chrome {
+  background: var(--pv2-gradient-deep) !important;
+  background-color: var(--pv2-bg-base) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__header {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong) !important;
+  backdrop-filter: blur(var(--pv2-blur-md)) !important;
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) !important;
+  box-shadow: var(--pv2-shadow-sm) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pv2-gradient-brand-h);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__search {
+  border: 1px solid var(--pv2-border) !important;
+  background: rgba(var(--pv2-r-white), 0.88) !important;
+  box-shadow: none !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__search-input::placeholder {
+  color: var(--pv2-text-subtle);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-chrome__search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__admin-back {
+  border: 1px solid var(--pv2-border) !important;
+  background: var(--pv2-bg-glass) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__profile-bar {
+  background: linear-gradient(
+    135deg,
+    var(--pv2-primary) 0%,
+    var(--pv2-primary) 48%,
+    rgba(var(--pv2-r-white), 0.5) 100%
+  ) !important;
+  box-shadow: 0 10px 28px rgba(var(--pv2-r-primary), 0.2), inset 0 1px 0 rgba(var(--pv2-r-white), 0.4) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__msgr-btn {
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--pv2-r-white), 0.86);
+  border: 1px solid var(--pv2-border) !important;
+  box-shadow: var(--pv2-shadow-sm);
+  transition:
+    background var(--pv2-dur-fast),
+    box-shadow var(--pv2-dur-fast),
+    transform var(--pv2-dur-fast);
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__msgr-btn svg path {
+  stroke: var(--pv2-cyan);
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__msgr-btn:hover {
+  background: rgba(var(--pv2-r-primary), 0.12);
+  box-shadow: var(--pv2-shadow-glow);
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__msgr-active {
+  background: var(--pv2-gradient-brand) !important;
+  border-color: transparent !important;
+  box-shadow: var(--pv2-shadow-glow) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__msgr-active svg path {
+  stroke: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__msgr-unread {
+  background: #f87171 !important;
+  box-shadow: 0 0 0 2px var(--pv2-white), 0 2px 8px rgba(248, 113, 113, 0.45) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__msgr-btn {
+  background: rgba(var(--pv2-r-white), 0.88);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__msgr-unread {
+  box-shadow: 0 0 0 2px var(--pv2-white), 0 2px 8px rgba(248, 113, 113, 0.35) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__messenger > section {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass) !important;
+  backdrop-filter: blur(var(--pv2-blur-md));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md));
+  box-shadow: var(--pv2-shadow-md) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__messenger > section {
+  background: linear-gradient(180deg, rgba(var(--pv2-r-white), 0.94), rgba(var(--pv2-r-white), 0.88)) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__aside {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__side-card,
+html[data-portal-design="v2"] .cabinet-chrome__info-card,
+html[data-portal-design="v2"] .cabinet-chrome__recent-panel {
+  border: 1px solid var(--pv2-border) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__nav-active {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border-color: transparent !important;
+  box-shadow: 0 6px 20px rgba(var(--pv2-r-primary), 0.28) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__hero {
+  box-shadow: var(--pv2-shadow-md), 0 0 48px rgba(var(--pv2-r-primary), 0.12) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__recent-title {
+  background: var(--pv2-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome {
+  background: radial-gradient(120% 80% at 90% -10%, rgba(var(--pv2-r-white), 0.3) 0%, transparent 50%),
+    linear-gradient(180deg, var(--pv2-white) 0%, var(--pv2-white) 100%) !important;
+  background-color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__header,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__aside {
+  background: linear-gradient(180deg, rgba(var(--pv2-r-white), 0.88), rgba(var(--pv2-r-white), 0.75)) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__search {
+  background: rgba(var(--pv2-r-white), 0.9) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__recent-title {
+  filter: none;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__section {
+  min-width: 0;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__recent-panel {
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__recent-panel,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__side-card,
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__info-card {
+  background: linear-gradient(180deg, rgba(var(--pv2-r-white), 0.92), rgba(var(--pv2-r-white), 0.82)) !important;
+  border-color: rgba(var(--pv2-r-white), 0.35) !important;
+  box-shadow: 0 12px 32px rgba(var(--pv2-r-ink), 0.08) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__profile-bar {
+  color: var(--pv2-frost) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__recent-title {
+  background: var(--pv2-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+html[data-portal-design="v2"] .dashboard-hero-grid {
+  gap: clamp(14px, 2vw, 22px);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .cabinet-chrome__nav-active {
+  color: var(--pv2-deep) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__recent-panel .contractor-forms__templateBtn--active,
+html[data-portal-design="v2"] .cabinet-chrome__recent-panel .contractor-forms__templateBtn:focus-visible {
+  outline: 2px solid var(--pv2-teal);
+  outline-offset: 2px;
+}

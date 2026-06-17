@@ -8,6 +8,14 @@ const MESSENGER_STORE = "trassa-messenger-v1";
 const PEERS_STORE = "trassa-messenger-peers-v1";
 export const TBOT_MSGR_ANNOUNCED_IDS_KEY = "trassa-tbot-msgr-announced-ids";
 
+/** Состояние красной точки у Т-бота (мессенджер / ответ ИИ). */
+export const TBOT_NOTIFY_DOT_EVENT = "trassa-tbot-notify-dot";
+
+export function dispatchTbotNotifyDot(active: boolean): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(TBOT_NOTIFY_DOT_EVENT, { detail: { active } }));
+}
+
 export type IncomingMessengerStub = {
   id: string;
   threadId: string;

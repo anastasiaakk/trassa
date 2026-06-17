@@ -1,0 +1,20 @@
+﻿/**
+ * Календарь мероприятий (Page5EventsView) при portal v2.
+ */
+html[data-portal-design="v2"] .page5-events-v2 {
+  border: 1px solid var(--pv2-border-strong) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+}
+
+html[data-portal-design="v2"] .page5-events-v2 .page5-events-v2__day--today {
+  box-shadow: 0 0 0 2px var(--pv2-teal) !important;
+}
+
+html[data-portal-design="v2"] .page5-events-v2 button[type="button"]:not(:disabled):hover {
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] .page5-events-v2 {
+  background: linear-gradient(180deg, rgba(var(--pv2-r-white), 0.94), rgba(var(--pv2-r-white), 0.88)) !important;
+}

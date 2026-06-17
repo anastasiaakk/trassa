@@ -1,0 +1,85 @@
+/**
+ * Leaflet-карта Page2 при portal v2.
+ */
+html[data-portal-design="v2"] .map-v2 {
+  background: linear-gradient(180deg, #f8fcff 0%, #eef9fc 100%) !important;
+}
+
+html[data-portal-design="v2"] .map-v2 :global(.leaflet-container) {
+  background: #f8fcff !important;
+}
+
+html[data-portal-design="v2"] .map-v2-marker-main .markerMainCore,
+html[data-portal-design="v2"] .map-v2-marker-main.markerMainCore {
+  box-shadow:
+    0 1px 3px rgba(10, 37, 64, 0.22),
+    0 0 0 1px rgba(0, 212, 165, 0.45),
+    0 0 12px 3px rgba(0, 212, 165, 0.55) !important;
+}
+
+html[data-portal-design="v2"] .map-v2-marker-subject {
+  box-shadow:
+    0 1px 2px rgba(10, 37, 64, 0.2),
+    0 0 10px 2px rgba(103, 232, 249, 0.45) !important;
+}
+
+html[data-portal-design="v2"] .map-v2-popup {
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+  border: 1px solid var(--pv2-border-strong) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+}
+
+html[data-portal-design="v2"] .map-v2-popup-tab--active {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 14px rgba(0, 212, 165, 0.22) !important;
+}
+
+html[data-portal-design="v2"] .map-v2-zoom-btn {
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+  border: 1px solid var(--pv2-border-strong) !important;
+  box-shadow: var(--pv2-shadow-sm) !important;
+}
+
+html[data-portal-design="v2"] .map-v2-zoom-btn:hover {
+  background: rgba(0, 212, 165, 0.14) !important;
+  color: var(--pv2-deep) !important;
+}
+
+html[data-portal-design="v2"] .map-v2-scale {
+  border: 1px solid var(--pv2-border) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+html[data-portal-design="v2"] .map-v2-tooltip {
+  border: 1px solid var(--pv2-border) !important;
+  color: var(--pv2-deep) !important;
+  box-shadow: var(--pv2-shadow-sm) !important;
+}
+
+html[data-portal-design="v2"] .desktop-download-v2__btn {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border: none !important;
+  box-shadow: var(--pv2-shadow-glow) !important;
+}
+
+html[data-portal-design="v2"] .desktop-download-v2__btn:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 10px 28px rgba(0, 212, 165, 0.35) !important;
+}
+
+html[data-portal-design="v2"] .desktop-download-v2__check {
+  border-color: var(--pv2-border) !important;
+  background: rgba(0, 212, 165, 0.08) !important;
+  color: var(--pv2-deep) !important;
+}
+
+html[data-portal-design="v2"] .desktop-download-v2__mirror {
+  color: var(--pv2-deep) !important;
+  font-weight: 700;
+}

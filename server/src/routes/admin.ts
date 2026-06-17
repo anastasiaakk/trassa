@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db } from "../db.js";
 import { signAdminToken } from "../middleware/adminAuth.js";
 import { validatePasswordPolicy } from "../passwordPolicy.js";
+import { adminLoginLimiter } from "../middleware/rateLimit.js";
 
 const loginSchema = z.object({
   email: z.string().email().max(320),
@@ -17,7 +18,7 @@ function normalizeEmail(email: string): string {
 
 export const adminRouter = Router();
 
-adminRouter.post("/login", async (req: Request, res: Response) => {
+adminRouter.post("/login", adminLoginLimiter, async (req: Request, res: Response) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ ok: false, error: "Некорректные данные." });

@@ -1,0 +1,104 @@
+/**
+ * Принудительно только 5 цветов макета в v2 (переопределение старых HEX).
+ */
+html[data-portal-design="v2"] .cabinet-chrome__msgr-unread,
+html[data-portal-design="v2"] .cabinet-chrome__msgr-unread-dot {
+  background: #f87171 !important;
+  box-shadow: 0 0 0 2px var(--pv2-white), 0 2px 8px rgba(248, 113, 113, 0.45) !important;
+}
+
+html[data-portal-design="v2"] body.route-cabinet,
+html[data-portal-design="v2"] .cabinet-chrome--v2,
+html[data-portal-design="v2"] .page2-v2,
+html[data-portal-design="v2"] .routes-v2-bg,
+html[data-portal-design="v2"] .profile-v2-shell,
+html[data-portal-design="v2"] .cabinet-v2-light-scene {
+  background-color: var(--pv2-white) !important;
+  background-image: var(--pv2-gradient-page-light) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] body.route-cabinet,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .cabinet-chrome--v2 {
+  background-color: var(--pv2-ink) !important;
+  background-image: var(--pv2-gradient-mesh-a), var(--pv2-gradient-mesh-b), var(--pv2-gradient-deep) !important;
+}
+
+html[data-portal-design="v2"] .pv2-badge--success {
+  color: var(--pv2-white);
+  background: var(--pv2-primary);
+  border-color: transparent;
+}
+
+html[data-portal-design="v2"] .dock-unread,
+html[data-portal-design="v2"] .cabinet-quick-dock__badge {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+}
+
+/* Брендовый градиент (primary → #5A86FD): белый текст */
+html[data-portal-design="v2"] :is(
+  .page2-v2__about-tab--active,
+  .desktop-download-v2__btn,
+  .contractor-forms-v2 .contractor-forms__templateBtn--active,
+  .admin-login-v2 button[type="submit"],
+  .admin-v2-nav-active,
+  .cabinet-chrome__nav-active,
+  .cabinet-v2-aside__nav--active,
+  .cabinet-v2-aside__tile--active,
+  .cabinet-v2-dashboard__action--active,
+  .cabinet-quick-dock__btn--active,
+  .portal-whats-new,
+  .portal-whats-new__link,
+  .portal-whats-new__ok,
+  .portal-whats-new__close,
+  .association-v2__btn-primary,
+  .profile-v2__save,
+  .profile-v2__admin-back,
+  .page3-v2__login-card button[type="submit"],
+  .page3-v2__login-card .page3-v2__primary-btn
+) {
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .cabinet-v2-aside__nav--active .cabinet-v2-aside__badge {
+  background: rgba(var(--pv2-r-white), 0.22) !important;
+  color: var(--pv2-white) !important;
+}
+
+/* Старый navy/teal → палитра v2 */
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .btnNeoPrimary,
+html[data-portal-design="v2"] .admin-tables-v2 .btnNeoPrimary {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .glassNavBtnActive,
+html[data-portal-design="v2"] .admin-dashboard--portal-v2 .navBtnActive {
+  background: var(--pv2-primary) !important;
+  border-color: transparent !important;
+  color: var(--pv2-white) !important;
+}
+
+/* Page1 — светлая сцена (детали в public-v2-light.css, v2-final-layer.css) */
+
+
+/* Page1.module / legacy CTA на v2-страницах */
+html[data-portal-design="v2"] .page1-v2 .heroCta,
+html[data-portal-design="v2"] .page1-v2__hero .heroCta {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+  border-color: transparent !important;
+}
+
+html[data-portal-design="v2"] .page4-v2__notice strong {
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .page4-v2__notice strong {
+  color: var(--pv2-white) !important;
+}
+
+/* Карта: фон обёртки */
+html[data-portal-design="v2"] .map-v2[class*="wrap"] {
+  background: var(--pv2-white) !important;
+}

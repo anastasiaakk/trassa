@@ -1,0 +1,75 @@
+/**
+ * Доступность v2: фокус, контраст, prefers-contrast.
+ */
+html[data-portal-design="v2"] :focus {
+  outline: none;
+}
+
+html[data-portal-design="v2"] :focus-visible {
+  outline: 2px solid var(--pv2-teal);
+  outline-offset: 2px;
+}
+
+html[data-portal-design="v2"] .pv2-btn:focus-visible,
+html[data-portal-design="v2"] .cabinet-chrome__msgr-btn:focus-visible,
+html[data-portal-design="v2"] .cabinet-chrome__nav-active:focus-visible,
+html[data-portal-design="v2"] .page3-v2__role-card:focus-visible,
+html[data-portal-design="v2"] .page3-v2__next:focus-visible,
+html[data-portal-design="v2"] .map-v2-zoom-btn:focus-visible,
+html[data-portal-design="v2"] .page2-v2__btn-primary:focus-visible,
+html[data-portal-design="v2"] .profile-v2 input:focus-visible,
+html[data-portal-design="v2"] .profile-v2 select:focus-visible,
+html[data-portal-design="v2"] .profile-v2__save:focus-visible,
+html[data-portal-design="v2"] .floating-widget-v2__panel button:focus-visible,
+html[data-portal-design="v2"] .floating-widget-v2__fab-tbot:focus-visible,
+html[data-portal-design="v2"] .floating-widget-v2__fab-notes:focus-visible,
+html[data-portal-design="v2"] .messenger-v2__dialog button:focus-visible,
+html[data-portal-design="v2"] .page5-v2__section-card:focus-within,
+html[data-portal-design="v2"] .contractor-forms-v2 .contractor-forms__templateBtn:focus-visible,
+html[data-portal-design="v2"] .cabinet-quick-dock__btn:focus-visible,
+html[data-portal-design="v2"] .desktop-download-v2__btn:focus-visible {
+  outline: 2px solid var(--pv2-cyan);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(0, 212, 165, 0.28);
+}
+
+html[data-portal-design="v2"] .cabinet-chrome__search-input:focus-visible,
+html[data-portal-design="v2"] .pv2-input:focus-visible,
+html[data-portal-design="v2"] input:focus-visible,
+html[data-portal-design="v2"] textarea:focus-visible,
+html[data-portal-design="v2"] select:focus-visible {
+  outline: 2px solid var(--pv2-teal);
+  outline-offset: 0;
+  box-shadow: 0 0 0 3px rgba(0, 212, 165, 0.28);
+}
+
+html[data-portal-design="v2"] .subjectPopupTab:focus-visible,
+html[data-portal-design="v2"] .page2-v2__about-tab--active:focus-visible {
+  outline-offset: 2px;
+}
+
+@media (prefers-contrast: more) {
+  html[data-portal-design="v2"] {
+    --pv2-text-muted: rgba(232, 247, 252, 0.9);
+    --pv2-border: rgba(103, 232, 249, 0.32);
+    --pv2-border-strong: rgba(103, 232, 249, 0.48);
+  }
+
+  html[data-portal-design="v2"][data-cabinet-theme="light"] {
+    --pv2-text-muted: rgba(10, 37, 64, 0.88);
+  }
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] {
+  --pv2-text: #0a2540;
+  --pv2-text-muted: rgba(10, 37, 64, 0.78);
+  --pv2-text-subtle: rgba(10, 37, 64, 0.62);
+  --pv2-border: rgba(10, 37, 64, 0.2);
+  --pv2-border-strong: rgba(0, 120, 95, 0.38);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="light"] body {
+  background: linear-gradient(180deg, #f4fbff 0%, #e8f7fc 100%);
+  background-color: #e8f7fc;
+  color: var(--pv2-text);
+}

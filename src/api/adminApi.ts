@@ -23,7 +23,9 @@ export function setAdminApiToken(token: string | null): void {
 export async function adminApiLogin(
   email: string,
   password: string
-): Promise<{ ok: true; adminToken: string } | { ok: false; error: string }> {
+): Promise<
+  { ok: true; adminToken: string } | { ok: false; error: string; status?: number }
+> {
   const base = getApiBase();
   try {
     const res = await fetchWithTimeout(`${base}/api/admin/login`, {
@@ -34,11 +36,19 @@ export async function adminApiLogin(
     });
     const body = (await res.json()) as { ok?: boolean; adminToken?: string; error?: string };
     if (!res.ok || !body.ok || !body.adminToken) {
-      return { ok: false, error: body.error ?? "Не удалось войти." };
+      return {
+        ok: false,
+        error: body.error ?? "Не удалось войти.",
+        status: res.status,
+      };
     }
     return { ok: true, adminToken: body.adminToken };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : "Сеть недоступна." };
+    return {
+      ok: false,
+      status: 0,
+      error: e instanceof Error ? e.message : "Сеть недоступна.",
+    };
   }
 }
 

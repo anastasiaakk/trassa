@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { cx } from "../design-system/cabinetChromeClasses";
 import type { AssociationId } from "../utils/sharedAssociationDocumentsStorage";
 import {
   addDocument,
@@ -38,6 +39,7 @@ type Props = {
   layoutStyles: { recentPanel: CSSProperties; recentTitle: CSSProperties };
   incomingDocumentsPath: string;
   isDark?: boolean;
+  isV2?: boolean;
 };
 
 function fileToDataUrl(file: File): Promise<{ name: string; dataUrl: string }> {
@@ -66,6 +68,7 @@ const AssociationDocumentsView = memo(function AssociationDocumentsView({
   layoutStyles,
   incomingDocumentsPath,
   isDark = false,
+  isV2 = false,
 }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -258,8 +261,9 @@ const AssociationDocumentsView = memo(function AssociationDocumentsView({
 
   return (
     <div
+      className={cx(isV2 && "association-v2__shell")}
       style={{
-        ...layoutStyles.recentPanel,
+        ...(isV2 ? {} : layoutStyles.recentPanel),
         width: "100%",
         maxWidth: "100%",
         boxSizing: "border-box",
@@ -289,23 +293,40 @@ const AssociationDocumentsView = memo(function AssociationDocumentsView({
             paddingRight: 4,
           }}
         >
-          <div style={{ ...layoutStyles.recentTitle, margin: 0 }}>Документооборот с подрядчиками</div>
+          <div
+            className={cx(isV2 && "association-v2__title")}
+            style={isV2 ? { margin: 0 } : { ...layoutStyles.recentTitle, margin: 0 }}
+          >
+            Документооборот с подрядчиками
+          </div>
 
           {aiNotice ? (
             <div
               role="status"
-              style={{
-                padding: "14px 18px",
-                borderRadius: 18,
-                background: "linear-gradient(135deg, rgba(79, 128, 243, 0.12) 0%, rgba(36, 59, 116, 0.08) 100%)",
-                border: "1px solid rgba(79, 128, 243, 0.35)",
-                boxShadow: styles.cardShadow,
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-                gap: 12,
-              }}
+              className={cx(isV2 && "association-v2__notice")}
+              style={
+                isV2
+                  ? {
+                      display: "flex",
+                      flexWrap: "wrap",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      gap: 12,
+                    }
+                  : {
+                      padding: "14px 18px",
+                      borderRadius: 18,
+                      background:
+                        "linear-gradient(135deg, rgba(79, 128, 243, 0.12) 0%, rgba(36, 59, 116, 0.08) 100%)",
+                      border: "1px solid rgba(79, 128, 243, 0.35)",
+                      boxShadow: styles.cardShadow,
+                      display: "flex",
+                      flexWrap: "wrap",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      gap: 12,
+                    }
+              }
             >
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start", minWidth: 0 }}>
                 <span

@@ -1,0 +1,71 @@
+/**
+ * Админ — конструктор таблиц (AdminTablesPanel + FormGridEditor).
+ */
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridScroll {
+  border-color: var(--pv2-border) !important;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable th {
+  background: rgba(0, 212, 165, 0.12) !important;
+  color: var(--pv2-ink) !important;
+  border-bottom-color: var(--pv2-border) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable td {
+  border-bottom-color: rgba(0, 212, 165, 0.12) !important;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridStickyCol {
+  background: rgba(235, 243, 255, 0.96) !important;
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .tableRowSelected td {
+  background: rgba(0, 212, 165, 0.14) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .tableRowSelected td:first-child {
+  box-shadow: inset 3px 0 0 var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 input[type="text"],
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 input[type="number"],
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 input[type="date"] {
+  border: 1px solid var(--pv2-border) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .navBtnActive {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-white) !important;
+  border-color: transparent !important;
+  box-shadow: 0 6px 16px rgba(0, 212, 165, 0.24) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridScroll {
+  background: rgba(17, 26, 52, 0.72);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridTable th {
+  background: rgba(0, 212, 165, 0.2) !important;
+  color: #eaf0ff !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridTable td {
+  color: #f5f8ff;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridStickyCol {
+  background: rgba(20, 33, 68, 0.95) !important;
+  color: #c9d8ff !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 input[type="text"],
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 input[type="number"],
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 input[type="date"] {
+  background: rgba(17, 26, 52, 0.9) !important;
+  color: #f5f8ff !important;
+}

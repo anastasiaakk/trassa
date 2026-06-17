@@ -1,0 +1,386 @@
+/**
+ * Админ — конструктор таблиц (AdminTablesPanel + FormGridEditor).
+ */
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridScroll {
+  border-color: var(--pv2-border) !important;
+  background: rgba(var(--pv2-r-white), 0.92) !important;
+  max-height: min(680px, 72vh) !important;
+  width: 100%;
+  border-radius: 8px !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable {
+  border-collapse: collapse;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable th {
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+  color: var(--pv2-ink) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.14) !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  max-width: none !important;
+  min-width: 10rem;
+  white-space: normal;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridTable td {
+  border-color: rgba(var(--pv2-r-primary), 0.1) !important;
+  color: var(--pv2-ink);
+  background: rgba(var(--pv2-r-white), 0.55);
+  min-width: 10rem;
+  vertical-align: top;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridStickyCol {
+  background: rgba(var(--pv2-r-surface), 0.98) !important;
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .tableRowSelected td {
+  background: rgba(var(--pv2-r-primary), 0.14) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .tableRowSelected td:first-child {
+  box-shadow: inset 3px 0 0 var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 .formGridCellInput,
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 input[type="text"],
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 input[type="number"],
+html[data-portal-design="v2"] .admin-tables-v2 .form-grid-v2 input[type="date"] {
+  border: 1px solid var(--pv2-border) !important;
+  border-radius: 4px !important;
+  background: rgba(var(--pv2-r-white), 0.98) !important;
+  color: var(--pv2-ink) !important;
+  box-shadow: none !important;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Вкладки панели — одна высота (Конструктор + иконки) */
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-nav-btn {
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1 !important;
+  border-radius: 999px !important;
+  border: 1.5px solid rgba(var(--pv2-r-primary), 0.35) !important;
+  background: rgba(var(--pv2-r-white), 0.94) !important;
+  color: rgba(var(--pv2-r-ink), 0.86) !important;
+  box-shadow: none !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="navBtnIconOnly"] {
+  width: 40px !important;
+  min-width: 40px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-nav-btn--active,
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-tab-btn--active,
+html[data-portal-design="v2"] .admin-tables-v2 [class*="navBtnActive"],
+html[data-portal-design="v2"] .admin-tables-v2 [class*="tabBtnActive"] {
+  background: rgba(var(--pv2-r-white), 0.98) !important;
+  color: rgba(var(--pv2-r-ink), 0.9) !important;
+  border: 1.5px solid rgba(var(--pv2-r-primary), 0.55) !important;
+  box-shadow: 0 0 0 2px rgba(var(--pv2-r-primary), 0.12) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-nav-btn:not(.admin-tables-nav-btn--active),
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-tab-btn:not(.admin-tables-tab-btn--active),
+html[data-portal-design="v2"] .admin-tables-v2 [class*="navBtn"]:not([class*="navBtnActive"]),
+html[data-portal-design="v2"] .admin-tables-v2 [class*="tabBtn"]:not([class*="tabBtnActive"]) {
+  background: rgba(var(--pv2-r-white), 0.92) !important;
+  border: 1.5px solid rgba(var(--pv2-r-primary), 0.28) !important;
+  color: rgba(var(--pv2-r-ink), 0.75) !important;
+  box-shadow: none !important;
+}
+
+/* Кнопки сайдбара конструктора (глобальные классы — без CSS Modules) */
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-action {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-action-icon {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-action-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-action-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  text-align: center;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-tab-btn,
+html[data-portal-design="v2"] .admin-tables-v2 [class*="tabBtn"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-create {
+  background: var(--pv2-primary) !important;
+  border: none !important;
+  color: #fff !important;
+  box-shadow: 0 4px 16px rgba(var(--pv2-r-primary), 0.32) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-create:hover {
+  filter: brightness(1.05);
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-create .admin-tables-sidebar-action-label,
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-create .admin-tables-sidebar-action-icon,
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-create svg {
+  color: #fff !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-import {
+  background: var(--pv2-white) !important;
+  border: 1px solid rgba(var(--pv2-r-ink), 0.12) !important;
+  color: var(--pv2-ink) !important;
+  box-shadow: none !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-import:hover {
+  background: rgba(var(--pv2-r-primary), 0.06) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.28) !important;
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-import:hover .admin-tables-sidebar-action-label,
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-import:hover .admin-tables-sidebar-action-icon,
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-sidebar-import:hover svg {
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="templateItemActive"] {
+  border-color: rgba(var(--pv2-r-primary), 0.35) !important;
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="hintsBox"],
+html[data-portal-design="v2"] .admin-tables-v2 [class*="aiOk"] {
+  background: rgba(var(--pv2-r-primary), 0.06) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.18) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-tables-v2 .admin-tables-aside,
+html[data-portal-design="v2"] .admin-v2-soft .admin-tables-v2 [class*="editor"] {
+  background: var(--pv2-white) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.08) !important;
+}
+
+html[data-portal-design="v2"] .admin-v2-soft .admin-tables-v2 [class*="search"] {
+  background: rgba(var(--pv2-r-primary), 0.04) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.1) !important;
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridScroll {
+  background: rgba(var(--pv2-r-ink), 0.88) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridTable th {
+  background: rgba(var(--pv2-r-primary), 0.18) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridTable td {
+  color: var(--pv2-white);
+  background: rgba(var(--pv2-r-ink), 0.35);
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridStickyCol {
+  background: rgba(var(--pv2-r-ink), 0.95) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 .formGridCellInput,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 input[type="text"],
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 input[type="number"],
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .form-grid-v2 input[type="date"] {
+  background: rgba(var(--pv2-r-ink), 0.92) !important;
+  color: var(--pv2-white) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .admin-tables-nav-btn {
+  border-color: rgba(154, 136, 255, 0.42) !important;
+  background: rgba(17, 22, 41, 0.92) !important;
+  color: rgba(229, 236, 255, 0.88) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .admin-tables-nav-btn--active,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .admin-tables-tab-btn--active {
+  border-color: rgba(178, 160, 255, 0.72) !important;
+  background: linear-gradient(135deg, rgba(124, 101, 246, 0.42), rgba(93, 74, 207, 0.26)) !important;
+  color: rgba(247, 249, 255, 0.98) !important;
+  box-shadow:
+    0 0 0 1px rgba(176, 158, 255, 0.24),
+    0 10px 18px rgba(70, 47, 171, 0.3) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .admin-tables-nav-btn svg,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-tables-v2 .admin-tables-nav-btn svg * {
+  stroke: currentColor !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-v2-soft .admin-tables-v2 .admin-tables-aside,
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-v2-soft .admin-tables-v2 [class*="editor"] {
+  background: linear-gradient(170deg, rgba(15, 19, 36, 0.92), rgba(17, 22, 44, 0.86)) !important;
+  border-color: rgba(136, 117, 255, 0.2) !important;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .admin-v2-soft .admin-tables-v2 [class*="search"] {
+  background: rgba(11, 14, 28, 0.9) !important;
+  border-color: rgba(147, 128, 255, 0.24) !important;
+  color: rgba(235, 240, 255, 0.94) !important;
+}
+
+/* Модальное окно импорта (портал в body) */
+html[data-portal-design="v2"] .admin-tables-import-overlay {
+  background: rgba(var(--pv2-r-ink), 0.45) !important;
+  backdrop-filter: blur(var(--pv2-blur-sm));
+  -webkit-backdrop-filter: blur(var(--pv2-blur-sm));
+}
+
+html[data-portal-design="v2"] .admin-tables-import-dialog {
+  border-color: rgba(var(--pv2-r-ink), 0.1) !important;
+  background: var(--pv2-white) !important;
+  color: var(--pv2-ink) !important;
+  box-shadow: var(--pv2-shadow-lg) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-import-submit {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+  box-shadow: 0 4px 14px rgba(var(--pv2-r-primary), 0.35) !important;
+}
+
+/* Редактор столбцов — компактные строки */
+html[data-portal-design="v2"] .admin-tables-v2 [class*="FormColumnEditor_row"] {
+  background: rgba(var(--pv2-r-primary), 0.05) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.08) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="FormColumnEditor_input"],
+html[data-portal-design="v2"] .admin-tables-v2 [class*="FormColumnEditor_select"] {
+  border-color: rgba(var(--pv2-r-ink), 0.12) !important;
+  color: var(--pv2-ink) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="FormColumnEditor_input"]:focus,
+html[data-portal-design="v2"] .admin-tables-v2 [class*="FormColumnEditor_select"]:focus {
+  border-color: rgba(var(--pv2-r-primary), 0.45) !important;
+  box-shadow: 0 0 0 2px rgba(var(--pv2-r-primary), 0.14) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="FormColumnEditor_addBtn"] {
+  border-color: rgba(var(--pv2-r-primary), 0.35) !important;
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="columnsToolbar"] {
+  background: rgba(var(--pv2-r-primary), 0.05) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.08) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="sheetTabsBar"] {
+  background: rgba(var(--pv2-r-white), 0.88) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.08) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="sheetTab"] {
+  box-sizing: border-box !important;
+  min-height: 32px !important;
+  border-width: 1px !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="sheetTabActive"] {
+  border-width: 1px !important;
+  border-color: rgba(var(--pv2-r-primary), 0.4) !important;
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+  box-shadow: 0 0 0 1px rgba(var(--pv2-r-primary), 0.18) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="actionBtnPrimary"] {
+  background: var(--pv2-primary) !important;
+  color: var(--pv2-white) !important;
+  box-shadow: 0 4px 14px rgba(var(--pv2-r-primary), 0.28) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="actionBtnSecondary"]:hover {
+  border-color: rgba(var(--pv2-r-primary), 0.35) !important;
+  color: var(--pv2-primary) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 [class*="editorActionBar"] {
+  background: rgba(var(--pv2-r-primary), 0.05) !important;
+  border-color: rgba(var(--pv2-r-ink), 0.08) !important;
+}
+
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-nav-btn svg,
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-nav-btn [class*="navGlyph"],
+html[data-portal-design="v2"] .admin-tables-v2 .admin-tables-nav-btn svg * {
+  fill: none !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}

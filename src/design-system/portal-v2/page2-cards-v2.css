@@ -1,0 +1,349 @@
+/**
+ * Page2 KPI — полупрозрачное стекло как на Quanta-референсе.
+ */
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="overviewStats"] {
+  gap: clamp(12px, 1.5vw, 16px);
+  align-items: stretch;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat,
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="statItem"] {
+  position: relative;
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 128px;
+  padding: 18px 20px 20px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  background-image: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.06) 48%,
+    rgba(255, 255, 255, 0.04) 100%
+  ) !important;
+  backdrop-filter: blur(22px) saturate(1.35);
+  -webkit-backdrop-filter: blur(22px) saturate(1.35);
+  box-shadow:
+    0 10px 32px rgba(8, 16, 40, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+  overflow: hidden;
+  transition:
+    transform var(--pv2-dur-fast) var(--pv2-ease-out),
+    background var(--pv2-dur-fast) var(--pv2-ease-out),
+    border-color var(--pv2-dur-fast) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat::before {
+  content: none;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat:hover,
+html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="statItem"]:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  background-image: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  ) !important;
+}
+
+/* Иконка + заголовок */
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-head-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: 0;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.92);
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-icon svg {
+  opacity: 0.95;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-icon-img {
+  display: block;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.95;
+  mix-blend-mode: screen;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-icon-img--lg {
+  width: 22px;
+  height: 22px;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-title,
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat [class*="statTag"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* Мета */
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-meta,
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat [class*="statLabel"] {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 auto !important;
+  padding: 0 !important;
+  font-size: 0.6875rem !important;
+  font-weight: 400 !important;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.46) !important;
+}
+
+/* Кнопка графика (как на референсе — угол карточки) */
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-chart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition:
+    background var(--pv2-dur-fast) var(--pv2-ease-out),
+    border-color var(--pv2-dur-fast) var(--pv2-ease-out),
+    transform var(--pv2-dur-fast) var(--pv2-ease-out);
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-chart-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-chart-btn--active {
+  background: rgba(155, 138, 251, 0.42);
+  border-color: rgba(196, 181, 253, 0.55);
+}
+
+/* Метрика */
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-metric {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat-value,
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat [class*="statNum"] {
+  font-size: clamp(1.625rem, 2.6vw, 2rem) !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #fff !important;
+}
+
+html[data-portal-design="v2"] body.route-page2 .page2-v2__stat [class*="statContent"] {
+  display: contents;
+}
+
+/* Всплывающее окно мониторинга */
+html[data-portal-design="v2"] .page2-v2__monitor-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--pv2-z-modal, 200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 32px);
+  background: rgba(8, 10, 16, 0.58);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-dialog {
+  position: relative;
+  width: min(100%, 440px);
+  max-height: min(90vh, 560px);
+  overflow: auto;
+  padding: 20px 20px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(var(--pv2-r-primary), 0.12);
+  background: rgba(var(--pv2-r-white), 0.96);
+  box-shadow:
+    0 24px 64px rgba(var(--pv2-r-ink), 0.18),
+    inset 0 1px 0 rgba(var(--pv2-r-white), 1);
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-right: 4px;
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-head-text {
+  min-width: 0;
+  flex: 1;
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pv2-muted);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-sub {
+  margin: 6px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--pv2-muted);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-close {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(var(--pv2-r-primary), 0.16);
+  border-radius: 50%;
+  background: rgba(var(--pv2-r-white), 0.92);
+  color: var(--pv2-ink);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(var(--pv2-r-ink), 0.08);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-close:hover {
+  background: var(--pv2-white);
+  border-color: rgba(var(--pv2-r-primary), 0.32);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-current {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--pv2-ink);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-current-label {
+  font-size: 0.75rem;
+  color: var(--pv2-muted);
+}
+
+html[data-portal-design="v2"] .page2-v2__monitor-chart {
+  margin: 0 0 12px;
+}
+
+html[data-portal-design="v2"] .page2-v2__stat-monitor-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+html[data-portal-design="v2"] .page2-v2__stat-monitor-point {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+html[data-portal-design="v2"] .page2-v2__stat-monitor-point--end {
+  align-items: flex-end;
+  text-align: right;
+}
+
+html[data-portal-design="v2"] .page2-v2__stat-monitor-num {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--pv2-ink);
+  letter-spacing: -0.02em;
+}
+
+html[data-portal-design="v2"] .page2-v2__stat-monitor-hint {
+  font-size: 0.625rem;
+  color: var(--pv2-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-portal-design="v2"] body.route-page2 .page2-v2__stat,
+  html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="statItem"] {
+    transition: none;
+  }
+
+  html[data-portal-design="v2"] body.route-page2 .page2-v2__stat:hover,
+  html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="statItem"]:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-portal-design="v2"] body.route-page2 .page2-v2__stat,
+  html[data-portal-design="v2"] body.route-page2 .page2-v2__overview [class*="statItem"] {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.22) !important;
+  }
+}

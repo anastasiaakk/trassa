@@ -3,7 +3,8 @@
  */
 
 import { PORTAL_KV } from "../config/portalKeys";
-import { pushPortalKv } from "./portalSync";
+import type { MapSubjectOrganization } from "./mapSubjectOrganizations";
+import { pushPortalKvWithAck } from "./portalSync";
 
 const STORAGE_KEY = "trassa-contractor-organizations-v1";
 
@@ -35,7 +36,7 @@ export function loadContractorOrganizations(): string[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw === null) {
-      saveContractorOrganizations([...DEFAULT_ORGANIZATIONS]);
+      void saveContractorOrganizations([...DEFAULT_ORGANIZATIONS]);
       return [...DEFAULT_ORGANIZATIONS].sort((a, b) => a.localeCompare(b, "ru"));
     }
     const list = parseList(raw);
@@ -46,13 +47,17 @@ export function loadContractorOrganizations(): string[] {
   }
 }
 
-export function saveContractorOrganizations(names: string[]): void {
+export async function saveContractorOrganizations(
+  names: string[]
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const uniq = Array.from(new Set(names.map(normalizeOrgName))).filter(Boolean);
   uniq.sort((a, b) => a.localeCompare(b, "ru"));
-  pushPortalKv(PORTAL_KV.CONTRACTOR_ORGS, uniq);
+  return pushPortalKvWithAck(PORTAL_KV.CONTRACTOR_ORGS, uniq);
 }
 
-export function addContractorOrganization(name: string): { ok: true } | { ok: false; error: string } {
+export async function addContractorOrganization(
+  name: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const n = normalizeOrgName(name);
   if (!n) {
     return { ok: false, error: "Введите название организации." };
@@ -64,14 +69,15 @@ export function addContractorOrganization(name: string): { ok: true } | { ok: fa
   if (list.some((x) => x.toLowerCase() === n.toLowerCase())) {
     return { ok: false, error: "Такая организация уже есть в списке." };
   }
-  saveContractorOrganizations([...list, n]);
-  return { ok: true };
+  return saveContractorOrganizations([...list, n]);
 }
 
-export function removeContractorOrganization(name: string): void {
+export async function removeContractorOrganization(
+  name: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const n = normalizeOrgName(name);
   const list = loadContractorOrganizations().filter((x) => x !== n);
-  saveContractorOrganizations(list);
+  return saveContractorOrganizations(list);
 }
 
 /** Фильтр для «умного поиска»: без учёта регистра, подстрока */
@@ -92,4 +98,40 @@ export function resolveOrganizationFromInput(input: string, list: string[]): str
   const exact = list.find((x) => x === t);
   if (exact) return exact;
   return list.find((x) => x.toLowerCase() === t.toLowerCase()) ?? null;
+}
+
+/** Подрядчик с карты, которого ещё нет в списке для входа (по названию). */
+export type MapContractorForLoginPick = {
+  entryId: string;
+  name: string;
+  subjectName: string;
+};
+
+export function listMapContractorsForLoginPick(
+  mapEntries: MapSubjectOrganization[],
+  loginList: string[]
+): MapContractorForLoginPick[] {
+  const inLogin = new Set(loginList.map((x) => normalizeOrgName(x).toLowerCase()));
+  const seenNames = new Set<string>();
+  const out: MapContractorForLoginPick[] = [];
+
+  for (const entry of mapEntries) {
+    if (entry.kind !== "contractors") continue;
+    const name = normalizeOrgName(entry.name);
+    if (!name) continue;
+    const key = name.toLowerCase();
+    if (inLogin.has(key) || seenNames.has(key)) continue;
+    seenNames.add(key);
+    out.push({
+      entryId: entry.id,
+      name,
+      subjectName: normalizeOrgName(entry.subjectName),
+    });
+  }
+
+  return out.sort((a, b) => {
+    const byName = a.name.localeCompare(b.name, "ru");
+    if (byName !== 0) return byName;
+    return a.subjectName.localeCompare(b.subjectName, "ru");
+  });
 }

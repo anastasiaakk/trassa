@@ -1,0 +1,449 @@
+/**
+ * Кабинет подрядчика — тёмная fintech-сцена (Ardentis / DeFi dashboard DNA).
+ * Только контент и фон сцены; topbar, rail и aside не переопределяются.
+ */
+
+/* —— Фон сцены: глубокий navy + мягкое свечение —— */
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-chrome--v2.cabinet-v2-scene:not(.pv2-scene--light) {
+  background:
+    radial-gradient(ellipse 90% 70% at 12% -8%, rgba(var(--pv2-r-primary), 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 55% at 88% 4%, rgba(var(--pv2-r-white), 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 45% at 50% 105%, rgba(var(--pv2-r-primary), 0.08) 0%, transparent 52%),
+    linear-gradient(180deg, #0a0c12 0%, #0f1219 42%, #12151e 100%) !important;
+  background-color: #0a0c12 !important;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-scene:not(.pv2-scene--light)::before {
+  opacity: 0.22;
+}
+
+/* —— KPI: монохромные fintech-карточки —— */
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-glass-kpi-card {
+  --cgk-bg: rgba(18, 22, 32, 0.92);
+  --cgk-border: rgba(255, 255, 255, 0.07);
+  --cgk-glow: rgba(var(--pv2-r-primary), 0.1);
+  --cgk-title: rgba(255, 255, 255, 0.92);
+  --cgk-meta: rgba(255, 255, 255, 0.46);
+  --cgk-value: #ffffff;
+  --cgk-icon: rgba(255, 255, 255, 0.78);
+  border-radius: 18px;
+  background:
+    radial-gradient(130% 100% at 0% 0%, var(--cgk-glow) 0%, transparent 52%),
+    linear-gradient(168deg, rgba(22, 26, 38, 0.96) 0%, rgba(14, 17, 26, 0.98) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-glass-kpi-card--default,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-glass-kpi-card--violet,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-glass-kpi-card--teal,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-glass-kpi-card--copper {
+  --cgk-bg: rgba(18, 22, 32, 0.92);
+  --cgk-glow: rgba(var(--pv2-r-primary), 0.09);
+  --cgk-value: #fff;
+  --cgk-icon: rgba(255, 255, 255, 0.8);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-glass-kpi-card--actionable:hover {
+  border-color: rgba(var(--pv2-r-primary), 0.32);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 16px 40px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(var(--pv2-r-primary), 0.12);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-glass-kpi-card__trend--up {
+  background: rgba(var(--pv2-r-primary), 0.92);
+  box-shadow: 0 4px 14px rgba(var(--pv2-r-primary), 0.35);
+}
+
+/* —— Главная панель: тёмное стекло без синего заливного градиента —— */
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__main-region,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2-dashboard__panel {
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  background:
+    linear-gradient(168deg, rgba(20, 24, 34, 0.88) 0%, rgba(14, 17, 26, 0.94) 100%) !important;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(28px) saturate(130%);
+  -webkit-backdrop-filter: blur(28px) saturate(130%);
+}
+
+/* —— Виджеты дашборда —— */
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__info.cabinet-chrome__info-card,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__action {
+  background: rgba(16, 20, 30, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28) !important;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__info-label {
+  color: rgba(255, 255, 255, 0.42);
+  letter-spacing: 0.08em;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__info-title {
+  color: #fff;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__info-text,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__action-text {
+  color: rgba(255, 255, 255, 0.52);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__info-action {
+  border-color: rgba(var(--pv2-r-primary), 0.35);
+  background: rgba(var(--pv2-r-primary), 0.12);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__info-action:hover {
+  background: rgba(var(--pv2-r-primary), 0.2);
+  border-color: rgba(var(--pv2-r-primary), 0.48);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__action:hover {
+  background: rgba(22, 28, 42, 0.95) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.28) !important;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__action-badge {
+  background: var(--pv2-primary);
+  box-shadow: 0 4px 12px rgba(var(--pv2-r-primary), 0.4);
+}
+
+/* —— События —— */
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__events.cabinet-chrome__recent-panel {
+  background: rgba(16, 20, 30, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28) !important;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__events--collapsible
+  .cabinet-v2-dashboard__events-summary {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__events-count {
+  background: rgba(var(--pv2-r-primary), 0.14);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__events-body {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__event {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__event-title {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__event-meta {
+  color: rgba(255, 255, 255, 0.46);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__event-desc {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .cabinet-v2-dashboard__empty {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.48);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* —— Подстраницы /page4 —— */
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__panel,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__list-item-card,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__list-item-btn,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__form-panel,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__event-card {
+  background: rgba(16, 20, 30, 0.82) !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28) !important;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__page-title {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__page-lede,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__section-lede,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__empty-hint {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__section-title {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__tag-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__tag-chip--active {
+  background: rgba(var(--pv2-r-primary), 0.18);
+  border-color: rgba(var(--pv2-r-primary), 0.38);
+  color: #fff;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__field,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__textarea {
+  background: rgba(8, 10, 16, 0.65);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .page4-v2__notice {
+  background: rgba(var(--pv2-r-primary), 0.1) !important;
+  border-color: rgba(var(--pv2-r-primary), 0.22) !important;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* —— Планнер и дедлайны РАДОР (виджеты дашборда) —— */
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner.pv2-card-l1,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines.pv2-card-l1 {
+  background: rgba(16, 20, 30, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.32) !important;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner.pv2-card-l1::before,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines.pv2-card-l1::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 38%,
+    transparent 55%
+  ) !important;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner__kicker,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__kicker {
+  color: rgba(255, 255, 255, 0.44);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner__manage,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__manage {
+  color: rgba(130, 168, 255, 0.98);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner__empty,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__empty {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner__row:hover {
+  background: rgba(var(--pv2-r-primary), 0.12);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner__title {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner__row--done .contractor-planner__title {
+  color: rgba(255, 255, 255, 0.46);
+  text-decoration-color: rgba(255, 255, 255, 0.28);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner__date {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-planner__check {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__table th {
+  color: rgba(255, 255, 255, 0.44);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__table td {
+  color: rgba(255, 255, 255, 0.86);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__name {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__name:hover {
+  color: rgba(130, 168, 255, 0.98);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__status--muted {
+  color: rgba(255, 255, 255, 0.46);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__status--submitted {
+  color: #4ade80;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__status--overdue {
+  color: #f87171;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .cabinet-v2-dashboard-stage
+  .contractor-rador-deadlines__status--progress {
+  color: rgba(130, 168, 255, 0.98);
+}
+
+/* —— Страница планнера —— */
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .contractor-planner-page__calendar,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"]
+  .contractor-planner-page__day {
+  background: rgba(16, 20, 30, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28) !important;
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__month,
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__day-title {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__weekdays {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__cell {
+  color: rgba(255, 255, 255, 0.82);
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__cell--selected {
+  background: rgba(var(--pv2-r-primary), 0.18);
+  border-color: rgba(var(--pv2-r-primary), 0.38);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__input {
+  background: rgba(8, 10, 16, 0.65);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__item {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__item-title {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+html[data-portal-design="v2"].route-page4[data-cabinet-theme="dark"] .contractor-planner-page__empty {
+  color: rgba(255, 255, 255, 0.48);
+}

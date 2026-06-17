@@ -6,6 +6,13 @@ import { publicUrl } from "../utils/publicUrl";
  */
 export const APP_LOGO_SRC = publicUrl("tagjs/k21ztar3.png");
 export const PAGE2_HEADER_LOGO_SRC = publicUrl("tagjs/lt3gp5do.png");
+/** Фон страницы 2 (карта подрядчиков) */
+export const PAGE2_BG_VIDEO = publicUrl("page2-bg.mov");
+
+/** KPI hero Page2 — иконки карточек */
+export const ICON_PAGE2_CONTRACTORS = publicUrl("icons/page2/contractors-group.png");
+export const ICON_PAGE2_STATISTICS = publicUrl("icons/page2/statistics-pie.png");
+export const ICON_PAGE2_PROJECTS = publicUrl("icons/page2/projects-bag.png");
 
 export const ICON_SEARCH = publicUrl("tagjs/w5oazpzp.svg");
 /** Переключатель темы (солнце/луна) */

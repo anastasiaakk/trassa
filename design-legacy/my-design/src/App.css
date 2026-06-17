@@ -1,0 +1,652 @@
+:root {
+  --color-primary: #243B74;
+  --color-secondary: #1A2A52;
+  --color-accent: #243b74;
+  --color-muted: #5c6b8a;
+  --color-background: #F5F2EC;
+
+  /* Неоморфный «короб» вокруг контента (тёмный soft-ui) */
+  --neo-rim: #12161f;
+  --neo-raised-light: rgba(255, 255, 255, 0.07);
+  --neo-raised-dark: rgba(0, 0, 0, 0.42);
+  --neo-inset-top: rgba(255, 255, 255, 0.06);
+  --neo-inset-bottom: rgba(0, 0, 0, 0.35);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  min-height: 100svh;
+}
+
+body, html, #root {
+  font-family: var(--font-ui);
+  color: var(--color-primary);
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+}
+
+/* Рамка окна: «вдавленный» фон, поверх — приподнятая панель с контентом */
+body,
+html {
+  background-color: var(--neo-rim);
+  background-image: radial-gradient(120% 90% at 50% 0%, rgba(36, 59, 116, 0.35), transparent 55%),
+    linear-gradient(165deg, #0f131c 0%, #151a24 45%, #10141c 100%);
+}
+
+#root {
+  min-height: 100svh;
+  min-height: 100dvh;
+  max-width: 100%;
+  overflow-x: clip;
+  box-sizing: border-box;
+  padding: 14px;
+  background: transparent;
+  box-shadow: inset 5px 5px 14px var(--neo-inset-bottom), inset -4px -4px 12px var(--neo-inset-top);
+}
+
+/* Фон приложения: заливка + лепестки (ниже контента). Контент в .app-shell__main поверх. */
+.app-shell {
+  position: relative;
+  min-height: calc(100svh - 28px);
+  min-height: calc(100dvh - 28px);
+  isolation: isolate;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 10px 10px 26px var(--neo-raised-dark), -6px -6px 18px var(--neo-raised-light),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.app-shell__bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.app-shell__bgFill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(160deg, #1e2a48 0%, #1a2b4c 40%, #162240 100%);
+}
+
+/* Страница 1: палитра бренда (#0A2540, #00D4A5, #67E8F9) — приглушённый градиент */
+body.route-page1 {
+  background-color: #0a2540;
+}
+
+body.route-page1 #root {
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+body.route-page1 .app-shell,
+body.route-page1 .app-shell--page1 {
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+body.route-page1 .app-shell__bgFill {
+  z-index: 0;
+  background-color: #0a2540;
+  background-image: linear-gradient(152deg, #124656 0%, #0f3d52 38%, #0a2540 68%, #081c32 100%);
+}
+
+/* Живой фон: северное сияние + глубина + лёгкий блик (без «шаров») */
+body.route-page1 .page1-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+body.route-page1 .page1-ambient__aurora {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 160vmax;
+  height: 160vmax;
+  margin-left: -80vmax;
+  margin-top: -80vmax;
+  will-change: transform;
+}
+
+body.route-page1 .page1-ambient__aurora--a {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(0, 212, 165, 0.2) 55deg,
+    transparent 110deg,
+    rgba(103, 232, 249, 0.16) 185deg,
+    transparent 250deg,
+    rgba(0, 212, 165, 0.12) 310deg,
+    transparent 360deg
+  );
+  filter: blur(72px);
+  opacity: 0.9;
+  animation: page1AuroraSpinA 36s linear infinite;
+}
+
+body.route-page1 .page1-ambient__aurora--b {
+  background: conic-gradient(
+    from 120deg at 45% 55%,
+    transparent 0deg,
+    rgba(103, 232, 249, 0.14) 70deg,
+    transparent 140deg,
+    rgba(19, 74, 92, 0.35) 220deg,
+    transparent 300deg,
+    rgba(0, 212, 165, 0.1) 340deg,
+    transparent 360deg
+  );
+  filter: blur(88px);
+  opacity: 0.75;
+  animation: page1AuroraSpinB 52s linear infinite reverse;
+}
+
+body.route-page1 .page1-ambient__depth {
+  position: absolute;
+  inset: -15%;
+  background:
+    radial-gradient(ellipse 120% 80% at 12% 18%, rgba(0, 212, 165, 0.18) 0%, transparent 58%),
+    radial-gradient(ellipse 100% 70% at 90% 85%, rgba(103, 232, 249, 0.12) 0%, transparent 55%);
+  background-size: 130% 130%, 125% 125%;
+  animation: page1DepthPulse 14s ease-in-out infinite;
+}
+
+body.route-page1 .page1-ambient__sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    108deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(255, 255, 255, 0.02) 47%,
+    rgba(0, 212, 165, 0.1) 50%,
+    rgba(103, 232, 249, 0.08) 52%,
+    rgba(255, 255, 255, 0.02) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 260% 100%;
+  animation: page1LightSweep 11s ease-in-out infinite;
+}
+
+@keyframes page1AuroraSpinA {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes page1AuroraSpinB {
+  from {
+    transform: rotate(0deg) scale(1.05);
+  }
+  to {
+    transform: rotate(360deg) scale(1.05);
+  }
+}
+
+@keyframes page1DepthPulse {
+  0%,
+  100% {
+    background-position: 0% 10%, 100% 90%;
+    opacity: 0.85;
+  }
+  50% {
+    background-position: 22% 28%, 78% 72%;
+    opacity: 1;
+  }
+}
+
+@keyframes page1LightSweep {
+  0%,
+  100% {
+    background-position: 130% 0;
+    opacity: 0.5;
+  }
+  45% {
+    background-position: -30% 0;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.route-page1 .page1-ambient__aurora,
+  body.route-page1 .page1-ambient__depth,
+  body.route-page1 .page1-ambient__sweep {
+    animation: none !important;
+  }
+}
+
+body.route-page1 .page1-flow-bg {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Страница 2 — светлый фон в палитре бренда (без тёмной «рамки» html/body) */
+html.route-page2,
+body.route-page2 {
+  background-color: #e8f2f6;
+  background-image: linear-gradient(
+    180deg,
+    #eef7f9 0%,
+    #e8f2f6 42%,
+    #e2edf2 100%
+  );
+}
+
+body.route-page2 #root {
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  /* overflow-x: clip даёт overflow-y: auto и режет box-shadow админ-панели */
+  overflow: visible;
+}
+
+body.route-page2 .app-shell,
+body.route-page2 .app-shell--page1,
+body.route-page2 .app-shell--page2 {
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+body.route-page2 .app-shell__bgFill {
+  background-color: #e8f2f6;
+  background-image: linear-gradient(
+    180deg,
+    #eef7f9 0%,
+    #e8f2f6 42%,
+    #e2edf2 100%
+  );
+}
+
+body.route-page2 .app-shell__main {
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+/* Страница 2 — видеофон + светлая вуаль для читаемости */
+body.route-page2 .page2-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+body.route-page2 .page2-ambient__video {
+  position: absolute;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transform: translate3d(0, 0, 0) scale(1.03);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: opacity, transform;
+  filter: blur(0.8px) saturate(1.05);
+  transition: opacity 2.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.route-page2 .page2-ambient--ready .page2-ambient__video {
+  opacity: 0.48;
+  animation: page2VideoFloat 36s ease-in-out infinite alternate;
+}
+
+body.route-page2 .page2-ambient__veil {
+  position: absolute;
+  inset: 0;
+  opacity: 0.92;
+  background: linear-gradient(
+    180deg,
+    rgba(238, 247, 249, 0.55) 0%,
+    rgba(232, 242, 246, 0.38) 42%,
+    rgba(228, 240, 245, 0.42) 68%,
+    rgba(226, 237, 242, 0.6) 100%
+  );
+  transition: opacity 2.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.route-page2 .page2-ambient--ready .page2-ambient__veil {
+  opacity: 1;
+}
+
+body.route-page2 .page2-ambient--failed .page2-ambient__video {
+  display: none;
+}
+
+@keyframes page2VideoFloat {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(0, -1.2%, 0) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.route-page2 .page2-ambient__video {
+    display: none;
+    animation: none;
+  }
+}
+
+.app-shell__main {
+  position: relative;
+  z-index: 1;
+  /* Весь UI над слоем .app-shell__bg (заливка + лепестки) */
+  isolation: isolate;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #e8e5de, #f6f1e8);
+  transition: background 0.5s ease;
+}
+
+.app.page {
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: 18px 18px 28px rgba(145, 132, 116, 0.25), -18px -18px 28px rgba(255, 255, 255, 0.9);
+  background: #eeebe2;
+}
+
+.splash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(-45deg, #0f1629, #1a2a52, #243b74, #2d4a8a);
+  background-size: 400% 400%;
+  color: white;
+  font-size: 2rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.splash::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
+}
+
+.splash h1 {
+  opacity: 1;
+  text-align: center;
+  text-shadow: 0 0 30px rgba(255,255,255,0.5), 0 0 60px rgba(86,6,29,0.8);
+  letter-spacing: 3px;
+  font-weight: 300;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.entry-splash {
+  --entry-splash-cyan: #2ee8d8;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  pointer-events: none;
+  background: #05080f;
+  animation: entrySplashOut var(--entry-splash-duration, 2800ms) ease forwards;
+}
+
+.entry-splash__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(1.08) contrast(1.04) brightness(0.92);
+}
+
+.entry-splash__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 38%, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.72) 72%),
+    linear-gradient(180deg, rgba(5, 8, 15, 0.35) 0%, rgba(5, 8, 15, 0.55) 48%, rgba(5, 8, 15, 0.82) 100%);
+  pointer-events: none;
+}
+
+.entry-splash__stack {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 28px 18vh;
+  gap: 22px;
+  text-align: center;
+  animation: entryStackIn 700ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+}
+
+.entry-splash__logo {
+  width: min(132px, 34vw);
+  height: auto;
+  max-height: 12vh;
+  object-fit: contain;
+  display: block;
+  image-rendering: auto;
+  filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.55));
+  animation: entryLogoPulse 2200ms ease-in-out infinite alternate;
+}
+
+.entry-splash__caption {
+  margin: 0;
+  font-size: clamp(0.9375rem, 2.2vw, 1.0625rem);
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--leading-snug);
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+}
+
+.entry-splash__progress {
+  position: relative;
+  width: min(420px, calc(100vw - 56px));
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.entry-splash__progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--entry-splash-cyan) 0%, #7af6ec 100%);
+  box-shadow: 0 0 18px rgba(46, 232, 216, 0.55);
+  animation: entryProgressFill var(--entry-splash-duration, 2800ms) cubic-bezier(0.35, 0.05, 0.2, 1) forwards;
+}
+
+.entry-splash__progress-glow {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  margin-top: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(122, 246, 236, 0.95) 0%, rgba(46, 232, 216, 0.35) 45%, transparent 70%);
+  opacity: 0;
+  animation: entryProgressGlow var(--entry-splash-duration, 2800ms) cubic-bezier(0.35, 0.05, 0.2, 1) forwards;
+}
+
+@keyframes entryStackIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes entryLogoPulse {
+  from {
+    transform: scale(1);
+    filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.55));
+  }
+  to {
+    transform: scale(1.03);
+    filter: drop-shadow(0 22px 48px rgba(46, 232, 216, 0.22));
+  }
+}
+
+@keyframes entrySplashOut {
+  0%,
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes entryProgressFill {
+  0% {
+    width: 8%;
+  }
+  100% {
+    width: 78%;
+  }
+}
+
+@keyframes entryProgressGlow {
+  0% {
+    opacity: 0;
+    left: 4%;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.85;
+    left: 74%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry-splash,
+  .entry-splash__stack,
+  .entry-splash__logo,
+  .entry-splash__progress-fill,
+  .entry-splash__progress-glow {
+    animation: none !important;
+  }
+
+  .entry-splash__progress-fill {
+    width: 72%;
+  }
+}
+
+.map-container {
+  width: 100%;
+  height: 500px;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ece6db;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 10px 10px 18px rgba(118, 108, 97, 0.2), -10px -10px 18px rgba(255, 255, 255, 0.8);
+  z-index: 1000;
+}
+
+.roles {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.role-card {
+  background: var(--color-secondary);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  width: 200px;
+  text-align: center;
+}
+
+.role-card:hover {
+  transform: scale(1.05);
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid var(--color-muted);
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Глобальный бордовый hover убран — hover задаётся в модулях страниц */

@@ -1,0 +1,151 @@
+/**
+ * Page3 — вход и выбор роли (v2 glass).
+ * Глобальные классы page3-v2* на ключевых узлах.
+ */
+html[data-portal-design="v2"] .page3-v2 {
+  background: var(--pv2-gradient-deep) !important;
+  color: var(--pv2-frost);
+}
+
+html[data-portal-design="v2"] .page3-v2 .page3-v2__wash {
+  background:
+    radial-gradient(ellipse 95% 58% at 48% -5%, rgba(0, 212, 165, 0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 75% 50% at 88% 78%, rgba(103, 232, 249, 0.16) 0%, transparent 52%),
+    radial-gradient(ellipse 65% 42% at 8% 58%, rgba(0, 212, 165, 0.1) 0%, transparent 50%) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2 .page3-v2__glow {
+  background: radial-gradient(
+    ellipse 55% 45% at 45% 40%,
+    rgba(0, 212, 165, 0.22) 0%,
+    rgba(103, 232, 249, 0.1) 42%,
+    transparent 68%
+  ) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__title {
+  background: var(--pv2-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__subtitle {
+  color: var(--pv2-text-muted) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__back {
+  color: var(--pv2-cyan) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__back:hover {
+  background: rgba(0, 212, 165, 0.12) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__role-card {
+  border: 1px solid var(--pv2-border-strong) !important;
+  box-shadow: var(--pv2-shadow-sm), 0 0 32px rgba(0, 212, 165, 0.08) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__role-card:not(.page3-v2__role-card--selected):hover {
+  border-color: var(--pv2-teal) !important;
+  box-shadow: var(--pv2-shadow-md), 0 0 40px rgba(103, 232, 249, 0.18) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__role-card--selected {
+  box-shadow: var(--pv2-shadow-glow), var(--pv2-shadow-md) !important;
+  outline: 2px solid rgba(0, 212, 165, 0.45);
+  outline-offset: 2px;
+}
+
+html[data-portal-design="v2"] .page3-v2__login-card {
+  border: 1px solid var(--pv2-border-strong) !important;
+  background: var(--pv2-gradient-glass), var(--pv2-bg-glass-strong) !important;
+  backdrop-filter: blur(var(--pv2-blur-md)) !important;
+  -webkit-backdrop-filter: blur(var(--pv2-blur-md)) !important;
+  box-shadow: var(--pv2-shadow-md) !important;
+  color: var(--pv2-frost);
+}
+
+html[data-portal-design="v2"] .page3-v2__login-card input,
+html[data-portal-design="v2"] .page3-v2__login-card textarea,
+html[data-portal-design="v2"] .page3-v2__login-card select {
+  border-color: var(--pv2-border) !important;
+  background: rgba(6, 26, 46, 0.55) !important;
+  color: var(--pv2-frost) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__login-card input::placeholder,
+html[data-portal-design="v2"] .page3-v2__login-card textarea::placeholder {
+  color: var(--pv2-text-subtle) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__login-card label {
+  color: var(--pv2-text-muted) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__login-card button[type="submit"],
+html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__primary-btn {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border: none !important;
+  box-shadow: var(--pv2-shadow-glow) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__decor {
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(0, 212, 165, 0.35) 0%,
+    rgba(103, 232, 249, 0.12) 40%,
+    transparent 72%
+  ) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__road {
+  opacity: 0.42;
+  filter: saturate(0.65) hue-rotate(165deg) brightness(0.92);
+}
+
+html[data-portal-design="v2"] .page3-v2__institutions-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 26, 46, 0.08) 28%,
+    rgba(10, 37, 64, 0.42) 58%,
+    rgba(6, 26, 46, 0.72) 100%
+  ) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__role-card--selected .page3-v2__institutions-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 212, 165, 0.06) 20%,
+    rgba(10, 37, 64, 0.5) 55%,
+    rgba(6, 26, 46, 0.82) 100%
+  ) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__next {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  box-shadow: var(--pv2-shadow-glow) !important;
+  border: none !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__profile-btn--active {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border-color: transparent !important;
+  box-shadow: var(--pv2-shadow-glow) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__profile-btn {
+  border-color: var(--pv2-border) !important;
+  background: rgba(6, 26, 46, 0.4) !important;
+  color: var(--pv2-frost) !important;
+}
+
+html[data-portal-design="v2"] .page3-v2__selected-badge {
+  background: var(--pv2-gradient-brand) !important;
+  color: var(--pv2-deep) !important;
+  border-color: transparent !important;
+}

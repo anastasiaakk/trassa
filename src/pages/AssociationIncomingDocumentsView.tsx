@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { cx } from "../design-system/cabinetChromeClasses";
 import type { AssociationId } from "../utils/sharedAssociationDocumentsStorage";
 import {
   getDocument,
@@ -28,6 +29,7 @@ type Props = {
   layoutStyles: { recentPanel: CSSProperties; recentTitle: CSSProperties };
   /** Например `/page5` или `/page6` */
   basePath: string;
+  isV2?: boolean;
 };
 
 const AssociationIncomingDocumentsView = memo(function AssociationIncomingDocumentsView({
@@ -35,6 +37,7 @@ const AssociationIncomingDocumentsView = memo(function AssociationIncomingDocume
   association,
   layoutStyles,
   basePath,
+  isV2 = false,
 }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -95,8 +98,9 @@ const AssociationIncomingDocumentsView = memo(function AssociationIncomingDocume
 
   return (
     <div
+      className={cx(isV2 && "association-v2__shell")}
       style={{
-        ...layoutStyles.recentPanel,
+        ...(isV2 ? {} : layoutStyles.recentPanel),
         width: "100%",
         maxWidth: "100%",
         boxSizing: "border-box",

@@ -1,64 +1,30 @@
-import { Suspense, lazy, memo, useEffect, useMemo, useState } from "react";
+import { Suspense, memo, useEffect, useRef, useState } from "react";
 import {
   Routes,
   Route,
-  Navigate,
   useNavigationType,
   useLocation,
 } from "react-router-dom";
 import "./App.css";
 import { authMe } from "./api/authApi";
-import SeasonBackgroundLayer from "./components/SeasonBackgroundLayer";
 import { saveProfileSettings } from "./profileSettingsStorage";
-import Page1Flow from "./pages/Page1Flow";
+import Page2Background from "./components/Page2Background";
 import { isAuthApiEnabled } from "./utils/authMode";
 import { loadMaintenanceState } from "./utils/maintenanceMode";
-
-const Page2 = lazy(() => import("./pages/Page2"));
-const Page3 = lazy(() => import("./pages/Page3"));
-const Page4 = lazy(() => import("./pages/Page4"));
-const Page5 = lazy(() => import("./pages/Page5"));
-const Page6 = lazy(() => import("./pages/Page6"));
-const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
-const CabinetSchool = lazy(() => import("./pages/CabinetSchool"));
-const CabinetSchoolCalendar = lazy(() => import("./pages/CabinetSchoolCalendar"));
-const CabinetSchoolMessages = lazy(() => import("./pages/CabinetSchoolMessages"));
-const CabinetSchoolMaterials = lazy(() => import("./pages/CabinetSchoolMaterials"));
-const CabinetSpo = lazy(() => import("./pages/CabinetSpo"));
-const CabinetSpoPortfolio = lazy(() => import("./pages/CabinetSpoPortfolio"));
-const CabinetSpoRequests = lazy(() => import("./pages/CabinetSpoRequests"));
-const DownloadDesktopPage = lazy(() => import("./pages/DownloadDesktopPage"));
-
-/** Создаём элементы маршрутов один раз при загрузке модуля — без лишних пересозданий при рендере App */
-const APP_ROUTES = [
-  { path: "/", element: <Page1Flow /> },
-  { path: "/services", element: <Page2 /> },
-  { path: "/page3", element: <Page3 /> },
-  { path: "/cabinet-school", element: <CabinetSchool /> },
-  { path: "/cabinet-school/materials", element: <CabinetSchoolMaterials /> },
-  { path: "/cabinet-school/messages", element: <CabinetSchoolMessages /> },
-  { path: "/cabinet-school/calendar", element: <CabinetSchoolCalendar /> },
-  { path: "/cabinet-spo", element: <CabinetSpo /> },
-  { path: "/cabinet-spo/requests", element: <CabinetSpoRequests /> },
-  { path: "/cabinet-spo/portfolio", element: <CabinetSpoPortfolio /> },
-  { path: "/page4", element: <Page4 /> },
-  { path: "/page4/proforientation", element: <Page4 /> },
-  { path: "/page4/documents", element: <Page4 /> },
-  { path: "/page4/teams", element: <Page4 /> },
-  { path: "/page5", element: <Page5 /> },
-  { path: "/page5/proforientation", element: <Page5 /> },
-  { path: "/page5/documents", element: <Page5 /> },
-  { path: "/page5/documents/incoming", element: <Page5 /> },
-  { path: "/page5/teams", element: <Page5 /> },
-  { path: "/page6", element: <Page6 /> },
-  { path: "/page6/proforientation", element: <Page6 /> },
-  { path: "/page6/documents", element: <Page6 /> },
-  { path: "/page6/documents/incoming", element: <Page6 /> },
-  { path: "/page6/teams", element: <Page6 /> },
-  { path: "/profile", element: <ProfileSettings /> },
-  { path: "/download", element: <DownloadDesktopPage /> },
-  { path: "/page1", element: <Navigate to="/" replace /> },
-] as const;
+import { getPortalDesign } from "./design-system/portalDesign";
+import { INTRO_DONE_SESSION_KEY } from "./ensureIntroRoute";
+import { whenIntroSplashDone } from "./utils/introSplashRuntime";
+import DeviceAccessBlocked from "./components/DeviceAccessBlocked";
+import PortalPrivacyBrowseNotice from "./components/PortalPrivacyBrowseNotice";
+import { hideCaptureShield, startPortalScreenshotGuard } from "./utils/portalScreenshotGuard";
+import { isScreenshotShieldDisabledClient } from "./utils/portalMobileCaptureGuard";
+import { isProfileCabinetTransition } from "./utils/profileNavigation";
+import { APP_ROUTES } from "./routes/appRoutes";
+import { usePortalPrivacyBootstrap } from "./hooks/usePortalPrivacyBootstrap";
+import { usePortalAccessGate } from "./hooks/usePortalAccessGate";
+import { useRouteBodyClasses } from "./hooks/useRouteBodyClasses";
+import { useViolationsGuardState } from "./hooks/useViolationsGuardState";
+import { usePageMeta } from "./hooks/usePageMeta";
 
 function MaintenanceOverlay() {
   const location = useLocation();
@@ -77,36 +43,53 @@ function MaintenanceOverlay() {
     return null;
   }
 
+  const isV2 = getPortalDesign() === "v2";
+
   return (
     <div
+      className={isV2 ? "maintenance-v2" : undefined}
       style={{
         position: "fixed",
         inset: 0,
         zIndex: 99999,
-        background: "linear-gradient(160deg, #1a2744 0%, #0d1526 100%)",
-        color: "#e8eef8",
+        background: isV2
+          ? undefined
+          : "linear-gradient(160deg, #1a2744 0%, #0d1526 100%)",
+        color: isV2 ? undefined : "#e8eef8",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: 24,
         textAlign: "center",
-        fontFamily: "Montserrat, system-ui, sans-serif",
+        fontFamily: "var(--font-ui)",
       }}
     >
-      <div style={{ maxWidth: 520 }}>
-        <h1 style={{ margin: "0 0 16px", fontSize: "1.5rem", fontWeight: 700 }}>
+      <div className={isV2 ? "maintenance-v2__card" : undefined} style={isV2 ? undefined : { maxWidth: 520 }}>
+        <h1
+          className={isV2 ? "maintenance-v2__title" : undefined}
+          style={
+            isV2
+              ? undefined
+              : { margin: "0 0 16px", fontSize: "1.5rem", fontWeight: 700 }
+          }
+        >
           Технические работы
         </h1>
         <p style={{ margin: 0, lineHeight: 1.55, fontSize: "1rem", opacity: 0.95 }}>
           {state.message}
         </p>
         <p
-          style={{
-            marginTop: 24,
-            fontSize: "0.88rem",
-            opacity: 0.75,
-            lineHeight: 1.45,
-          }}
+          className={isV2 ? "maintenance-v2__hint" : undefined}
+          style={
+            isV2
+              ? undefined
+              : {
+                  marginTop: 24,
+                  fontSize: "0.88rem",
+                  opacity: 0.75,
+                  lineHeight: 1.45,
+                }
+          }
         >
           Администратор может открыть раздел «Карта подрядчиков» в меню портала
           (маршрут /services), войти в панель и отключить режим техработ.
@@ -117,132 +100,163 @@ function MaintenanceOverlay() {
 }
 
 function App() {
+  useEffect(() => {
+    const stripShield = () => {
+      document.documentElement.classList.remove("portal-capture-shield-active");
+      document.getElementById("portal-capture-shield")?.remove();
+    };
+    stripShield();
+    window.addEventListener("pageshow", stripShield);
+    return () => window.removeEventListener("pageshow", stripShield);
+  }, []);
+
+  const apiOn = isAuthApiEnabled();
+  const privacyAccepted = usePortalPrivacyBootstrap();
+  const violationsGuard = useViolationsGuardState();
+  const { portalAccess, banMessage, portalBlocked } = usePortalAccessGate(privacyAccepted);
+
+  const [portalUserName, setPortalUserName] = useState<string | null>(null);
+  const portalUserNameRef = useRef<string | null>(null);
+  portalUserNameRef.current = portalUserName;
+
   const action = useNavigationType();
   const location = useLocation();
   const pathname = location.pathname;
+  const prevPathnameRef = useRef(pathname);
 
   useEffect(() => {
-    if (action !== "POP") {
-      window.scrollTo(0, 0);
-    }
+    const prev = prevPathnameRef.current;
+    prevPathnameRef.current = pathname;
+    if (action === "POP") return;
+    if (isProfileCabinetTransition(prev, pathname)) return;
+    window.scrollTo(0, 0);
   }, [action, pathname]);
+
+  useRouteBodyClasses();
+
+  const isV2 = getPortalDesign() === "v2";
+  const isPage1Home = pathname === "/";
+  const isPage2Map = pathname === "/services" || pathname === "/map";
+
+  usePageMeta();
+
+  useEffect(() => {
+    if (portalAccess === "allowed") return;
+    document.documentElement.classList.remove("portal-capture-shield-active");
+    document.getElementById("portal-capture-shield")?.remove();
+    hideCaptureShield();
+  }, [portalAccess]);
+
+  /** Защита от скриншотов — только ПК без тача (на телефоне отключена). */
+  useEffect(() => {
+    if (isScreenshotShieldDisabledClient()) {
+      document.documentElement.classList.remove("portal-capture-shield-active");
+      document.getElementById("portal-capture-shield")?.remove();
+      hideCaptureShield();
+      return;
+    }
+    if (!apiOn || portalBlocked || !privacyAccepted || !violationsGuard.enabled) {
+      document.documentElement.classList.remove("portal-capture-shield-active");
+      hideCaptureShield();
+      return;
+    }
+    let stop: (() => void) | undefined;
+    whenIntroSplashDone(() => {
+      try {
+        if (sessionStorage.getItem(INTRO_DONE_SESSION_KEY) !== "1") return;
+      } catch {
+        return;
+      }
+      stop = startPortalScreenshotGuard({
+        userName: () => portalUserNameRef.current,
+      });
+    });
+    return () => {
+      stop?.();
+      document.documentElement.classList.remove("portal-capture-shield-active");
+    };
+  }, [apiOn, portalBlocked, privacyAccepted, violationsGuard.enabled]);
 
   /** Подтягиваем профиль с сервера, если есть сессия (JWT cookie). */
   useEffect(() => {
-    if (!isAuthApiEnabled()) return;
-    void authMe().then((r) => {
-      if (r.ok) saveProfileSettings(r.profile);
-    });
-  }, []);
-
-  const pageMeta = useMemo(() => {
-    switch (pathname) {
-      case "/":
-        return {
-          title: "Страница 1 — ТрассА",
-          metaDescription: "Комплексный портал для управления персоналом, развития лучших практик в дорожной деятельности",
-        };
-      case "/services":
-        return {
-          title: "Страница 2 — Карта подрядчиков — ТрассА",
-          metaDescription: "Интерактивная карта подрядчиков по городам России",
-        };
-      case "/page3":
-        return {
-          title: "Страница 3 — Выбор роли — ТрассА",
-          metaDescription: "Выбор роли пользователя для входа в систему",
-        };
-      case "/cabinet-school":
-        return {
-          title: "Личный кабинет — Школа — ТрассА",
-          metaDescription: "Кабинет обучающегося",
-        };
-      case "/cabinet-school/calendar":
-        return {
-          title: "Календарь активностей — Школа — ТрассА",
-          metaDescription: "Отдельная страница календаря мероприятий для школьников",
-        };
-      case "/cabinet-school/messages":
-        return {
-          title: "Объявления и письма — Школа — ТрассА",
-          metaDescription: "Отдельная страница объявлений и писем для школьников",
-        };
-      case "/cabinet-school/materials":
-        return {
-          title: "Материалы и задания — Школа — ТрассА",
-          metaDescription: "Отдельная страница материалов и заданий для школьников",
-        };
-      case "/cabinet-spo":
-        return {
-          title: "Личный кабинет — СПО и ВО — ТрассА",
-          metaDescription: "Кабинет студента СПО и вуза",
-        };
-      case "/page4":
-        return {
-          title: "Страница 4 — Подрядчик — ТрассА",
-          metaDescription: "Рабочий контур подрядчика для управления письмами и задачами",
-        };
-      case "/page4/proforientation":
-        return {
-          title: "Профориентация и кадры — Подрядчик — ТрассА",
-          metaDescription: "Результаты профориентационного теста и подбор кадров",
-        };
-      case "/page5":
-        return {
-          title: "Страница 5 — РАДОР — ТрассА",
-          metaDescription: "Рабочий контур ассоциации РАДОР для управления заявками, документами и мероприятиями",
-        };
-      case "/page5/proforientation":
-        return {
-          title: "Профориентация — РАДОР — ТрассА",
-          metaDescription: "Результаты профориентационного теста обучающихся",
-        };
-      case "/page6":
-        return {
-          title: "Страница 6 — АДО — ТрассА",
-          metaDescription: "Рабочий контур АДО для управления заявками, документами и мероприятиями",
-        };
-      case "/page6/proforientation":
-        return {
-          title: "Профориентация — АДО — ТрассА",
-          metaDescription: "Результаты профориентационного теста обучающихся",
-        };
-      case "/profile":
-        return {
-          title: "Настройки профиля — ТрассА",
-          metaDescription: "Личные данные, контакты и уведомления",
-        };
-      case "/download":
-        return {
-          title: "Скачать приложение — ТрассА",
-          metaDescription: "Установка десктопной версии портала для Windows",
-        };
-      default:
-        return {
-          title: "ТрассА",
-          metaDescription: "",
-        };
+    if (!apiOn || portalBlocked || !privacyAccepted) return;
+    const load = () => {
+      void authMe().then((r) => {
+        if (r.ok) {
+          saveProfileSettings(r.profile);
+          const name = [r.profile.lastName, r.profile.firstName]
+            .filter(Boolean)
+            .join(" ")
+            .trim();
+          setPortalUserName(name || r.profile.email || null);
+        }
+      });
+    };
+    try {
+      if (sessionStorage.getItem(INTRO_DONE_SESSION_KEY) !== "1") {
+        whenIntroSplashDone(load);
+        return;
+      }
+    } catch {
+      /* ignore */
     }
-  }, [pathname]);
+    load();
+  }, [apiOn, portalBlocked, privacyAccepted]);
 
-  useEffect(() => {
-    document.title = pageMeta.title;
+  if (portalAccess === "region-blocked") {
+    return (
+      <DeviceAccessBlocked
+        title="Портал недоступен"
+        message={banMessage}
+        hint={null}
+      />
+    );
+  }
 
-    const descriptionElement = document.querySelector('meta[name="description"]');
-    if (descriptionElement) {
-      descriptionElement.setAttribute("content", pageMeta.metaDescription);
-    }
-  }, [pageMeta]);
+  if (portalAccess === "banned") {
+    return (
+      <DeviceAccessBlocked
+        message={banMessage}
+        title="Сервис недоступен"
+        hint={null}
+      />
+    );
+  }
 
   return (
     <>
-      <div className="app-shell">
+      <div
+        className={`app-shell${isPage1Home ? " app-shell--page1" : ""}${isPage2Map ? " app-shell--page2" : ""}${!privacyAccepted ? " app-shell--privacy-notice" : ""}`}
+      >
         <div className="app-shell__bg" aria-hidden>
           <div className="app-shell__bgFill" />
-          {pathname === "/services" ? <SeasonBackgroundLayer /> : null}
+          {isPage1Home ? (
+            <div className="page1-ambient" aria-hidden>
+              <div className="page1-ambient__aurora page1-ambient__aurora--a" />
+              <div className="page1-ambient__aurora page1-ambient__aurora--b" />
+              <div className="page1-ambient__depth" />
+              <div className="page1-ambient__sweep" />
+            </div>
+          ) : null}
+          {isPage2Map ? <Page2Background /> : null}
         </div>
         <div className="app-shell__main">
-          <Suspense fallback={null}>
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  minHeight: "40vh",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "var(--font-ui)",
+                  color: isV2 ? "var(--pv2-muted)" : "#5c6b8a",
+                }}
+              >
+                Загрузка…
+              </div>
+            }
+          >
             <Routes>
               {APP_ROUTES.map((route) => (
                 <Route key={route.path} path={route.path} element={route.element} />
@@ -251,6 +265,7 @@ function App() {
           </Suspense>
         </div>
       </div>
+      {!privacyAccepted ? <PortalPrivacyBrowseNotice /> : null}
       <MaintenanceOverlay />
     </>
   );

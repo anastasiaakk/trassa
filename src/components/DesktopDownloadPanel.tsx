@@ -1,4 +1,6 @@
 import { memo, useEffect, useState } from "react";
+import { cx } from "../design-system/cabinetChromeClasses";
+import { usePortalDesign } from "../design-system/usePortalDesign";
 import styles from "./DesktopDownloadPanel.module.css";
 import {
   TRASSA_APP_UPDATE_LOCAL_URL,
@@ -28,6 +30,7 @@ async function fetchManifest(url: string): Promise<UpdateManifest | null> {
 }
 
 function DesktopDownloadPanel({ embedded }: Props) {
+  const isV2 = usePortalDesign() === "v2";
   const [version, setVersion] = useState<string | null>(null);
   const [checkBusy, setCheckBusy] = useState(false);
   const [checkMsg, setCheckMsg] = useState<string | null>(null);
@@ -51,7 +54,7 @@ function DesktopDownloadPanel({ embedded }: Props) {
   }, []);
 
   return (
-    <div className={embedded ? styles.embedded : styles.standalone}>
+    <div className={cx(embedded ? styles.embedded : styles.standalone, isV2 && "desktop-download-v2")}>
       <h2 className={styles.title} id="about-dialog-download-heading">
         Приложение для компьютера (Windows)
       </h2>
@@ -67,7 +70,7 @@ function DesktopDownloadPanel({ embedded }: Props) {
       </ul>
       <div className={styles.downloadBlock}>
         <a
-          className={styles.downloadBtn}
+          className={cx(styles.downloadBtn, isV2 && "desktop-download-v2__btn")}
           href={TRASSA_SETUP_DOWNLOAD_URL}
           download="trassa-setup.exe"
           rel="noopener noreferrer"
@@ -80,7 +83,7 @@ function DesktopDownloadPanel({ embedded }: Props) {
         </p>
         <button
           type="button"
-          className={styles.checkBtn}
+          className={cx(styles.checkBtn, isV2 && "desktop-download-v2__check")}
           disabled={checkBusy}
           onClick={() => {
             if (!window.trassaDesktop?.checkForUpdatesNow) {
@@ -105,7 +108,11 @@ function DesktopDownloadPanel({ embedded }: Props) {
         {hasLocalMirror ? (
           <p className={styles.downloadMirror}>
             Если ссылка не открывается,{" "}
-            <a className={styles.mirrorLink} href={TRASSA_SETUP_LOCAL_URL} download="trassa-setup.exe">
+            <a
+              className={cx(styles.mirrorLink, isV2 && "desktop-download-v2__mirror")}
+              href={TRASSA_SETUP_LOCAL_URL}
+              download="trassa-setup.exe"
+            >
               скачать копию с этого сайта
             </a>
             .

@@ -1,0 +1,82 @@
+/**
+ * Вложенные разделы кабинетов РАДОР/АДО (документы, команды, входящие).
+ */
+html[data-portal-design="v2"] .association-v2__shell {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--pv2-radius-xl);
+  padding: 22px 28px 28px;
+  gap: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+html[data-portal-design="v2"] .association-v2__shell::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--pv2-gradient-brand-h);
+  opacity: 0.88;
+  border-radius: var(--pv2-radius-xl) var(--pv2-radius-xl) 0 0;
+  pointer-events: none;
+}
+
+html[data-portal-design="v2"] .association-v2__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--pv2-ink);
+  line-height: 1.2;
+}
+
+html[data-portal-design="v2"][data-cabinet-theme="dark"] .association-v2__title {
+  color: var(--pv2-frost);
+}
+
+html[data-portal-design="v2"] .association-v2__card {
+  border: 1px solid var(--pv2-border);
+  background: var(--pv2-bg-glass);
+  box-shadow: var(--pv2-shadow-sm);
+  border-radius: var(--pv2-radius-md);
+}
+
+html[data-portal-design="v2"] .association-v2__notice {
+  padding: 14px 18px;
+  border-radius: var(--pv2-radius-md);
+  border: 1px solid var(--pv2-border-strong);
+  background: linear-gradient(135deg, rgba(var(--pv2-r-primary), 0.12), rgba(var(--pv2-r-white), 0.08));
+  color: var(--pv2-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+html[data-portal-design="v2"] .association-v2__btn-primary {
+  border: none;
+  border-radius: var(--pv2-radius-md);
+  padding: 12px 18px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  background: var(--pv2-gradient-brand);
+  color: var(--pv2-deep);
+  box-shadow: 0 6px 18px rgba(var(--pv2-r-primary), 0.28);
+}
+
+html[data-portal-design="v2"] .association-v2__btn-ghost {
+  border: 1px solid var(--pv2-border);
+  border-radius: var(--pv2-radius-md);
+  padding: 10px 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  background: var(--pv2-bg-glass);
+  color: var(--pv2-text);
+}

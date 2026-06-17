@@ -1,0 +1,94 @@
+.fieldset {
+  margin: 16px 0 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(111, 149, 255, 0.85);
+}
+
+.fieldsetMap .legend {
+  color: rgba(10, 37, 64, 0.55);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(111, 149, 255, 0.18);
+  background: rgba(6, 24, 40, 0.35);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.fieldsetMap .option {
+  border-color: rgba(10, 37, 64, 0.12);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.option:hover {
+  border-color: rgba(0, 212, 165, 0.45);
+  background: rgba(0, 212, 165, 0.08);
+}
+
+.optionChecked {
+  border-color: rgba(0, 212, 165, 0.55);
+  background: rgba(0, 212, 165, 0.12);
+  box-shadow: 0 0 0 1px rgba(0, 212, 165, 0.2);
+}
+
+.fieldsetMap .optionChecked {
+  background: rgba(0, 212, 165, 0.1);
+}
+
+.input {
+  margin-top: 3px;
+  accent-color: #00d4a5;
+  flex-shrink: 0;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.fieldsetMap .label {
+  color: #0a2540;
+}
+
+.hint {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: rgba(111, 149, 255, 0.72);
+}
+
+.fieldsetMap .hint {
+  color: rgba(10, 37, 64, 0.58);
+}

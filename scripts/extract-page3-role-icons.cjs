@@ -20,39 +20,79 @@ const REF_MAP = {
 
 /** Область белого круга с иконкой (карточка 419×329) */
 const CROP = { left: 32, top: 252, width: 64, height: 64 };
+const ICON_CANVAS = 48;
+/** Единый «кегль» глифа: обрезка по контуру и вписывание в квадрат. */
+const ICON_GLYPH = 42;
+/** Шапка — контурная, без заливки; чуть крупнее для визуального паритета с «тяжёлыми» иконками. */
+const GLYPH_BOOST = {
+  "66h5rmum": 1.12,
+};
+
+/** Оставляем только штрихи пиктограммы (#243B74), убираем белый круг, серый фон карточки и чёрный экспорт. */
+function isRoleGlyphPixel(r, g, b) {
+  const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+  if (lum >= 175) return false;
+  if (r <= 45 && g <= 45 && b <= 45) return false;
+  const spread = Math.max(r, g, b) - Math.min(r, g, b);
+  if (spread < 32 && lum >= 80 && lum < 175) return false;
+  return b >= r - 8 && b >= g - 5 && lum <= 155 && spread >= 10;
+}
+
+function clearIconBackdrop(data) {
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    if (!isRoleGlyphPixel(r, g, b)) {
+      data[i + 3] = 0;
+    }
+  }
+}
+
+/** Убирает фон, обрезает пустые поля, масштабирует глиф в кадре ICON_CANVAS. */
+async function normalizeRoleIconPng(srcPath, destPath, id = "") {
+  const sharp = require("sharp");
+  const boost = GLYPH_BOOST[id] ?? 1;
+  const glyphTarget = Math.min(ICON_CANVAS, Math.round(ICON_GLYPH * boost));
+  const { data, info } = await sharp(srcPath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  clearIconBackdrop(data);
+  const pad = Math.floor((ICON_CANVAS - glyphTarget) / 2);
+  await sharp(data, {
+    raw: { width: info.width, height: info.height, channels: 4 },
+  })
+    .trim({ threshold: 8 })
+    .resize(glyphTarget, glyphTarget, {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .extend({
+      top: pad,
+      bottom: ICON_CANVAS - glyphTarget - pad,
+      left: pad,
+      right: ICON_CANVAS - glyphTarget - pad,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .png()
+    .toFile(destPath);
+}
 
 async function extractFromRef(id, refFile) {
   const sharp = require("sharp");
   const src = path.join(REFS, refFile);
   const dest = path.join(OUT, `${id}.png`);
-  const width = id === "66h5rmum" ? 58 : 48;
-  const height = 48;
+  const tmp = path.join(OUT, `${id}.__tmp.png`);
   await sharp(src)
     .extract(CROP)
-    .resize(width, height, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .resize(ICON_CANVAS, ICON_CANVAS, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
-    .toFile(dest);
+    .toFile(tmp);
+  await normalizeRoleIconPng(tmp, dest, id);
+  fs.unlinkSync(tmp);
   return dest;
 }
 
-/** Убирает чёрный/тёмный фон экспорта Figma — иконка на белом круге кнопки */
-async function prepareRoleIconPng(srcPath, destPath) {
-  const sharp = require("sharp");
-  const { data, info } = await sharp(srcPath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  const threshold = 42;
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    if (r <= threshold && g <= threshold && b <= threshold) {
-      data[i + 3] = 0;
-    }
-  }
-  await sharp(data, {
-    raw: { width: info.width, height: info.height, channels: 4 },
-  })
-    .png()
-    .toFile(destPath);
+async function prepareRoleIconPng(srcPath, destPath, id = "") {
+  await normalizeRoleIconPng(srcPath, destPath, id);
 }
 
 async function copyImport(id) {
@@ -61,7 +101,7 @@ async function copyImport(id) {
     if (!fs.existsSync(src)) continue;
     const dest = path.join(OUT, `${id}${ext}`);
     if (ext === ".png") {
-      await prepareRoleIconPng(src, dest);
+      await prepareRoleIconPng(src, dest, id);
     } else {
       fs.copyFileSync(src, dest);
     }
@@ -82,13 +122,13 @@ async function runExtractPage3RoleIcons() {
       continue;
     }
     const refPath = path.join(REFS, ref);
-    if (!fs.existsSync(refPath)) {
-      console.warn(`  skip ${id}: нет public/page3-refs/${ref}`);
+    if (fs.existsSync(refPath)) {
+      await extractFromRef(id, ref);
+      console.log(`  ${id} <- page3-refs/${ref}`);
+      ok++;
       continue;
     }
-    await extractFromRef(id, ref);
-    console.log(`  ${id} <- page3-refs/${ref}`);
-    ok++;
+    console.warn(`  skip ${id}: нет tagjs-import и page3-refs/${ref}`);
   }
 
   console.log(`[extract-page3-role-icons] готово: ${ok}/4`);
