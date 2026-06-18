@@ -1,6 +1,6 @@
 # Админ-панель
 
-Админка встроена в **карту** (`/services` → Page2) и открывается после входа администратора.
+Админка встроена в **карту** (`/services` → `ServicesMapPage`) и открывается после входа администратора.
 
 ## Файлы
 
@@ -27,22 +27,22 @@
 | `src/utils/adminRouteState.ts` | Секции и URL state |
 | `src/utils/adminAuth.ts` | Сессия админа |
 
-### Page3 (выбор роли и вход)
+### RoleSelectPage (выбор роли и вход, маршрут `/page3`)
 
 | Файл | Назначение |
 |------|------------|
-| `src/pages/Page3.tsx` | Shell: выбор роли + обёртка auth |
-| `src/hooks/usePage3Auth.ts` | Логика входа, регистрации, восстановления |
-| `src/config/page3Roles.ts` | Иконки ролей, тексты, preload |
-| `src/components/page3/Page3RoleCard.tsx` | Карточка роли |
-| `src/components/page3/Page3AuthForm.tsx` | Shell формы входа |
-| `src/components/page3/Page3*FormSection.tsx` | Login / register / forgot секции |
+| `src/pages/RoleSelectPage.tsx` | Shell: выбор роли + обёртка auth |
+| `src/hooks/useRoleSelectAuth.ts` | Логика входа, регистрации, восстановления |
+| `src/config/roleSelectRoles.ts` | Иконки ролей, тексты, preload |
+| `src/components/roleSelect/RoleSelectRoleCard.tsx` | Карточка роли |
+| `src/components/roleSelect/RoleSelectAuthForm.tsx` | Shell формы входа |
+| `src/components/roleSelect/Page3*FormSection.tsx` | Login / register / forgot секции |
 
 ### Мессенджер (кабинеты page5/page6)
 
 | Файл | Назначение |
 |------|------------|
-| `src/pages/Page5MessengerView.tsx` | Shell мессенджера |
+| `src/pages/CabinetMessengerView.tsx` | Shell мессенджера |
 | `src/hooks/useMessengerState.ts` | Состояние, отправка, приглашения |
 | `src/components/messenger/*` | Sidebar, thread, bubbles, диалоги |
 | `src/utils/messengerThreadStore.ts` | localStorage peers/threads |
@@ -59,7 +59,7 @@
 | `src/components/tbot/tbotConstants.ts` | Размеры, storage позиций |
 | `src/utils/messengerTbotNotify.ts` | Красная точка, звук, OS push |
 
-### Формы подрядчика (Page4)
+### Формы подрядчика (`ContractorCabinetPage`, `/page4`)
 
 | Файл | Назначение |
 |------|------------|

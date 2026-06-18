@@ -2,7 +2,7 @@ import type { NavigateFunction } from "react-router-dom";
 import { navigateToProfileSettings } from "./profileNavigation";
 import type { CabinetDockItem } from "../components/CabinetQuickDock";
 
-export type CabinetSection = "dashboard" | "messenger";
+export type CabinetSection = "dashboard" | "messenger" | "events";
 
 export type AssociationCabinetSection = "dashboard" | "events" | "messenger";
 

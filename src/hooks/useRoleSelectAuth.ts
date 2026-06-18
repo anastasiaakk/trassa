@@ -26,23 +26,23 @@ import {
 } from "../utils/cabinetBetaPreview";
 import { contractorOrgValidationMessage } from "../utils/page3Auth";
 
-export type Page3AuthMode = "login" | "register" | "forgot";
+export type RoleSelectAuthMode = "login" | "register" | "forgot";
 
-type UsePage3AuthParams = {
+type useRoleSelectAuthParams = {
   selectedRole: number | null;
   showLogin: boolean;
   navigate: NavigateFunction;
   setIsNavigating: (value: boolean) => void;
 };
 
-export function usePage3Auth({
+export function useRoleSelectAuth({
   selectedRole,
   showLogin,
   navigate,
   setIsNavigating,
-}: UsePage3AuthParams) {
+}: useRoleSelectAuthParams) {
   const [institutionProfile, setInstitutionProfile] = useState<"ado" | "rador">("rador");
-  const [authMode, setAuthMode] = useState<Page3AuthMode>("login");
+  const [authMode, setAuthMode] = useState<RoleSelectAuthMode>("login");
   const [forgotStep, setForgotStep] = useState<"email" | "password">("email");
   const [loginEmail, setLoginEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -416,4 +416,4 @@ export function usePage3Auth({
   };
 }
 
-export type Page3AuthState = ReturnType<typeof usePage3Auth>;
+export type RoleSelectAuthState = ReturnType<typeof useRoleSelectAuth>;

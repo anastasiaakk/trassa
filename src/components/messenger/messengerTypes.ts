@@ -1,3 +1,3 @@
-import type { Page5ThemeStyles } from "../../pages/Page5EventsView";
+import type { CabinetThemeStyles } from "../../pages/AssociationEventsView";
 
-export type MessengerThemeStyles = Page5ThemeStyles;
+export type MessengerThemeStyles = CabinetThemeStyles;

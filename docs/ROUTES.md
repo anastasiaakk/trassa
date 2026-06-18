@@ -8,9 +8,9 @@
 
 | Маршрут | Файл | Описание |
 |---------|------|----------|
-| `/` | `Page1Flow` | Главная, интро-сплэш |
-| `/services` | `Page2` | Карта подрядчиков (+ встроенная админка) |
-| `/page3` | `Page3` | Выбор роли (школьник, студент, подрядчик…) |
+| `/` | `PortalEntryPage` → `PortalHomePage` | Главная, интро-сплэш |
+| `/services` | `ServicesMapPage` | Карта подрядчиков (+ встроенная админка) |
+| `/page3` | `RoleSelectPage` | Выбор роли (школьник, студент, подрядчик…) |
 | `/download` | `DownloadDesktopPage` | Скачать десктоп |
 | `/privacy` | `PrivacyPolicyPage` | Политика ПДн |
 | `/design-preview` | `DesignSystemPreview` | Превью DS v2 (dev) |
@@ -21,9 +21,9 @@
 |---------|------|------|
 | `/cabinet-school/*` | `CabinetSchool` | Школьник |
 | `/cabinet-spo/*` | `CabinetSpo` | Студент СПО |
-| `/page4/*` | `Page4` | Подрядчик |
-| `/page5`, `/page5/*` | `Page5` | Ассоциация (РАДОР) |
-| `/page6`, `/page6/*` | `Page6` | Ассоциация (АДО) — обёртка над `AssociationPage` |
+| `/page4/*` | `ContractorCabinetPage` | Подрядчик |
+| `/page5`, `/page5/*` | `AssociationCabinetPage` | Ассоциация (РАДОР) |
+| `/page6`, `/page6/*` | `AdoCabinetPage` | Ассоциация (АДО) — обёртка над `AssociationPage` |
 
 ### Подмаршруты ассоциации (page5 / page6)
 

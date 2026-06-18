@@ -8,7 +8,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, type NavigateFunction } from "react-router-dom";
 import type { ProfileSettingsData } from "../profileSettingsStorage";
 import {
   CABINET_THEME_CHANGED,
@@ -26,10 +26,15 @@ import {
   getCabinetSectionMeta,
   getCabinetTitle,
 } from "../utils/cabinetRailItems";
-import { buildCabinetDockItems } from "../utils/cabinetDockItems";
+import { buildCabinetDockItems, buildAssociationDockItems } from "../utils/cabinetDockItems";
 import { useCabinetMobileNav } from "../hooks/useCabinetMobileNav";
 import { getHoverTooltipPreset, HoverTooltip } from "./HoverTooltip";
-import { Page5MessengerView } from "../pages/Page5MessengerView";
+import { CabinetMessengerView } from "../pages/CabinetMessengerView";
+import {
+  buildAssociationRailGroups,
+  getAssociationSectionMeta,
+} from "../utils/associationRailItems";
+import { useAssociationRailBadges } from "../hooks/useAssociationRailBadges";
 import { injectImagePreloads } from "../utils/imagePreload";
 import {
   hasMessengerInboxUnread,
@@ -80,7 +85,27 @@ import {
 
 export { CABINET_CHROME_PRELOAD_IMAGES };
 
-export type CabinetSection = "dashboard" | "messenger";
+export type CabinetSection = "dashboard" | "messenger" | "events";
+
+function isAssociationCabinetPath(cabinetPath: string): boolean {
+  return cabinetPath === "/page5" || cabinetPath === "/page6";
+}
+
+function leaveAssociationNestedRoute(
+  cabinetPath: string,
+  pathname: string,
+  navigate: NavigateFunction
+): void {
+  const nested = [
+    `${cabinetPath}/proforientation`,
+    `${cabinetPath}/documents`,
+    `${cabinetPath}/documents/incoming`,
+    `${cabinetPath}/teams`,
+  ];
+  if (nested.includes(pathname)) {
+    navigate(cabinetPath, { replace: true });
+  }
+}
 
 export type CabinetChromeStyles = {
   pageBg: string;
@@ -141,14 +166,20 @@ export type CabinetChromeContext = {
   /** Поиск из шапки кабинета (v2 и legacy). */
   searchQuery: string;
   normalizedSearch: string;
+  cabinetSection: CabinetSection;
+  setCabinetSection: (section: CabinetSection) => void;
 };
 
 type Props = {
   cabinetPath: string;
   children: (ctx: CabinetChromeContext) => ReactNode;
+  /** Вкладка «Мероприятия» для кабинетов РАДОР/АДО */
+  renderEvents?: (ctx: CabinetChromeContext) => ReactNode;
+  /** Подпись роли в боковом меню (по умолчанию — из cabinetPath) */
+  sidebarRoleLabel?: string;
 };
 
-function CabinetChromeLayout({ cabinetPath, children }: Props) {
+function CabinetChromeLayout({ cabinetPath, children, renderEvents, sidebarRoleLabel }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
@@ -162,6 +193,8 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
   const [tbotNotifyDot, setTbotNotifyDot] = useState(false);
   const [messengerMountKey, setMessengerMountKey] = useState(0);
   const messengerEnabled = cabinetPath !== "/cabinet-school" && cabinetPath !== "/cabinet-spo";
+  const isAssociationCabinet = isAssociationCabinetPath(cabinetPath);
+  const associationRailBadges = useAssociationRailBadges();
 
   const isDark = theme === "dark";
   const portalDesign = usePortalDesign();
@@ -172,31 +205,47 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
   );
   const normalizedSearch = useMemo(() => searchQuery.trim().toLowerCase(), [searchQuery]);
 
-  const dockItems = useMemo(
-    () =>
-      isV2
-        ? buildCabinetDockItems({
-            cabinetPath,
-            pathname: location.pathname,
-            cabinetSection,
-            messengerEnabled,
-            messengerHasUnread,
-            navigate,
-            setCabinetSection,
-            locationState: location.state,
-          })
-        : [],
-    [
-      isV2,
+  const openEventsSection = useCallback(() => {
+    if (!isAssociationCabinet) return;
+    leaveAssociationNestedRoute(cabinetPath, location.pathname, navigate);
+    setCabinetSection("events");
+  }, [isAssociationCabinet, cabinetPath, location.pathname, navigate]);
+
+  const dockItems = useMemo(() => {
+    if (!isV2) return [];
+    if (isAssociationCabinet) {
+      return buildAssociationDockItems({
+        basePath: cabinetPath,
+        pathname: location.pathname,
+        cabinetSection,
+        messengerHasUnread,
+        navigate,
+        setCabinetSection,
+        onOpenEvents: openEventsSection,
+      });
+    }
+    return buildCabinetDockItems({
       cabinetPath,
-      location.pathname,
-      location.state,
+      pathname: location.pathname,
       cabinetSection,
       messengerEnabled,
       messengerHasUnread,
       navigate,
-    ]
-  );
+      setCabinetSection,
+      locationState: location.state,
+    });
+  }, [
+    isV2,
+    isAssociationCabinet,
+    cabinetPath,
+    location.pathname,
+    location.state,
+    cabinetSection,
+    messengerEnabled,
+    messengerHasUnread,
+    navigate,
+    openEventsSection,
+  ]);
 
   const railBadgeOverrides = useMemo(() => {
     if (cabinetPath === "/page4") {
@@ -205,33 +254,44 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
     return undefined;
   }, [cabinetPath, contractorRailBadges]);
 
-  const railGroups = useMemo(
-    () =>
-      isV2
-        ? buildCabinetRailGroups({
-            cabinetPath,
-            pathname: location.pathname,
-            cabinetSection,
-            messengerEnabled,
-            navigate,
-            setCabinetSection,
-            badgeOverrides: railBadgeOverrides,
-          })
-        : [],
-    [
-      isV2,
+  const railGroups = useMemo(() => {
+    if (!isV2) return [];
+    if (isAssociationCabinet) {
+      return buildAssociationRailGroups({
+        basePath: cabinetPath,
+        pathname: location.pathname,
+        cabinetSection,
+        navigate,
+        setCabinetSection,
+        onOpenEvents: openEventsSection,
+        badgeOverrides: associationRailBadges,
+      });
+    }
+    return buildCabinetRailGroups({
       cabinetPath,
-      location.pathname,
+      pathname: location.pathname,
       cabinetSection,
       messengerEnabled,
       navigate,
       setCabinetSection,
-      railBadgeOverrides,
-    ]
-  );
+      badgeOverrides: railBadgeOverrides,
+    });
+  }, [
+    isV2,
+    isAssociationCabinet,
+    cabinetPath,
+    location.pathname,
+    cabinetSection,
+    messengerEnabled,
+    navigate,
+    openEventsSection,
+    associationRailBadges,
+    railBadgeOverrides,
+  ]);
 
   const cabinetTitle = useMemo(() => getCabinetTitle(cabinetPath), [cabinetPath]);
   const cabinetRoleLabel = useMemo(() => {
+    if (sidebarRoleLabel) return sidebarRoleLabel;
     switch (cabinetPath) {
       case "/cabinet-school":
         return "Школьник";
@@ -246,11 +306,13 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
       default:
         return "Участник";
     }
-  }, [cabinetPath]);
-  const cabinetMeta = useMemo(
-    () => getCabinetSectionMeta(location.pathname, cabinetPath, cabinetSection),
-    [location.pathname, cabinetPath, cabinetSection]
-  );
+  }, [cabinetPath, sidebarRoleLabel]);
+  const cabinetMeta = useMemo(() => {
+    if (isAssociationCabinet) {
+      return getAssociationSectionMeta(location.pathname, cabinetPath, cabinetSection);
+    }
+    return getCabinetSectionMeta(location.pathname, cabinetPath, cabinetSection);
+  }, [isAssociationCabinet, location.pathname, cabinetPath, cabinetSection]);
   /** Поиск в brand, toolbar отдельно — как у подрядчика (и студента на мобильном) */
   const isSearchFirstTopbar = cabinetPath === "/page4" || cabinetPath === "/cabinet-spo";
 
@@ -360,10 +422,13 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
       return;
     }
     applyMessengerInvitePayload(data);
+    if (isAssociationCabinet) {
+      leaveAssociationNestedRoute(cabinetPath, location.pathname, navigate);
+    }
     setCabinetSection("messenger");
     setMessengerMountKey((k) => k + 1);
     navigate({ pathname: location.pathname, search: "" }, { replace: true });
-  }, [location.search, location.pathname, navigate, messengerEnabled]);
+  }, [location.search, location.pathname, navigate, messengerEnabled, isAssociationCabinet, cabinetPath]);
 
   useEffect(() => {
     if (messengerEnabled) return;
@@ -385,8 +450,11 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
   }, []);
 
   const handleToolbarMessenger = useCallback(() => {
+    if (isAssociationCabinet) {
+      leaveAssociationNestedRoute(cabinetPath, location.pathname, navigate);
+    }
     setCabinetSection((prev) => (prev === "messenger" ? "dashboard" : "messenger"));
-  }, []);
+  }, [isAssociationCabinet, cabinetPath, location.pathname, navigate]);
 
   const handleToolbarNotifications = useCallback(() => {
     if (cabinetPath === "/cabinet-school") {
@@ -617,8 +685,21 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
       plaqueName,
       searchQuery,
       normalizedSearch,
+      cabinetSection,
+      setCabinetSection,
     }),
-    [styles, layoutStyles, cn, isV2, isDark, profilePlaque, plaqueName, searchQuery, normalizedSearch]
+    [
+      styles,
+      layoutStyles,
+      cn,
+      isV2,
+      isDark,
+      profilePlaque,
+      plaqueName,
+      searchQuery,
+      normalizedSearch,
+      cabinetSection,
+    ]
   );
 
   const profileActions = (
@@ -849,12 +930,16 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
   const mainContent =
     cabinetSection === "messenger" ? (
       <main className={cn.messenger} style={mainRegion}>
-        <Page5MessengerView
+        <CabinetMessengerView
           key={messengerMountKey}
           styles={styles}
           isDark={isDark}
           cabinetPath={cabinetPath}
         />
+      </main>
+    ) : cabinetSection === "events" && renderEvents ? (
+      <main className={cx(cn.messenger, "page5-v2__main-region")} style={mainRegion}>
+        {renderEvents(ctx)}
       </main>
     ) : (
       children(ctx)

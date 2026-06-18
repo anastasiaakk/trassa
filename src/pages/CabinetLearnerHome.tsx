@@ -11,7 +11,7 @@ import {
   AUDIENCE_LABELS,
   getUpcomingEventsForPanel,
   type CalendarEventItem,
-} from "./Page5EventsView";
+} from "./AssociationEventsView";
 import {
   loadSharedCalendarEvents,
   SHARED_CALENDAR_EVENTS_KEY,

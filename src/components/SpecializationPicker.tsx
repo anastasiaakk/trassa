@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchPublicSpecializations } from "../api/specializationsApi";
 import { isAuthApiEnabled } from "../utils/authMode";
 import { loadActiveSpecializations, type Specialization } from "../utils/specializationsStorage";
-import styles from "../pages/Page3.module.css";
+import styles from "../pages/RoleSelectPage.module.css";
 
 type Props = {
   value: string;

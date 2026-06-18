@@ -1,11 +1,11 @@
-import styles from "../../pages/Page3.module.css";
+import styles from "../../pages/RoleSelectPage.module.css";
 
-type Page3PasswordEyeButtonProps = {
+type RoleSelectPasswordEyeButtonProps = {
   showPassword: boolean;
   onToggle: () => void;
 };
 
-export default function Page3PasswordEyeButton({ showPassword, onToggle }: Page3PasswordEyeButtonProps) {
+export default function RoleSelectPasswordEyeButton({ showPassword, onToggle }: RoleSelectPasswordEyeButtonProps) {
   return (
     <button
       type="button"

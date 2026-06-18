@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { cx } from "../../design-system/cabinetChromeClasses";
-import styles from "../../pages/Page3.module.css";
+import styles from "../../pages/RoleSelectPage.module.css";
 
-type Page3RolePickerProps = {
+type RoleSelectRolePickerProps = {
   isV2: boolean;
   roleHoverSuppressed: boolean;
   selectedRole: number | null;
@@ -10,13 +10,13 @@ type Page3RolePickerProps = {
   onNext: () => void;
 };
 
-export default function Page3RolePicker({
+export default function RoleSelectRolePicker({
   isV2,
   roleHoverSuppressed,
   selectedRole,
   cards,
   onNext,
-}: Page3RolePickerProps) {
+}: RoleSelectRolePickerProps) {
   return (
     <div className={styles.rolePickMain}>
       <div className={styles.titleBlock}>

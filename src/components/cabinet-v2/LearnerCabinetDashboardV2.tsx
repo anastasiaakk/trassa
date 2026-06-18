@@ -6,7 +6,7 @@ import ProforientationTestSection from "../ProforientationTestSection";
 import {
   AUDIENCE_LABELS,
   type CalendarEventItem,
-} from "../../pages/Page5EventsView";
+} from "../../pages/AssociationEventsView";
 import type { LearnerCabinetVariant } from "../../pages/CabinetLearnerHome";
 import { cx } from "../../design-system/cabinetChromeClasses";
 import {

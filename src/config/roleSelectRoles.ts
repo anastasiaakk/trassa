@@ -61,7 +61,7 @@ export function getLoginBadgeText(
   return "Государственные институты";
 }
 
-export const PAGE3_PRELOAD_IMAGES = [
+export const ROLE_SELECT_PRELOAD_IMAGES = [
   firstCardIcon,
   ROLE_ICON_STUDENT,
   ROLE_ICON_CONTRACTOR,
@@ -76,7 +76,7 @@ export const PAGE3_PRELOAD_IMAGES = [
   fourthCardExpandedPhoto,
 ] as const;
 
-export const PAGE3_ROLE_ICONS = [
+export const ROLE_SELECT_ROLE_ICONS = [
   {
     iconSrc: firstCardIcon,
     overlay: true,
@@ -103,4 +103,4 @@ export const PAGE3_ROLE_ICONS = [
   },
 ] as const;
 
-export type Page3RoleIcon = (typeof PAGE3_ROLE_ICONS)[number];
+export type RoleSelectRoleIcon = (typeof ROLE_SELECT_ROLE_ICONS)[number];

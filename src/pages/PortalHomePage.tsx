@@ -4,7 +4,7 @@ import { prefetchServicesRoute } from "../utils/routePrefetch";
 import Sparkline from "../components/Sparkline";
 import { cx } from "../design-system/cabinetChromeClasses";
 import { publicUrl } from "../utils/publicUrl";
-import styles from "./Page1.module.css";
+import styles from "./PortalHomePage.module.css";
 
 const STAT_ICON_SPECIALISTS = publicUrl("icons/page1-stat-specialists.png");
 
@@ -116,7 +116,7 @@ function StatIcon({ type }: { type: (typeof STATS)[number]["icon"] }) {
   );
 }
 
-const Page1: FunctionComponent<{
+const PortalHomePage: FunctionComponent<{
   isV2?: boolean;
   introFast?: boolean;
   /** Кроссфейд после entry-splash */
@@ -353,4 +353,4 @@ const Page1: FunctionComponent<{
   );
 };
 
-export default Page1;
+export default PortalHomePage;

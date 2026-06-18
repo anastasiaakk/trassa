@@ -1,4 +1,4 @@
-import type { CalendarEventItem } from "../pages/Page5EventsView";
+import type { CalendarEventItem } from "../pages/AssociationEventsView";
 import { PORTAL_KV } from "../config/portalKeys";
 import { pushPortalKv } from "./portalSync";
 

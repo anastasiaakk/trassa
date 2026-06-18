@@ -5,7 +5,7 @@ import {
   ICON_PAGE2_STATISTICS,
 } from "../assets/appIcons";
 import { cx } from "../design-system/cabinetChromeClasses";
-import styles from "../pages/Page2.module.css";
+import styles from "../pages/ServicesMapPage.module.css";
 
 export type Page2StatData = {
   id: string;

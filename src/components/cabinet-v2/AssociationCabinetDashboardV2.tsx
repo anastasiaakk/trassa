@@ -7,7 +7,7 @@ import { getHoverTooltipPreset, HoverTooltip } from "../HoverTooltip";
 import {
   AUDIENCE_LABELS,
   type CalendarEventItem,
-} from "../../pages/Page5EventsView";
+} from "../../pages/AssociationEventsView";
 
 export type AssociationPageCard = {
   title: string;

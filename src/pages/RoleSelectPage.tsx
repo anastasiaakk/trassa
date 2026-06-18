@@ -6,17 +6,17 @@ import {
   shouldShowReturnToAdminDashboard,
 } from "../utils/adminReturnNavigation";
 import { clearCabinetBetaPreview } from "../utils/cabinetBetaPreview";
-import Page3AuthForm from "../components/page3/Page3AuthForm";
-import Page3RoleCard from "../components/page3/Page3RoleCard";
-import Page3RolePicker from "../components/page3/Page3RolePicker";
-import Page3RoadBackground from "../components/page3/Page3RoadBackground";
-import { PAGE3_PRELOAD_IMAGES, PAGE3_ROLE_ICONS } from "../config/page3Roles";
+import RoleSelectAuthForm from "../components/roleSelect/RoleSelectAuthForm";
+import RoleSelectRoleCard from "../components/roleSelect/RoleSelectRoleCard";
+import RoleSelectRolePicker from "../components/roleSelect/RoleSelectRolePicker";
+import RoleSelectRoadBackground from "../components/roleSelect/RoleSelectRoadBackground";
+import { ROLE_SELECT_PRELOAD_IMAGES, ROLE_SELECT_ROLE_ICONS } from "../config/roleSelectRoles";
 import { cx } from "../design-system/cabinetChromeClasses";
 import { usePortalDesign } from "../design-system/usePortalDesign";
-import { usePage3Auth } from "../hooks/usePage3Auth";
-import styles from "./Page3.module.css";
+import { useRoleSelectAuth } from "../hooks/useRoleSelectAuth";
+import styles from "./RoleSelectPage.module.css";
 
-const Page3 = () => {
+const RoleSelectPage = () => {
   const isV2 = usePortalDesign() === "v2";
   const [selectedRole, setSelectedRole] = useState<number | null>(null);
   const [roleHoverSuppressed, setRoleHoverSuppressed] = useState(false);
@@ -24,7 +24,7 @@ const Page3 = () => {
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
 
-  const auth = usePage3Auth({
+  const auth = useRoleSelectAuth({
     selectedRole,
     showLogin,
     navigate,
@@ -41,14 +41,14 @@ const Page3 = () => {
 
   useEffect(() => {
     void Promise.all([
-      import("./Page4"),
-      import("./Page5"),
-      import("./Page6"),
+      import("./ContractorCabinetPage"),
+      import("./AssociationCabinetPage"),
+      import("./AdoCabinetPage"),
       import("./ProfileSettings"),
       import("./CabinetSchool"),
       import("./CabinetSpo"),
     ]);
-    return injectImagePreloads(PAGE3_PRELOAD_IMAGES);
+    return injectImagePreloads(ROLE_SELECT_PRELOAD_IMAGES);
   }, []);
 
   useEffect(() => {
@@ -98,8 +98,8 @@ const Page3 = () => {
 
   const cards = useMemo(
     () =>
-      PAGE3_ROLE_ICONS.map((icon, index) => (
-        <Page3RoleCard
+      ROLE_SELECT_ROLE_ICONS.map((icon, index) => (
+        <RoleSelectRoleCard
           key={index}
           icon={icon}
           index={index}
@@ -146,7 +146,7 @@ const Page3 = () => {
     <div
       className={cx(styles.pageRoot, isNavigating && styles.pageRootNavigating, isV2 && "page3-v2")}
     >
-      <Page3RoadBackground isV2={isV2} />
+      <RoleSelectRoadBackground isV2={isV2} />
       <div
         className={cx(
           styles.hero,
@@ -162,7 +162,7 @@ const Page3 = () => {
           {!showLogin ? (
             <>
               {backRow}
-              <Page3RolePicker
+              <RoleSelectRolePicker
                 isV2={isV2}
                 roleHoverSuppressed={roleHoverSuppressed}
                 selectedRole={selectedRole}
@@ -173,7 +173,7 @@ const Page3 = () => {
           ) : (
             <>
               {backRow}
-              <Page3AuthForm isV2={isV2} selectedRole={selectedRole} auth={auth} />
+              <RoleSelectAuthForm isV2={isV2} selectedRole={selectedRole} auth={auth} />
             </>
           )}
         </div>
@@ -184,4 +184,4 @@ const Page3 = () => {
   );
 };
 
-export default Page3;
+export default RoleSelectPage;

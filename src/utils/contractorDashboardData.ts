@@ -1,5 +1,5 @@
 import type { FormSubmission, FormTemplate } from "../types/adminForms";
-import type { CalendarEventItem } from "../pages/Page5EventsView";
+import type { CalendarEventItem } from "../pages/AssociationEventsView";
 import type { ContractorRecommendation } from "./distributionRecommendations";
 import { getContractorSeenAt } from "./distributionRecommendations";
 import { submissionFillPercentSingle } from "./adminFormsGrid";

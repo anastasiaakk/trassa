@@ -17,7 +17,7 @@ import {
   heroTopRowStyle,
 } from "../utils/cabinetHero";
 import { ContractorCabinetAside } from "../components/ContractorCabinetAside";
-import { AUDIENCE_LABELS, getUpcomingStudentSchoolEventsForPanel } from "./Page5EventsView";
+import { AUDIENCE_LABELS, getUpcomingStudentSchoolEventsForPanel } from "./AssociationEventsView";
 import {
   loadSharedCalendarEvents,
   SHARED_CALENDAR_EVENTS_KEY,
@@ -782,7 +782,7 @@ function ContractorCabinetDashboard({ ctx }: { ctx: CabinetChromeContext }) {
   );
 }
 
-const Page4 = () => {
+const ContractorCabinetPage = () => {
   const renderDashboard = useCallback((ctx: CabinetChromeContext) => <ContractorCabinetDashboard ctx={ctx} />, []);
 
   return (
@@ -792,4 +792,4 @@ const Page4 = () => {
   );
 };
 
-export default memo(Page4);
+export default memo(ContractorCabinetPage);

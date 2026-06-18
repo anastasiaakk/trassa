@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import EntrySplash from "../components/EntrySplash";
 import { cx } from "../design-system/cabinetChromeClasses";
 import { usePortalDesign } from "../design-system/usePortalDesign";
-import Page1 from "./Page1";
+import PortalHomePage from "./PortalHomePage";
 import {
   clearIntroPendingEarly,
   endPage1Handoff,
@@ -16,10 +16,10 @@ import { releaseEntrySplashVideo } from "../utils/entrySplashVideo";
 type Phase = "splash" | "page1";
 
 /**
- * Сплэш → кроссфейд → Page1.
+ * Сплэш → кроссфейд → главная (PortalHomePage).
  * Анимация при каждой перезагрузке вкладки; внутри SPA после первого показа — без повтора.
  */
-export default function Page1Flow() {
+export default function PortalEntryPage() {
   const isV2 = usePortalDesign() === "v2";
   const playSplash = shouldPlayEntrySplash();
   const [phase, setPhase] = useState<Phase>(playSplash ? "splash" : "page1");
@@ -86,7 +86,7 @@ export default function Page1Flow() {
     >
       {page1Visible && (
         <div className={cx("page1-flow-bg__page", "page1-flow-bg__page--in")}>
-          <Page1
+          <PortalHomePage
             isV2={isV2}
             introFromSplash={page1FromSplash}
           />

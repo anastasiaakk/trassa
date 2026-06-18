@@ -1,15 +1,15 @@
 import { cx } from "../../design-system/cabinetChromeClasses";
-import type { Page3AuthState } from "../../hooks/usePage3Auth";
+import type { RoleSelectAuthState } from "../../hooks/useRoleSelectAuth";
 import { PASSWORD_RULES_SHORT } from "../../utils/passwordPolicy";
-import styles from "../../pages/Page3.module.css";
-import Page3PasswordEyeButton from "./Page3PasswordEyeButton";
+import styles from "../../pages/RoleSelectPage.module.css";
+import RoleSelectPasswordEyeButton from "./RoleSelectPasswordEyeButton";
 
-type Page3ForgotPasswordSectionProps = {
+type RoleSelectForgotPasswordSectionProps = {
   isV2: boolean;
-  auth: Page3AuthState;
+  auth: RoleSelectAuthState;
 };
 
-export default function Page3ForgotPasswordSection({ isV2, auth }: Page3ForgotPasswordSectionProps) {
+export default function RoleSelectForgotPasswordSection({ isV2, auth }: RoleSelectForgotPasswordSectionProps) {
   const {
     forgotStep,
     setForgotStep,
@@ -79,7 +79,7 @@ export default function Page3ForgotPasswordSection({ isV2, auth }: Page3ForgotPa
           onChange={(e) => setForgotPassword(e.target.value)}
           autoComplete="new-password"
         />
-        <Page3PasswordEyeButton
+        <RoleSelectPasswordEyeButton
           showPassword={showForgotPassword}
           onToggle={() => setShowForgotPassword((v) => !v)}
         />

@@ -106,9 +106,9 @@ function ProfileSettings() {
 
   useEffect(() => {
     const base = resolveCabinetBase(fromPath);
-    if (base === "/page4") void import("./Page4");
-    else if (base === "/page5") void import("./Page5");
-    else if (base === "/page6") void import("./Page6");
+    if (base === "/page4") void import("./ContractorCabinetPage");
+    else if (base === "/page5") void import("./AssociationCabinetPage");
+    else if (base === "/page6") void import("./AdoCabinetPage");
     else if (base === "/cabinet-school") void import("./CabinetSchool");
     else if (base === "/cabinet-spo") void import("./CabinetSpo");
   }, [fromPath]);

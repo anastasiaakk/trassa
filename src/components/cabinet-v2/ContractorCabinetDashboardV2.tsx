@@ -11,7 +11,7 @@ import {
   plannerEntryToPanelItem,
   togglePlannerEntryDone,
 } from "../../utils/contractorPlannerStorage";
-import { AUDIENCE_LABELS, type CalendarEventItem } from "../../pages/Page5EventsView";
+import { AUDIENCE_LABELS, type CalendarEventItem } from "../../pages/AssociationEventsView";
 import {
   CabinetV2EventsPanel,
   CabinetV2Hero,

@@ -11,7 +11,7 @@ import { getHoverTooltipPreset, HoverTooltip } from "../components/HoverTooltip"
 import { cx } from "../design-system/cabinetChromeClasses";
 import { usePortalDesign } from "../design-system/usePortalDesign";
 
-export type Page5ThemeStyles = {
+export type CabinetThemeStyles = {
   pageBg: string;
   text: string;
   muted: string;
@@ -112,13 +112,13 @@ const MONTH_NAMES = [
 ];
 
 type Props = {
-  styles: Page5ThemeStyles;
+  styles: CabinetThemeStyles;
   isDark: boolean;
   events: CalendarEventItem[];
   onEventsChange: Dispatch<SetStateAction<CalendarEventItem[]>>;
 };
 
-export const Page5EventsView = memo(function Page5EventsView({
+export const AssociationEventsView = memo(function AssociationEventsView({
   styles,
   isDark,
   events,

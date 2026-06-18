@@ -119,11 +119,12 @@ flowchart TB
 
 ## Известный технический долг
 
-- Крупные файлы: (нет критичных — Page3 auth разбит на `components/page3/Page3*FormSection.tsx`)
-- Legacy-имена маршрутов `page3`–`page6`
+- Крупные файлы: (нет критичных — Page3 auth разбит на `components/roleSelect/Page3*FormSection.tsx`)
+- Legacy-имена **маршрутов** `page3`–`page6` (URL и QR не трогаем); файлы страниц переименованы в осмысленные (`RoleSelectPage`, `AssociationCabinetPage`, …)
+- `AssociationCabinetPage` legacy (не v2) — `AssociationCabinetLegacy.tsx`; v2 → `CabinetChromeLayout` + `pages/association/*`
 - Два пути auth: серверный JWT + `localAuth.ts` (offline)
 - `exhaustive-deps` в ESLint — часть предупреждений, цель — снизить до 0
 
 Приоритет рефакторинга: разбивать по доменам (messenger, admin tables, map), не «всё сразу».
 
-**Сделано:** `AdminDashboard.tsx` — чистый TSX-shell; панели в `components/admin/` с lazy-load; smoke + lint + server tests в CI. Мессенджер → `useMessengerState` + `components/messenger/*`. Таблицы → `useAdminTablesPanel` + секции в `components/admin/AdminTables*`. Page3 → shell ~80 строк; `usePage3Auth` + `components/page3/*` (login/register/forgot секции, institution picker, password eye). Т-бот → `useTbotChat` + `components/tbot/*`, shell `AiChatBubble.tsx` ~86 строк. Формы подрядчика → `useContractorForms` + `components/contractor/ContractorForms*` + `contractorFormsViewUtils.ts`, shell `ContractorFormsView.tsx` ~95 строк.
+**Сделано:** … Формы подрядчика → `useContractorForms` + … Страницы переименованы (`PortalEntryPage`, `ServicesMapPage`, `RoleSelectPage`, `ContractorCabinetPage`, `AssociationCabinetPage`, `AdoCabinetPage`; календарь → `AssociationEventsView`, мессенджер → `CabinetMessengerView`). Кабинеты РАДОР/АДО (v2) → общий `CabinetChromeLayout` + `pages/association/*`.

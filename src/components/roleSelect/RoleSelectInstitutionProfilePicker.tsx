@@ -1,18 +1,18 @@
 import { cx } from "../../design-system/cabinetChromeClasses";
-import type { Page3AuthState } from "../../hooks/usePage3Auth";
-import styles from "../../pages/Page3.module.css";
+import type { RoleSelectAuthState } from "../../hooks/useRoleSelectAuth";
+import styles from "../../pages/RoleSelectPage.module.css";
 
-type Page3InstitutionProfilePickerProps = {
+type RoleSelectInstitutionProfilePickerProps = {
   isV2: boolean;
   selectedRole: number | null;
-  auth: Page3AuthState;
+  auth: RoleSelectAuthState;
 };
 
-export default function Page3InstitutionProfilePicker({
+export default function RoleSelectInstitutionProfilePicker({
   isV2,
   selectedRole,
   auth,
-}: Page3InstitutionProfilePickerProps) {
+}: RoleSelectInstitutionProfilePickerProps) {
   const { institutionProfile, setInstitutionProfile } = auth;
 
   if (selectedRole !== 3) return null;

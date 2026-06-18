@@ -42,6 +42,21 @@ import {
   templateHasSheetTabs,
 } from "../utils/formSheetUtils";
 
+function normalizeImportedCell(v: unknown): FormCellValue {
+  if (v === undefined || v === null) return "";
+  if (typeof v === "boolean" || typeof v === "number") return v;
+  return String(v);
+}
+
+function normalizeImportedRows(rows: FormGridRow[]): FormGridRow[] {
+  return rows.map((r) => ({
+    id: r.id,
+    cells: Object.fromEntries(
+      Object.entries(r.cells ?? {}).map(([k, v]) => [k, normalizeImportedCell(v)])
+    ),
+  }));
+}
+
 export function useContractorForms(emailNorm: string) {
   const [templates, setTemplates] = useState<FormTemplate[]>([]);
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
@@ -187,7 +202,7 @@ export function useContractorForms(emailNorm: string) {
     ? templates.find((t) => t.id === activeId) ?? getFormTemplate(activeId)
     : undefined;
   const hasSheetTabs = active ? templateHasSheetTabs(active) : false;
-  const importSheets = active?.importSheets ?? [];
+  const importSheets = useMemo(() => active?.importSheets ?? [], [active]);
 
   const activeSheet = useMemo<FormTemplateSheet | null>(() => {
     if (!active || !hasSheetTabs) return null;
@@ -205,7 +220,7 @@ export function useContractorForms(emailNorm: string) {
   }, [active, activeSheet]);
 
   const isGrid = effectiveTemplate ? templateLayout(effectiveTemplate) === "grid" : false;
-  const effectiveColumns = effectiveTemplate?.columns ?? [];
+  const effectiveColumns = useMemo(() => effectiveTemplate?.columns ?? [], [effectiveTemplate]);
 
   const loadSheetIntoEditor = useCallback(
     (
@@ -390,20 +405,6 @@ export function useContractorForms(emailNorm: string) {
     e.preventDefault();
     void persist(submit);
   };
-
-  const normalizeImportedCell = (v: unknown): FormCellValue => {
-    if (v === undefined || v === null) return "";
-    if (typeof v === "boolean" || typeof v === "number") return v;
-    return String(v);
-  };
-
-  const normalizeImportedRows = (rows: FormGridRow[]): FormGridRow[] =>
-    rows.map((r) => ({
-      id: r.id,
-      cells: Object.fromEntries(
-        Object.entries(r.cells ?? {}).map(([k, v]) => [k, normalizeImportedCell(v)])
-      ),
-    }));
 
   const handleAttachFile = useCallback(
     async (file: File | undefined) => {

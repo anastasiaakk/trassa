@@ -22,7 +22,7 @@ export type CabinetRailBadgeOverrides = Partial<Record<string, string | undefine
 type RailParams = {
   cabinetPath: string;
   pathname: string;
-  cabinetSection: "dashboard" | "messenger";
+  cabinetSection: "dashboard" | "messenger" | "events";
   messengerEnabled: boolean;
   navigate: NavigateFunction;
   setCabinetSection: (s: "dashboard" | "messenger") => void;
@@ -181,9 +181,10 @@ export function buildCabinetRailGroups(params: RailParams): CabinetRailGroup[] {
 export function getCabinetSectionMeta(
   pathname: string,
   cabinetPath: string,
-  cabinetSection: "dashboard" | "messenger"
+  cabinetSection: "dashboard" | "messenger" | "events",
 ): string {
   if (cabinetSection === "messenger") return "Мессенджер";
+  if (cabinetSection === "events") return "Мероприятия";
   if (pathname.startsWith("/cabinet-school/messages")) return "Письма и объявления";
   if (pathname.startsWith("/cabinet-school/calendar")) return "Календарь";
   if (pathname.startsWith("/cabinet-spo/requests")) return "Заявки";

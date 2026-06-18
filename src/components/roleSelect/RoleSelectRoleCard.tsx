@@ -3,13 +3,13 @@ import {
   ROLE_EXPAND_BG,
   ROLE_FEATURE_COPY,
   ROLE_HOVER_OVERLAY_SRC,
-  type Page3RoleIcon,
-} from "../../config/page3Roles";
+  type RoleSelectRoleIcon,
+} from "../../config/roleSelectRoles";
 import { cx } from "../../design-system/cabinetChromeClasses";
-import styles from "../../pages/Page3.module.css";
+import styles from "../../pages/RoleSelectPage.module.css";
 
-export type Page3RoleCardProps = {
-  icon: Page3RoleIcon;
+export type RoleSelectRoleCardProps = {
+  icon: RoleSelectRoleIcon;
   index: number;
   isSelected: boolean;
   isV2?: boolean;
@@ -17,8 +17,8 @@ export type Page3RoleCardProps = {
   onLeave?: () => void;
 };
 
-const Page3RoleCard = memo(
-  ({ icon, index, isSelected, isV2 = false, onSelect, onLeave }: Page3RoleCardProps) => {
+const RoleSelectRoleCard = memo(
+  ({ icon, index, isSelected, isV2 = false, onSelect, onLeave }: RoleSelectRoleCardProps) => {
     const hoverOverlaySrc = ROLE_HOVER_OVERLAY_SRC[index];
     const expandBg = ROLE_EXPAND_BG[index];
     const featureCopy = ROLE_FEATURE_COPY[index];
@@ -119,6 +119,6 @@ const Page3RoleCard = memo(
   }
 );
 
-Page3RoleCard.displayName = "Page3RoleCard";
+RoleSelectRoleCard.displayName = "RoleSelectRoleCard";
 
-export default Page3RoleCard;
+export default RoleSelectRoleCard;

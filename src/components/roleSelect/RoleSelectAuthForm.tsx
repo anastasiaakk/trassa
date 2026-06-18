@@ -1,19 +1,19 @@
-import { getLoginBadgeText } from "../../config/page3Roles";
+import { getLoginBadgeText } from "../../config/roleSelectRoles";
 import { cx } from "../../design-system/cabinetChromeClasses";
-import type { Page3AuthState } from "../../hooks/usePage3Auth";
-import styles from "../../pages/Page3.module.css";
-import Page3ForgotPasswordSection from "./Page3ForgotPasswordSection";
-import Page3InstitutionProfilePicker from "./Page3InstitutionProfilePicker";
-import Page3LoginFormSection from "./Page3LoginFormSection";
-import Page3RegisterFormSection from "./Page3RegisterFormSection";
+import type { RoleSelectAuthState } from "../../hooks/useRoleSelectAuth";
+import styles from "../../pages/RoleSelectPage.module.css";
+import RoleSelectForgotPasswordSection from "./RoleSelectForgotPasswordSection";
+import RoleSelectInstitutionProfilePicker from "./RoleSelectInstitutionProfilePicker";
+import RoleSelectLoginFormSection from "./RoleSelectLoginFormSection";
+import RoleSelectRegisterFormSection from "./RoleSelectRegisterFormSection";
 
-type Page3AuthFormProps = {
+type RoleSelectAuthFormProps = {
   isV2: boolean;
   selectedRole: number | null;
-  auth: Page3AuthState;
+  auth: RoleSelectAuthState;
 };
 
-export default function Page3AuthForm({ isV2, selectedRole, auth }: Page3AuthFormProps) {
+export default function RoleSelectAuthForm({ isV2, selectedRole, auth }: RoleSelectAuthFormProps) {
   const { institutionProfile, authMode, forgotStep, formError } = auth;
 
   return (
@@ -58,17 +58,17 @@ export default function Page3AuthForm({ isV2, selectedRole, auth }: Page3AuthFor
               </p>
             ) : null}
 
-            <Page3InstitutionProfilePicker isV2={isV2} selectedRole={selectedRole} auth={auth} />
+            <RoleSelectInstitutionProfilePicker isV2={isV2} selectedRole={selectedRole} auth={auth} />
 
             {authMode === "login" ? (
-              <Page3LoginFormSection isV2={isV2} selectedRole={selectedRole} auth={auth} />
+              <RoleSelectLoginFormSection isV2={isV2} selectedRole={selectedRole} auth={auth} />
             ) : null}
 
             {authMode === "register" ? (
-              <Page3RegisterFormSection isV2={isV2} selectedRole={selectedRole} auth={auth} />
+              <RoleSelectRegisterFormSection isV2={isV2} selectedRole={selectedRole} auth={auth} />
             ) : null}
 
-            {authMode === "forgot" ? <Page3ForgotPasswordSection isV2={isV2} auth={auth} /> : null}
+            {authMode === "forgot" ? <RoleSelectForgotPasswordSection isV2={isV2} auth={auth} /> : null}
           </div>
         </div>
       </div>

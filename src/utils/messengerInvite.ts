@@ -139,7 +139,7 @@ export function buildMessengerInviteUrl(cabinetPath: string, token: string): str
 
 type Peer = { id: string; name: string; role: string };
 
-/** Как в Page5MessengerView.loadPeers — чтобы приглашение не затирало демо-контакты */
+/** Как в CabinetMessengerView.loadPeers — чтобы приглашение не затирало демо-контакты */
 const DEFAULT_PEERS: Peer[] = [
   { id: "p1", name: "Елена Козлова", role: "Координатор ТОУАД" },
   { id: "p2", name: "Дмитрий Волков", role: "Представитель подрядчика" },

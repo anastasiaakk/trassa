@@ -1,5 +1,5 @@
 import { memo, useMemo } from "react";
-import type { Page5ThemeStyles } from "./Page5EventsView";
+import type { CabinetThemeStyles } from "./AssociationEventsView";
 import { cx } from "../design-system/cabinetChromeClasses";
 import { usePortalDesign } from "../design-system/usePortalDesign";
 import { useNarrowMessenger } from "../hooks/useNarrowMessenger";
@@ -13,13 +13,13 @@ import MessengerPeerSettingsDialog from "../components/messenger/MessengerPeerSe
 export type { MessengerAttachment, MessengerMessage, MessengerPeer } from "../types/messenger";
 
 type Props = {
-  styles: Page5ThemeStyles;
+  styles: CabinetThemeStyles;
   isDark: boolean;
   /** Маршрут кабинета для ссылки-приглашения, например /page5 или /page6 */
   cabinetPath?: string;
 };
 
-export const Page5MessengerView = memo(function Page5MessengerView({ styles, isDark, cabinetPath }: Props) {
+export const CabinetMessengerView = memo(function CabinetMessengerView({ styles, isDark, cabinetPath }: Props) {
   const isV2 = usePortalDesign() === "v2";
   const narrow = useNarrowMessenger();
   const m = useMessengerState(cabinetPath);

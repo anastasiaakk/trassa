@@ -1,22 +1,22 @@
 import ContractorOrgPicker from "../ContractorOrgPicker";
 import SpecializationPicker from "../SpecializationPicker";
 import { cx } from "../../design-system/cabinetChromeClasses";
-import type { Page3AuthState } from "../../hooks/usePage3Auth";
+import type { RoleSelectAuthState } from "../../hooks/useRoleSelectAuth";
 import { PASSWORD_RULES_SHORT } from "../../utils/passwordPolicy";
-import styles from "../../pages/Page3.module.css";
-import Page3PasswordEyeButton from "./Page3PasswordEyeButton";
+import styles from "../../pages/RoleSelectPage.module.css";
+import RoleSelectPasswordEyeButton from "./RoleSelectPasswordEyeButton";
 
-type Page3RegisterFormSectionProps = {
+type RoleSelectRegisterFormSectionProps = {
   isV2: boolean;
   selectedRole: number | null;
-  auth: Page3AuthState;
+  auth: RoleSelectAuthState;
 };
 
-export default function Page3RegisterFormSection({
+export default function RoleSelectRegisterFormSection({
   isV2,
   selectedRole,
   auth,
-}: Page3RegisterFormSectionProps) {
+}: RoleSelectRegisterFormSectionProps) {
   const {
     setAuthMode,
     setFormError,
@@ -181,7 +181,7 @@ export default function Page3RegisterFormSection({
               aria-describedby={regPasswordError ? "page3-reg-pw-error" : undefined}
               autoComplete="new-password"
             />
-            <Page3PasswordEyeButton
+            <RoleSelectPasswordEyeButton
               showPassword={showRegPassword}
               onToggle={() => setShowRegPassword((v) => !v)}
             />

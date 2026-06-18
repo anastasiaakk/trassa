@@ -1,16 +1,16 @@
 import ContractorOrgPicker from "../ContractorOrgPicker";
 import { cx } from "../../design-system/cabinetChromeClasses";
-import type { Page3AuthState } from "../../hooks/usePage3Auth";
-import styles from "../../pages/Page3.module.css";
-import Page3PasswordEyeButton from "./Page3PasswordEyeButton";
+import type { RoleSelectAuthState } from "../../hooks/useRoleSelectAuth";
+import styles from "../../pages/RoleSelectPage.module.css";
+import RoleSelectPasswordEyeButton from "./RoleSelectPasswordEyeButton";
 
-type Page3LoginFormSectionProps = {
+type RoleSelectLoginFormSectionProps = {
   isV2: boolean;
   selectedRole: number | null;
-  auth: Page3AuthState;
+  auth: RoleSelectAuthState;
 };
 
-export default function Page3LoginFormSection({ isV2, selectedRole, auth }: Page3LoginFormSectionProps) {
+export default function RoleSelectLoginFormSection({ isV2, selectedRole, auth }: RoleSelectLoginFormSectionProps) {
   const {
     loginEmail,
     setLoginEmail,
@@ -79,7 +79,7 @@ export default function Page3LoginFormSection({ isV2, selectedRole, auth }: Page
           onChange={(ev) => setPassword(ev.target.value)}
           autoComplete="current-password"
         />
-        <Page3PasswordEyeButton
+        <RoleSelectPasswordEyeButton
           showPassword={showPassword}
           onToggle={() => setShowPassword((v) => !v)}
         />

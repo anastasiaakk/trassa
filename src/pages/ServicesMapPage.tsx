@@ -27,7 +27,7 @@ import { loadMapCategoryLabels } from "../utils/mapCategoryLabels";
 import { loadMapSubjectOrganizations } from "../utils/mapSubjectOrganizations";
 import { cx } from "../design-system/cabinetChromeClasses";
 import { usePortalDesign } from "../design-system/usePortalDesign";
-import styles from "./Page2.module.css";
+import styles from "./ServicesMapPage.module.css";
 
 const RussiaLeafletMap = lazy(() => import("../components/RussiaLeafletMap"));
 const AdminDashboard = lazy(() => import("./AdminDashboard"));
@@ -109,7 +109,7 @@ const PAGE2_STATS = [
   },
 ] as const;
 
-const Page2 = () => {
+const ServicesMapPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isV2 = usePortalDesign() === "v2";
@@ -611,4 +611,4 @@ const Page2 = () => {
   );
 };
 
-export default memo(Page2);
+export default memo(ServicesMapPage);
