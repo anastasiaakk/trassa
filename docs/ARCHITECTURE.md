@@ -119,7 +119,7 @@ flowchart TB
 
 ## Известный технический долг
 
-- Крупные файлы: `Page3AuthForm.tsx`, `AdminPresentationPanel.tsx`, `ContractorFormsView.tsx`
+- Крупные файлы: `Page3AuthForm.tsx`, `ContractorFormsView.tsx`
 - Legacy-имена маршрутов `page3`–`page6`
 - Два пути auth: серверный JWT + `localAuth.ts` (offline)
 - `exhaustive-deps` в ESLint — часть предупреждений, цель — снизить до 0
