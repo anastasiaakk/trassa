@@ -208,10 +208,13 @@ export default function AdminDashboard({
 
   useEffect(() => {
     const route = readAdminRouteState(adminLocation.search);
-    if (route.mode === "dashboard" && route.tab !== activeSection) {
-      setActiveSection(route.tab);
-      return;
+    if (route.mode === "dashboard") {
+      setActiveSection((prev) => (prev === route.tab ? prev : route.tab));
     }
+  }, [adminLocation.search]);
+
+  useEffect(() => {
+    const route = readAdminRouteState(adminLocation.search);
     if (route.mode !== "dashboard") return;
     const nextSearch = buildAdminSearch("dashboard", activeSection);
     if (normalizeAdminSearch(adminLocation.search) !== nextSearch) {
