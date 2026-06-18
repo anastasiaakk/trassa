@@ -48,6 +48,14 @@
 | `src/components/tbot/tbotConstants.ts` | Размеры, storage позиций |
 | `src/utils/messengerTbotNotify.ts` | Красная точка, звук, OS push |
 
+### Формы подрядчика (Page4)
+
+| Файл | Назначение |
+|------|------------|
+| `src/pages/ContractorFormsView.tsx` | Shell таблиц подрядчика (~95 строк) |
+| `src/hooks/useContractorForms.ts` | Назначения, листы, импорт файлов, сохранение |
+| `src/components/contractor/ContractorForms*.tsx` | Список, редактор, уведомления, toast |
+
 ### Таблицы админки
 
 | Файл | Назначение |
