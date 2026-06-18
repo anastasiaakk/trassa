@@ -27,6 +27,17 @@
 | `src/utils/adminRouteState.ts` | Секции и URL state |
 | `src/utils/adminAuth.ts` | Сессия админа |
 
+### Page3 (выбор роли и вход)
+
+| Файл | Назначение |
+|------|------------|
+| `src/pages/Page3.tsx` | Shell: выбор роли + обёртка auth |
+| `src/hooks/usePage3Auth.ts` | Логика входа, регистрации, восстановления |
+| `src/config/page3Roles.ts` | Иконки ролей, тексты, preload |
+| `src/components/page3/Page3RoleCard.tsx` | Карточка роли |
+| `src/components/page3/Page3AuthForm.tsx` | Shell формы входа |
+| `src/components/page3/Page3*FormSection.tsx` | Login / register / forgot секции |
+
 ### Мессенджер (кабинеты page5/page6)
 
 | Файл | Назначение |
