@@ -1,27 +1,13 @@
-import { lazy, type ComponentProps, type ReactNode, Suspense } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import AdminDevicesPanel from "./AdminDevicesPanel";
 import AdminViolationsPanel from "./AdminViolationsPanel";
-import type AdminAccountSection from "./AdminAccountSection";
-import type AdminReleaseSection from "./AdminReleaseSection";
-import type AdminUsersSection from "./AdminUsersSection";
-import type AdminContractorsSection from "./AdminContractorsSection";
-import type AdminMapSection from "./AdminMapSection";
-import type AdminHomeSection from "./AdminHomeSection";
-import type AdminSettingsSection from "./AdminSettingsSection";
-
-const AdminAccountSectionLazy = lazy(() => import("./AdminAccountSection"));
-const AdminReleaseSectionLazy = lazy(() => import("./AdminReleaseSection"));
-const AdminUsersSectionLazy = lazy(() => import("./AdminUsersSection"));
-const AdminContractorsSectionLazy = lazy(() => import("./AdminContractorsSection"));
-const AdminMapSectionLazy = lazy(() => import("./AdminMapSection"));
-const AdminHomeSectionLazy = lazy(() => import("./AdminHomeSection"));
-const AdminSettingsSectionLazy = lazy(() => import("./AdminSettingsSection"));
-
-const sectionFallback = <p style={{ padding: "0.75rem 0", opacity: 0.7 }}>Загрузка…</p>;
-
-function LazySection({ children }: { children: ReactNode }) {
-  return <Suspense fallback={sectionFallback}>{children}</Suspense>;
-}
+import AdminAccountSection from "./AdminAccountSection";
+import AdminReleaseSection from "./AdminReleaseSection";
+import AdminUsersSection from "./AdminUsersSection";
+import AdminContractorsSection from "./AdminContractorsSection";
+import AdminMapSection from "./AdminMapSection";
+import AdminHomeSection from "./AdminHomeSection";
+import AdminSettingsSection from "./AdminSettingsSection";
 
 export type AdminPanelChromeProps = {
   sectionClass: string;
@@ -58,61 +44,29 @@ export function AdminViolationsSection(props: AdminPanelChromeProps) {
 }
 
 export function AdminAccountPanelSection() {
-  return (
-    <LazySection>
-      <AdminAccountSectionLazy />
-    </LazySection>
-  );
+  return <AdminAccountSection />;
 }
 
 export function AdminReleasePanelSection() {
-  return (
-    <LazySection>
-      <AdminReleaseSectionLazy />
-    </LazySection>
-  );
+  return <AdminReleaseSection />;
 }
 
-export function AdminUsersPanelSection(
-  props: ComponentProps<typeof AdminUsersSection>,
-) {
-  return (
-    <LazySection>
-      <AdminUsersSectionLazy {...props} />
-    </LazySection>
-  );
+export function AdminUsersPanelSection(props: ComponentProps<typeof AdminUsersSection>) {
+  return <AdminUsersSection {...props} />;
 }
 
-export function AdminContractorsPanelSection(
-  props: ComponentProps<typeof AdminContractorsSection>,
-) {
-  return (
-    <LazySection>
-      <AdminContractorsSectionLazy {...props} />
-    </LazySection>
-  );
+export function AdminContractorsPanelSection(props: ComponentProps<typeof AdminContractorsSection>) {
+  return <AdminContractorsSection {...props} />;
 }
 
 export function AdminMapPanelSection(props: ComponentProps<typeof AdminMapSection>) {
-  return (
-    <LazySection>
-      <AdminMapSectionLazy {...props} />
-    </LazySection>
-  );
+  return <AdminMapSection {...props} />;
 }
 
 export function AdminHomePanelSection(props: ComponentProps<typeof AdminHomeSection>) {
-  return (
-    <LazySection>
-      <AdminHomeSectionLazy {...props} />
-    </LazySection>
-  );
+  return <AdminHomeSection {...props} />;
 }
 
 export function AdminSettingsPanelSection(props: ComponentProps<typeof AdminSettingsSection>) {
-  return (
-    <LazySection>
-      <AdminSettingsSectionLazy {...props} />
-    </LazySection>
-  );
+  return <AdminSettingsSection {...props} />;
 }

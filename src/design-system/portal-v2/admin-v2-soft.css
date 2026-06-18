@@ -36,10 +36,9 @@ html[data-portal-design="v2"] body.route-page2 .page2-main--admin {
   padding-right: max(var(--admin-soft-layout-pad), env(safe-area-inset-right, 0)) !important;
 }
 
-/* stable на html даёт лишний зазор справа — при админке симметричный gutter */
-html[data-portal-design="v2"] html.route-page2:has(.page2-root--admin),
+/* Симметричный gutter только у скролла контента — не на html/body (дёргает всю сцену). */
 html[data-portal-design="v2"] body.route-page2:has(.page2-root--admin) {
-  scrollbar-gutter: stable both-edges;
+  scrollbar-gutter: auto;
 }
 
 html[data-portal-design="v2"] body.route-page2 .page2-main-inner--admin {

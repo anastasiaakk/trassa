@@ -959,6 +959,11 @@
   background: rgba(255, 255, 255, 0.56);
 }
 
+/* Вкладки админки: держим смонтированными, переключаем через hidden (без размонтирования). */
+.adminSectionPane[hidden] {
+  display: none !important;
+}
+
 /* Нейтральный hover только в дашборде (класс cabinetDashboard на AdminDashboard), не на экране входа */
 .cabinetDashboard .collapseTrigger:hover {
   background: rgba(255, 255, 255, 0.56);

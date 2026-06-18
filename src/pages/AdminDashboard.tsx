@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isAuthApiEnabled } from "../utils/authMode";
 import {
@@ -10,6 +10,7 @@ import {
 import { loadMaintenanceState } from "../utils/maintenanceMode";
 import {
   buildAdminSearch,
+  normalizeAdminSearch,
   readAdminRouteState,
   type AdminSectionId,
 } from "../utils/adminRouteState";
@@ -110,7 +111,11 @@ export default function AdminDashboard({
   const [activeSection, setActiveSection] = useState<AdminSectionId>(
     () => readAdminRouteState(adminLocation.search).tab,
   );
+  const [visitedSections, setVisitedSections] = useState<Set<AdminSectionId>>(
+    () => new Set([readAdminRouteState(adminLocation.search).tab]),
+  );
   const [softQuery, setSoftQuery] = useState("");
+  const panelScrollRef = useRef<HTMLDivElement>(null);
 
   const flatNav = useMemo(() => {
     const items: NavItem[] = [
@@ -183,17 +188,33 @@ export default function AdminDashboard({
   }, []);
 
   useEffect(() => {
-    const route = readAdminRouteState(adminLocation.search);
-    if (route.mode === "dashboard" && route.tab !== activeSection) {
-      setActiveSection(route.tab);
-    }
-  }, [adminLocation.search, activeSection]);
+    setVisitedSections((prev) => {
+      if (prev.has(activeSection)) return prev;
+      const next = new Set(prev);
+      next.add(activeSection);
+      return next;
+    });
+  }, [activeSection]);
+
+  useEffect(() => {
+    panelScrollRef.current?.scrollTo({ top: 0 });
+  }, [activeSection]);
+
+  useEffect(() => {
+    void import("./AdminTablesPanel");
+    void import("./AdminSpecializationsPanel");
+    void import("./DesignSystemPreview");
+  }, []);
 
   useEffect(() => {
     const route = readAdminRouteState(adminLocation.search);
+    if (route.mode === "dashboard" && route.tab !== activeSection) {
+      setActiveSection(route.tab);
+      return;
+    }
     if (route.mode !== "dashboard") return;
     const nextSearch = buildAdminSearch("dashboard", activeSection);
-    if ((adminLocation.search || "") !== nextSearch) {
+    if (normalizeAdminSearch(adminLocation.search) !== nextSearch) {
       adminNavigate({ pathname: "/services", search: nextSearch }, { replace: true });
     }
   }, [activeSection, adminLocation.search, adminNavigate]);
@@ -275,8 +296,9 @@ export default function AdminDashboard({
 
   useEffect(() => {
     if (!apiEnabled) return;
+    if (activeSection !== "users" && activeSection !== "home") return;
     const refresh = () => refreshUsers();
-    const intervalId = window.setInterval(refresh, 5000);
+    const intervalId = window.setInterval(refresh, 15_000);
     window.addEventListener("focus", refresh);
     document.addEventListener("visibilitychange", refresh);
     return () => {
@@ -284,7 +306,7 @@ export default function AdminDashboard({
       window.removeEventListener("focus", refresh);
       document.removeEventListener("visibilitychange", refresh);
     };
-  }, [apiEnabled, refreshUsers]);
+  }, [apiEnabled, refreshUsers, activeSection]);
 
   const handleLogout = useCallback(() => {
     logoutAdmin();
@@ -300,8 +322,8 @@ export default function AdminDashboard({
     btnSecondaryClass: styles.btnNeoPrimaryNeutral,
   };
 
-  const renderSection = () => {
-    switch (activeSection) {
+  const renderSectionContent = (section: AdminSectionId) => {
+    switch (section) {
       case "home":
         return (
           <AdminHomePanelSection
@@ -507,7 +529,7 @@ export default function AdminDashboard({
               </header>
             ) : null}
 
-            <div className={glass.glassPanelScroll}>
+            <div className={glass.glassPanelScroll} ref={panelScrollRef}>
               {isSoftUi ? (
                 <AdminSoftTopBar
                   displayName={
@@ -523,7 +545,18 @@ export default function AdminDashboard({
                   onBackToMap={onBackToMap}
                 />
               ) : null}
-              <div className={isSoftUi ? "admin-soft-content-card" : undefined}>{renderSection()}</div>
+              <div className={isSoftUi ? "admin-soft-content-card" : undefined}>
+                {Array.from(visitedSections).map((sectionId) => (
+                  <div
+                    key={sectionId}
+                    className={styles.adminSectionPane}
+                    hidden={sectionId !== activeSection}
+                    aria-hidden={sectionId !== activeSection}
+                  >
+                    {renderSectionContent(sectionId)}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -76,6 +76,13 @@ export function buildAdminSearch(
   return q ? `?${q}` : "";
 }
 
+/** Канонический query для сравнения (tab=home не пишем в URL). */
+export function normalizeAdminSearch(search: string): string {
+  const route = readAdminRouteState(search);
+  if (route.mode === "map") return "";
+  return buildAdminSearch(route.mode, route.tab);
+}
+
 export type Page2AdminSurface = "map" | "adminLogin" | "adminDashboard";
 
 export function adminSurfaceFromRoute(
