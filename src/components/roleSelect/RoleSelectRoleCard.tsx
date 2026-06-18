@@ -56,8 +56,8 @@ const RoleSelectRoleCard = memo(
           isSelected && styles.roleCardSelected,
           styles.roleCardInstitutions,
           isExpanded && styles.roleCardInstitutionsExpanded,
-          isV2 && "page3-v2__role-card",
-          isV2 && isSelected && "page3-v2__role-card--selected"
+          isV2 && "role-select-v2__role-card",
+          isV2 && isSelected && "role-select-v2__role-card--selected"
         )}
         data-role-index={index}
         onClick={handleDivClick}
@@ -95,7 +95,7 @@ const RoleSelectRoleCard = memo(
           </button>
         </div>
         <div className={styles.institutionsHoverPanel} style={expandPanelStyle}>
-          <div className={cx(styles.institutionsHoverShade, isV2 && "page3-v2__institutions-shade")} />
+          <div className={cx(styles.institutionsHoverShade, isV2 && "role-select-v2__institutions-shade")} />
           <div className={styles.institutionsHoverMeta}>
             <span className={styles.institutionsHoverIconWrap}>
               <img decoding="async" src={icon.iconSrc} alt="" className={styles.institutionsHoverIcon} />
@@ -107,7 +107,7 @@ const RoleSelectRoleCard = memo(
           </div>
         </div>
         {isSelected && (
-          <span className={cx(styles.selectedBadge, isV2 && "page3-v2__selected-badge")}>
+          <span className={cx(styles.selectedBadge, isV2 && "role-select-v2__selected-badge")}>
             <span className={styles.selectedBadgeMark} aria-hidden>
               ✓
             </span>

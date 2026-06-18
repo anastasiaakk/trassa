@@ -54,8 +54,8 @@ html[data-portal-design="v2"] :is(
   .association-v2__btn-primary,
   .profile-v2__save,
   .profile-v2__admin-back,
-  .page3-v2__login-card button[type="submit"],
-  .page3-v2__login-card .page3-v2__primary-btn
+  .role-select-v2__login-card button[type="submit"],
+  .role-select-v2__login-card .role-select-v2__primary-btn
 ) {
   color: var(--pv2-white) !important;
 }

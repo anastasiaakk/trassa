@@ -68,7 +68,7 @@
   }
 
   body.route-page3 [class*="pageRoot"],
-  body.route-page3 .page3-v2 {
+  body.route-page3 .role-select-v2 {
     height: auto !important;
     max-height: none !important;
     overflow-x: hidden !important;
@@ -255,7 +255,7 @@ html[data-portal-design="v2"] body {
 
 /* —— Page3 (вход / роли) —— */
 @media (max-width: 640px) {
-  html[data-portal-design="v2"] .page3-v2 [class*="pageRoot"] {
+  html[data-portal-design="v2"] .role-select-v2 [class*="pageRoot"] {
     height: auto;
     max-height: none;
     min-height: 100dvh;
@@ -270,18 +270,18 @@ html[data-portal-design="v2"] body {
       max(12px, env(safe-area-inset-left, 0));
   }
 
-  html[data-portal-design="v2"] .page3-v2 [class*="pageRoot"]:has([class*="heroAuthStep"]) {
+  html[data-portal-design="v2"] .role-select-v2 [class*="pageRoot"]:has([class*="heroAuthStep"]) {
     overflow: hidden;
   }
 
-  html[data-portal-design="v2"] .page3-v2 [class*="heroRolePick"] {
+  html[data-portal-design="v2"] .role-select-v2 [class*="heroRolePick"] {
     min-height: unset;
     align-items: center;
   }
 
-  /* Page3 — горизонтальный ряд карточек: page3-mobile.css */
+  /* Role select — горизонтальный ряд карточек: role-select-mobile.css */
 
-  html[data-portal-design="v2"] .page3-v2 [class*="hero"] {
+  html[data-portal-design="v2"] .role-select-v2 [class*="hero"] {
     max-height: none;
     overflow: visible;
   }

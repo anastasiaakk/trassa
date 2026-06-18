@@ -165,12 +165,12 @@ html[data-portal-design="v2"] .app-shell__main > div[style*="5c6b8a"] {
 }
 
 /* —— Page3 login legacy cards —— */
-html[data-portal-design="v2"] .page3-v2 [class*="card"]:not([class*="page3-v2"]) {
+html[data-portal-design="v2"] .role-select-v2 [class*="card"]:not([class*="role-select-v2"]) {
   border-color: rgba(var(--pv2-r-primary), 0.22) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 [class*="cardActive"],
-html[data-portal-design="v2"] .page3-v2 [class*="card"][data-active="true"] {
+html[data-portal-design="v2"] .role-select-v2 [class*="cardActive"],
+html[data-portal-design="v2"] .role-select-v2 [class*="card"][data-active="true"] {
   border-color: var(--pv2-primary) !important;
   box-shadow: 0 0 0 2px rgba(var(--pv2-r-primary), 0.25) !important;
 }

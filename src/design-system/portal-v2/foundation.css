@@ -163,10 +163,10 @@ html[data-portal-design="v2"] .pv2-section-title {
 
 /* Текст на синем градиенте (кнопки, активная навигация) */
 html[data-portal-design="v2"] .cabinet-chrome__nav-active,
-html[data-portal-design="v2"] .page3-v2__next,
-html[data-portal-design="v2"] .page3-v2__profile-btn--active,
-html[data-portal-design="v2"] .page3-v2__login-card button[type="submit"],
-html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__primary-btn,
+html[data-portal-design="v2"] .role-select-v2__next,
+html[data-portal-design="v2"] .role-select-v2__profile-btn--active,
+html[data-portal-design="v2"] .role-select-v2__login-card button[type="submit"],
+html[data-portal-design="v2"] .role-select-v2__login-card .role-select-v2__primary-btn,
 html[data-portal-design="v2"] .page2-v2__btn-primary,
 html[data-portal-design="v2"] .admin-v2-nav-active {
   color: var(--pv2-on-brand) !important;

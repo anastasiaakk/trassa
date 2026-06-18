@@ -42,7 +42,7 @@ export default function RoleSelectForgotPasswordSection({ isV2, auth }: RoleSele
           onChange={(e) => setForgotEmail(e.target.value)}
           autoComplete="email"
         />
-        <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
+        <button type="submit" className={cx(styles.loginSubmit, isV2 && "role-select-v2__primary-btn")}>
           Продолжить
         </button>
         <button
@@ -95,7 +95,7 @@ export default function RoleSelectForgotPasswordSection({ isV2, auth }: RoleSele
         onChange={(e) => setForgotPassword2(e.target.value)}
         autoComplete="new-password"
       />
-      <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
+      <button type="submit" className={cx(styles.loginSubmit, isV2 && "role-select-v2__primary-btn")}>
         Сохранить новый пароль
       </button>
       <button

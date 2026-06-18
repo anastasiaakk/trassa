@@ -1555,14 +1555,14 @@ button.loginForgot:active {
   }
 
   .roleCard {
-    --page3-role-card-w: 136px;
-    --page3-role-card-h: min(320px, 56dvh);
-    flex: 0 0 var(--page3-role-card-w);
-    width: var(--page3-role-card-w);
-    min-width: var(--page3-role-card-w);
-    max-width: var(--page3-role-card-w);
-    min-height: var(--page3-role-card-h);
-    height: var(--page3-role-card-h);
+    --role-select-role-card-w: 136px;
+    --role-select-role-card-h: min(320px, 56dvh);
+    flex: 0 0 var(--role-select-role-card-w);
+    width: var(--role-select-role-card-w);
+    min-width: var(--role-select-role-card-w);
+    max-width: var(--role-select-role-card-w);
+    min-height: var(--role-select-role-card-h);
+    height: var(--role-select-role-card-h);
     padding: 0 12px 16px;
     display: flex;
     flex-direction: column;
@@ -1601,8 +1601,8 @@ button.loginForgot:active {
    * На десктопе (>900px) широкая карточка после выбора остаётся.
    */
   .roleCard.roleCardInstitutionsExpanded {
-    width: var(--page3-role-card-w);
-    min-height: var(--page3-role-card-h);
+    width: var(--role-select-role-card-w);
+    min-height: var(--role-select-role-card-h);
     padding: 0 12px 16px;
   }
 

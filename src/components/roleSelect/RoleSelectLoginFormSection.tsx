@@ -85,20 +85,20 @@ export default function RoleSelectLoginFormSection({ isV2, selectedRole, auth }:
         />
       </div>
 
-      <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
+      <button type="submit" className={cx(styles.loginSubmit, isV2 && "role-select-v2__primary-btn")}>
         Войти
       </button>
       <div className={styles.loginAuthSecondaryRow}>
         <button
           type="button"
-          className={cx(styles.loginBetaPreview, isV2 && "page3-v2__beta-btn")}
+          className={cx(styles.loginBetaPreview, isV2 && "role-select-v2__beta-btn")}
           onClick={goCabinetBetaPreview}
         >
           Бета-просмотр
         </button>
         <button
           type="button"
-          className={cx(styles.loginRegisterBtn, isV2 && "page3-v2__register-btn")}
+          className={cx(styles.loginRegisterBtn, isV2 && "role-select-v2__register-btn")}
           onClick={() => {
             setAuthMode("register");
             setFormError(null);

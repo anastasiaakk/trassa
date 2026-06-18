@@ -18,12 +18,12 @@ export default function RoleSelectAuthForm({ isV2, selectedRole, auth }: RoleSel
 
   return (
     <div className={styles.loginCardWrap}>
-      <div className={cx(isV2 && "page3-v2__login-shell")}>
+      <div className={cx(isV2 && "role-select-v2__login-shell")}>
         <div
           className={cx(
             styles.loginCard,
             authMode === "register" && styles.loginCardTallForm,
-            isV2 && "page3-v2__login-card"
+            isV2 && "role-select-v2__login-card"
           )}
         >
           <div className={styles.loginCardHeader}>

@@ -52,9 +52,9 @@ export default function RoleSelectRegisterFormSection({
             aria-selected={regRegisterTab === "profile"}
             className={cx(
               styles.loginProfileBtn,
-              isV2 && "page3-v2__profile-btn",
+              isV2 && "role-select-v2__profile-btn",
               regRegisterTab === "profile" && styles.loginProfileBtnActive,
-              isV2 && regRegisterTab === "profile" && "page3-v2__profile-btn--active"
+              isV2 && regRegisterTab === "profile" && "role-select-v2__profile-btn--active"
             )}
             onClick={() => setRegRegisterTab("profile")}
           >
@@ -66,9 +66,9 @@ export default function RoleSelectRegisterFormSection({
             aria-selected={regRegisterTab === "spec"}
             className={cx(
               styles.loginProfileBtn,
-              isV2 && "page3-v2__profile-btn",
+              isV2 && "role-select-v2__profile-btn",
               regRegisterTab === "spec" && styles.loginProfileBtnActive,
-              isV2 && regRegisterTab === "spec" && "page3-v2__profile-btn--active"
+              isV2 && regRegisterTab === "spec" && "role-select-v2__profile-btn--active"
             )}
             onClick={() => setRegRegisterTab("spec")}
           >
@@ -211,7 +211,7 @@ export default function RoleSelectRegisterFormSection({
           {needsSpecialization ? (
             <button
               type="button"
-              className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}
+              className={cx(styles.loginSubmit, isV2 && "role-select-v2__primary-btn")}
               onClick={() => {
                 setFormError(null);
                 setRegRegisterTab("spec");
@@ -220,7 +220,7 @@ export default function RoleSelectRegisterFormSection({
               Далее: спецификация →
             </button>
           ) : (
-            <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
+            <button type="submit" className={cx(styles.loginSubmit, isV2 && "role-select-v2__primary-btn")}>
               Зарегистрироваться и войти
             </button>
           )}
@@ -237,7 +237,7 @@ export default function RoleSelectRegisterFormSection({
           >
             ← Назад к данным
           </button>
-          <button type="submit" className={cx(styles.loginSubmit, isV2 && "page3-v2__primary-btn")}>
+          <button type="submit" className={cx(styles.loginSubmit, isV2 && "role-select-v2__primary-btn")}>
             Зарегистрироваться и войти
           </button>
         </>

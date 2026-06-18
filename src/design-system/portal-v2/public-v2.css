@@ -83,19 +83,19 @@ html[data-portal-design="v2"] .page1-v2__hero {
 /* Page2 layout — page2-glass-v2.css */
 
 /* —— Page3 —— */
-html[data-portal-design="v2"] .page3-v2 {
+html[data-portal-design="v2"] .role-select-v2 {
   min-height: 100svh;
 }
 
 /* Выбор роли: оставляем legacy flex-карточки (.cardsRow в Page3.module.css). */
 
-html[data-portal-design="v2"] .page3-v2__login-shell {
+html[data-portal-design="v2"] .role-select-v2__login-shell {
   border-radius: var(--pv2-radius-xl);
   padding: 4px;
   background: linear-gradient(135deg, rgba(var(--pv2-r-primary), 0.35), rgba(var(--pv2-r-white), 0.2));
 }
 
-html[data-portal-design="v2"] .page3-v2__login-shell .page3-v2__login-card {
+html[data-portal-design="v2"] .role-select-v2__login-shell .role-select-v2__login-card {
   border-radius: calc(var(--pv2-radius-xl) - 4px) !important;
 }
 

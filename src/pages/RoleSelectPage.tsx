@@ -118,13 +118,13 @@ const RoleSelectPage = () => {
       style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}
     >
       {!showLogin ? (
-        <button type="button" className={cx(styles.backToPage2, isV2 && "page3-v2__back")} onClick={goToPage2}>
+        <button type="button" className={cx(styles.backToPage2, isV2 && "role-select-v2__back")} onClick={goToPage2}>
           ← Назад
         </button>
       ) : (
         <button
           type="button"
-          className={cx(styles.backToPage2, isV2 && "page3-v2__back")}
+          className={cx(styles.backToPage2, isV2 && "role-select-v2__back")}
           onClick={handleBackToRoles}
         >
           ← К выбору роли
@@ -133,7 +133,7 @@ const RoleSelectPage = () => {
       {shouldShowReturnToAdminDashboard() ? (
         <button
           type="button"
-          className={cx(styles.backToPage2, isV2 && "page3-v2__back")}
+          className={cx(styles.backToPage2, isV2 && "role-select-v2__back")}
           onClick={goToAdminCabinet}
         >
           ← Кабинет администратора
@@ -144,17 +144,17 @@ const RoleSelectPage = () => {
 
   return (
     <div
-      className={cx(styles.pageRoot, isNavigating && styles.pageRootNavigating, isV2 && "page3-v2")}
+      className={cx(styles.pageRoot, isNavigating && styles.pageRootNavigating, isV2 && "role-select-v2")}
     >
       <RoleSelectRoadBackground isV2={isV2} />
       <div
         className={cx(
           styles.hero,
           showLogin ? styles.heroAuthStep : styles.heroRolePick,
-          isV2 && "page3-v2__role-tab page3-v2__role-panel"
+          isV2 && "role-select-v2__role-tab role-select-v2__role-panel"
         )}
       >
-        <div className={cx(styles.decorLeft, isV2 && "page3-v2__decor")} />
+        <div className={cx(styles.decorLeft, isV2 && "role-select-v2__decor")} />
 
         <div
           className={`${styles.content} ${showLogin ? styles.contentAuthStep : styles.contentRolePick}`}

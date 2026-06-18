@@ -24,7 +24,7 @@ import {
   clearCabinetBetaPreview,
   startCabinetBetaPreview,
 } from "../utils/cabinetBetaPreview";
-import { contractorOrgValidationMessage } from "../utils/page3Auth";
+import { contractorOrgValidationMessage } from "../utils/roleSelectAuth";
 
 export type RoleSelectAuthMode = "login" | "register" | "forgot";
 

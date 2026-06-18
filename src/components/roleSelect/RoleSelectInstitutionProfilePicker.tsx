@@ -29,9 +29,9 @@ export default function RoleSelectInstitutionProfilePicker({
           aria-checked={institutionProfile === "ado"}
           className={cx(
             styles.loginProfileBtn,
-            isV2 && "page3-v2__profile-btn",
+            isV2 && "role-select-v2__profile-btn",
             institutionProfile === "ado" && styles.loginProfileBtnActive,
-            isV2 && institutionProfile === "ado" && "page3-v2__profile-btn--active"
+            isV2 && institutionProfile === "ado" && "role-select-v2__profile-btn--active"
           )}
           onClick={() => setInstitutionProfile("ado")}
         >
@@ -43,9 +43,9 @@ export default function RoleSelectInstitutionProfilePicker({
           aria-checked={institutionProfile === "rador"}
           className={cx(
             styles.loginProfileBtn,
-            isV2 && "page3-v2__profile-btn",
+            isV2 && "role-select-v2__profile-btn",
             institutionProfile === "rador" && styles.loginProfileBtnActive,
-            isV2 && institutionProfile === "rador" && "page3-v2__profile-btn--active"
+            isV2 && institutionProfile === "rador" && "role-select-v2__profile-btn--active"
           )}
           onClick={() => setInstitutionProfile("rador")}
         >

@@ -1,6 +1,6 @@
 /**
  * Этап C — публичные экраны v2: light-first (MediAid / Travel / Quanta refs).
- * Перекрывает тёмные правила page1.css, page3.css, public-v2.css, entry-splash.css.
+ * Перекрывает тёмные правила page1.css, role-select.css, public-v2.css, entry-splash.css.
  */
 
 /* —— Entry splash —— */
@@ -98,66 +98,66 @@ html[data-portal-design="v2"] .page1-v2__progress-track {
 }
 
 /* —— Page3 —— */
-html[data-portal-design="v2"] .page3-v2 {
+html[data-portal-design="v2"] .role-select-v2 {
   background: var(--pv2-scene-light) !important;
   background-color: var(--pv2-white) !important;
   color: var(--pv2-ink);
 }
 
-html[data-portal-design="v2"] .page3-v2__title {
+html[data-portal-design="v2"] .role-select-v2__title {
   color: var(--pv2-primary) !important;
   background: none !important;
   -webkit-text-fill-color: var(--pv2-primary);
 }
 
-html[data-portal-design="v2"] .page3-v2__subtitle {
+html[data-portal-design="v2"] .role-select-v2__subtitle {
   color: var(--pv2-muted) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__back {
+html[data-portal-design="v2"] .role-select-v2__back {
   color: var(--pv2-primary) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__role-card {
+html[data-portal-design="v2"] .role-select-v2__role-card {
   background: var(--pv2-glass-l2-bg) !important;
   border-color: var(--pv2-glass-l2-border) !important;
   box-shadow: var(--pv2-glass-l2-shadow) !important;
   color: var(--pv2-ink);
 }
 
-html[data-portal-design="v2"] .page3-v2__role-card--selected {
+html[data-portal-design="v2"] .role-select-v2__role-card--selected {
   outline-color: rgba(var(--pv2-r-primary), 0.45);
   box-shadow: 0 16px 48px rgba(var(--pv2-r-primary), 0.18), var(--pv2-glass-l2-shadow) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card {
+html[data-portal-design="v2"] .role-select-v2__login-card {
   background: var(--pv2-glass-l1-bg) !important;
   border-color: var(--pv2-glass-l1-border) !important;
   box-shadow: var(--pv2-glass-l1-shadow) !important;
   color: var(--pv2-ink);
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card input,
-html[data-portal-design="v2"] .page3-v2__login-card textarea,
-html[data-portal-design="v2"] .page3-v2__login-card select {
+html[data-portal-design="v2"] .role-select-v2__login-card input,
+html[data-portal-design="v2"] .role-select-v2__login-card textarea,
+html[data-portal-design="v2"] .role-select-v2__login-card select {
   background: var(--pv2-white) !important;
   border-color: rgba(var(--pv2-r-primary), 0.2) !important;
   color: var(--pv2-ink) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__primary-btn {
+html[data-portal-design="v2"] .role-select-v2__primary-btn {
   background: var(--pv2-primary) !important;
   color: var(--pv2-white) !important;
   box-shadow: 0 8px 28px rgba(var(--pv2-r-primary), 0.32) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__profile-btn {
+html[data-portal-design="v2"] .role-select-v2__profile-btn {
   background: var(--pv2-glass-l3-bg) !important;
   border-color: var(--pv2-glass-l3-border) !important;
   color: var(--pv2-ink) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__profile-btn--active {
+html[data-portal-design="v2"] .role-select-v2__profile-btn--active {
   background: rgba(var(--pv2-r-primary), 0.12) !important;
   border-color: var(--pv2-primary) !important;
 }

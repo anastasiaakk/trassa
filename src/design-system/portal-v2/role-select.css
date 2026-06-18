@@ -1,20 +1,20 @@
 /**
- * Page3 — вход и выбор роли (v2 glass).
- * Глобальные классы page3-v2* на ключевых узлах.
+ * RoleSelectPage — вход и выбор роли (v2 glass).
+ * Глобальные классы role-select-v2* на ключевых узлах.
  */
-html[data-portal-design="v2"] .page3-v2 {
+html[data-portal-design="v2"] .role-select-v2 {
   background: var(--pv2-scene-light) !important;
   color: var(--pv2-ink);
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__wash {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__wash {
   background:
     radial-gradient(ellipse 95% 58% at 48% -5%, rgba(var(--pv2-r-primary), 0.14) 0%, transparent 55%),
     radial-gradient(ellipse 75% 50% at 88% 78%, rgba(147, 130, 220, 0.12) 0%, transparent 52%),
     radial-gradient(ellipse 65% 42% at 8% 58%, rgba(var(--pv2-r-primary), 0.1) 0%, transparent 50%) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__glow {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__glow {
   background: radial-gradient(
     ellipse 55% 45% at 45% 40%,
     rgba(var(--pv2-r-primary), 0.16) 0%,
@@ -23,43 +23,43 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__glow {
   ) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__title {
+html[data-portal-design="v2"] .role-select-v2__title {
   background: none !important;
   color: var(--pv2-primary) !important;
   -webkit-text-fill-color: var(--pv2-primary);
 }
 
-html[data-portal-design="v2"] .page3-v2__subtitle {
+html[data-portal-design="v2"] .role-select-v2__subtitle {
   color: var(--pv2-muted) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__back {
+html[data-portal-design="v2"] .role-select-v2__back {
   color: var(--pv2-muted) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__back:hover {
+html[data-portal-design="v2"] .role-select-v2__back:hover {
   background: rgba(var(--pv2-r-primary), 0.08) !important;
   color: var(--pv2-primary) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__role-card {
+html[data-portal-design="v2"] .role-select-v2__role-card {
   border: 1px solid var(--pv2-glass-l2-border) !important;
   background: var(--pv2-glass-l2-bg) !important;
   box-shadow: var(--pv2-glass-l2-shadow) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__role-card:not(.page3-v2__role-card--selected):hover {
+html[data-portal-design="v2"] .role-select-v2__role-card:not(.role-select-v2__role-card--selected):hover {
   border-color: rgba(var(--pv2-r-primary), 0.28) !important;
   box-shadow: 0 14px 34px rgba(var(--pv2-r-ink), 0.09), 0 0 0 1px rgba(var(--pv2-r-primary), 0.08) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__role-card--selected {
+html[data-portal-design="v2"] .role-select-v2__role-card--selected {
   box-shadow: 0 18px 44px rgba(var(--pv2-r-primary), 0.18), 0 0 0 3px rgba(var(--pv2-r-primary), 0.16) !important;
   outline: 2px solid rgba(var(--pv2-r-primary), 0.32);
   outline-offset: 2px;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card {
+html[data-portal-design="v2"] .role-select-v2__login-card {
   border: 0 !important;
   background: #ffffff !important;
   backdrop-filter: none !important;
@@ -72,18 +72,18 @@ html[data-portal-design="v2"] .page3-v2__login-card {
   overflow: hidden !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card [class*="loginCardHeader"] {
+html[data-portal-design="v2"] .role-select-v2__login-card [class*="loginCardHeader"] {
   background: linear-gradient(165deg, #2a4580 0%, #1a2b56 48%, #243b74 100%) !important;
   border-radius: 0 !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card [class*="loginCardBody"] {
+html[data-portal-design="v2"] .role-select-v2__login-card [class*="loginCardBody"] {
   background: #ffffff !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card input,
-html[data-portal-design="v2"] .page3-v2__login-card textarea,
-html[data-portal-design="v2"] .page3-v2__login-card select {
+html[data-portal-design="v2"] .role-select-v2__login-card input,
+html[data-portal-design="v2"] .role-select-v2__login-card textarea,
+html[data-portal-design="v2"] .role-select-v2__login-card select {
   border-color: rgba(36, 59, 116, 0.1) !important;
   background: #f0f4f8 !important;
   color: #1a2a52 !important;
@@ -91,29 +91,29 @@ html[data-portal-design="v2"] .page3-v2__login-card select {
   box-shadow: none !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card input[role="combobox"] {
+html[data-portal-design="v2"] .role-select-v2__login-card input[role="combobox"] {
   background: #ffffff !important;
   border-color: rgba(36, 59, 116, 0.14) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card input::placeholder,
-html[data-portal-design="v2"] .page3-v2__login-card textarea::placeholder {
+html[data-portal-design="v2"] .role-select-v2__login-card input::placeholder,
+html[data-portal-design="v2"] .role-select-v2__login-card textarea::placeholder {
   color: rgba(var(--pv2-r-ink), 0.44) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card label {
+html[data-portal-design="v2"] .role-select-v2__login-card label {
   color: var(--pv2-muted) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card button[type="submit"],
-html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__primary-btn {
+html[data-portal-design="v2"] .role-select-v2__login-card button[type="submit"],
+html[data-portal-design="v2"] .role-select-v2__login-card .role-select-v2__primary-btn {
   background: var(--pv2-gradient-brand) !important;
   color: var(--pv2-white) !important;
   border: 1px solid rgba(var(--pv2-r-primary), 0.25) !important;
   box-shadow: 0 10px 26px rgba(var(--pv2-r-primary), 0.24) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__beta-btn {
+html[data-portal-design="v2"] .role-select-v2__login-card .role-select-v2__beta-btn {
   background: linear-gradient(180deg, #f8faff 0%, #eef4ff 100%) !important;
   color: #4277ff !important;
   border: 1px solid rgba(66, 119, 255, 0.34) !important;
@@ -121,34 +121,34 @@ html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__beta-btn {
   box-shadow: none !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__beta-btn:hover {
+html[data-portal-design="v2"] .role-select-v2__login-card .role-select-v2__beta-btn:hover {
   background: linear-gradient(180deg, #f3f7ff 0%, #e6efff 100%) !important;
   border-color: rgba(66, 119, 255, 0.48) !important;
   box-shadow: 0 6px 16px rgba(43, 100, 253, 0.12) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__register-btn {
+html[data-portal-design="v2"] .role-select-v2__login-card .role-select-v2__register-btn {
   background: #ffffff !important;
   color: #243b74 !important;
   border: 1px solid rgba(36, 59, 116, 0.22) !important;
   box-shadow: none !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__register-btn:hover {
+html[data-portal-design="v2"] .role-select-v2__login-card .role-select-v2__register-btn:hover {
   background: #f8faff !important;
   border-color: rgba(36, 59, 116, 0.34) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card [class*="loginBetaHint"] {
+html[data-portal-design="v2"] .role-select-v2__login-card [class*="loginBetaHint"] {
   color: #8a96ad !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card button[type="submit"],
-html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__primary-btn {
+html[data-portal-design="v2"] .role-select-v2__login-card button[type="submit"],
+html[data-portal-design="v2"] .role-select-v2__login-card .role-select-v2__primary-btn {
   border-radius: 12px !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__decor {
+html[data-portal-design="v2"] .role-select-v2__decor {
   background: radial-gradient(
     circle at 40% 40%,
     rgba(var(--pv2-r-primary), 0.2) 0%,
@@ -157,12 +157,12 @@ html[data-portal-design="v2"] .page3-v2__decor {
   ) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__road {
+html[data-portal-design="v2"] .role-select-v2__road {
   opacity: 0.42;
   filter: saturate(0.65) hue-rotate(165deg) brightness(0.92);
 }
 
-html[data-portal-design="v2"] .page3-v2__institutions-shade {
+html[data-portal-design="v2"] .role-select-v2__institutions-shade {
   background: linear-gradient(
     180deg,
     rgba(var(--pv2-r-ink), 0.04) 28%,
@@ -171,7 +171,7 @@ html[data-portal-design="v2"] .page3-v2__institutions-shade {
   ) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__role-card--selected .page3-v2__institutions-shade {
+html[data-portal-design="v2"] .role-select-v2__role-card--selected .role-select-v2__institutions-shade {
   background: linear-gradient(
     180deg,
     rgba(var(--pv2-r-primary), 0.08) 20%,
@@ -180,28 +180,28 @@ html[data-portal-design="v2"] .page3-v2__role-card--selected .page3-v2__institut
   ) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__next {
+html[data-portal-design="v2"] .role-select-v2__next {
   background: var(--pv2-primary) !important;
   color: var(--pv2-white) !important;
   box-shadow: 0 10px 24px rgba(var(--pv2-r-primary), 0.24) !important;
   border: 1px solid rgba(var(--pv2-r-primary), 0.26) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__profile-btn--active {
+html[data-portal-design="v2"] .role-select-v2__profile-btn--active {
   background: rgba(var(--pv2-r-primary), 0.1) !important;
   color: var(--pv2-primary) !important;
   border-color: rgba(var(--pv2-r-primary), 0.28) !important;
   box-shadow: 0 4px 14px rgba(var(--pv2-r-primary), 0.14) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card .page3-v2__profile-btn {
+html[data-portal-design="v2"] .role-select-v2__login-card .role-select-v2__profile-btn {
   border-color: rgba(var(--pv2-r-ink), 0.12) !important;
   background: rgba(255, 255, 255, 0.9) !important;
   color: var(--pv2-muted) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 [class*="loginProfileRowSpec"] [class*="loginProfileBtn"],
-html[data-portal-design="v2"] .page3-v2 [class*="loginProfileRowSpec"] .page3-v2__profile-btn {
+html[data-portal-design="v2"] .role-select-v2 [class*="loginProfileRowSpec"] [class*="loginProfileBtn"],
+html[data-portal-design="v2"] .role-select-v2 [class*="loginProfileRowSpec"] .role-select-v2__profile-btn {
   flex: 0 1 auto !important;
   min-width: max-content;
   max-width: 100%;
@@ -211,20 +211,20 @@ html[data-portal-design="v2"] .page3-v2 [class*="loginProfileRowSpec"] .page3-v2
   text-align: center;
 }
 
-html[data-portal-design="v2"] .page3-v2__selected-badge {
+html[data-portal-design="v2"] .role-select-v2__selected-badge {
   background: var(--pv2-white) !important;
   color: var(--pv2-ink) !important;
   border-color: rgba(var(--pv2-r-primary), 0.22) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2__selected-badge [class*="selectedBadgeMark"] {
+html[data-portal-design="v2"] .role-select-v2__selected-badge [class*="selectedBadgeMark"] {
   background: var(--pv2-primary) !important;
   box-shadow: 0 2px 8px rgba(var(--pv2-r-primary), 0.35) !important;
 }
 
 /* Страница выбора роли: сверху/снизу — как soft-админка; плашка тянется на высоту экрана */
-html[data-portal-design="v2"] body.route-page3 .page3-v2[class*="pageRoot"] {
-  --page3-v2-layout-pad: clamp(14px, 2vw, 22px);
+html[data-portal-design="v2"] body.route-page3 .role-select-v2[class*="pageRoot"] {
+  --role-select-v2-layout-pad: clamp(14px, 2vw, 22px);
   display: flex !important;
   flex-direction: column;
   align-items: stretch !important;
@@ -232,16 +232,16 @@ html[data-portal-design="v2"] body.route-page3 .page3-v2[class*="pageRoot"] {
   min-height: 100dvh !important;
   min-height: 100svh !important;
   height: 100svh !important;
-  padding-top: max(var(--page3-v2-layout-pad), env(safe-area-inset-top, 0)) !important;
-  padding-bottom: max(var(--page3-v2-layout-pad), env(safe-area-inset-bottom, 0)) !important;
+  padding-top: max(var(--role-select-v2-layout-pad), env(safe-area-inset-top, 0)) !important;
+  padding-bottom: max(var(--role-select-v2-layout-pad), env(safe-area-inset-bottom, 0)) !important;
   padding-left: clamp(16px, 3vw, 32px) !important;
   padding-right: clamp(16px, 3vw, 32px) !important;
   box-sizing: border-box;
 }
 
 /* Общая синяя плашка + белый блок: выбор роли, вход, регистрация */
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab {
-  --page3-v2-panel-h: 100%;
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab {
+  --role-select-v2-panel-h: 100%;
   position: relative;
   width: min(1240px, 100%) !important;
   max-width: 100% !important;
@@ -272,8 +272,8 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab {
   align-self: stretch;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab[class*="heroRolePick"],
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab[class*="heroAuthStep"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab[class*="heroRolePick"],
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab[class*="heroAuthStep"] {
   width: min(1240px, 100%) !important;
   max-height: none !important;
   min-height: 0 !important;
@@ -284,18 +284,18 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab[class*="heroAuthStep
 }
 
 /* Вход/регистрация: та же фиксированная плашка, что на выборе роли; скролл внутри белого блока */
-html[data-portal-design="v2"] body.route-page3 .page3-v2[class*="pageRoot"]:has([class*="heroAuthStep"]) {
+html[data-portal-design="v2"] body.route-page3 .role-select-v2[class*="pageRoot"]:has([class*="heroAuthStep"]) {
   height: 100svh !important;
   min-height: 100svh !important;
   overflow: hidden;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="decorLeft"],
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__decor {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="decorLeft"],
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__decor {
   display: none !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="content"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="content"] {
   width: 100% !important;
   max-width: 100% !important;
   align-items: stretch !important;
@@ -304,8 +304,8 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="content"] {
   min-height: 0;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentRolePick"],
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentAuthStep"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="contentRolePick"],
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="contentAuthStep"] {
   width: 100%;
   box-sizing: border-box;
   border-radius: calc(var(--pv2-radius-2xl) - 8px) !important;
@@ -323,7 +323,7 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentAuth
   max-height: none;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentAuthStep"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="contentAuthStep"] {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -331,7 +331,7 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentAuth
   min-height: 0;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="loginCardWrap"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="loginCardWrap"] {
   width: 100%;
   max-width: min(100%, 520px);
   margin: 0 auto;
@@ -344,13 +344,13 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="loginCardWr
   overflow: visible;
 }
 
-html[data-portal-design="v2"] .page3-v2__login-card [class*="loginCardBody"]:not([class*="loginCardBodyScroll"]) {
+html[data-portal-design="v2"] .role-select-v2__login-card [class*="loginCardBody"]:not([class*="loginCardBodyScroll"]) {
   overflow-y: auto;
   max-height: min(68vh, 620px);
   -webkit-overflow-scrolling: touch;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="loginCardTallForm"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="loginCardTallForm"] {
   flex: 1 1 auto;
   min-height: 0;
   max-height: none !important;
@@ -358,7 +358,7 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="loginCardTa
   flex-direction: column;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__login-shell {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__login-shell {
   background: transparent !important;
   padding: 0 !important;
   width: 100%;
@@ -368,15 +368,15 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__login-she
   flex-direction: column;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__login-card {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__login-card {
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentRolePick"] [class*="backToPage2Wrap"],
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentAuthStep"] [class*="backToPage2Wrap"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="contentRolePick"] [class*="backToPage2Wrap"],
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="contentAuthStep"] [class*="backToPage2Wrap"] {
   margin-left: 0 !important;
   margin-top: 0 !important;
   flex-shrink: 0;
@@ -390,7 +390,7 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentAuth
   border-radius: 0 !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="rolePickMain"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="rolePickMain"] {
   width: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -401,7 +401,7 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="rolePickMai
   min-height: 0;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="titleBlock"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="titleBlock"] {
   align-self: center;
   width: 100%;
   max-width: 100%;
@@ -409,16 +409,16 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="titleBlock"
   flex-shrink: 0;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__title {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__title {
   text-align: center !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__subtitle {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__subtitle {
   margin-left: auto;
   margin-right: auto;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="cardsRow"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="cardsRow"] {
   width: 100% !important;
   max-width: 100% !important;
   margin-left: 0 !important;
@@ -430,13 +430,13 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="cardsRow"] 
 }
 
 @media (min-width: 901px) {
-  html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="cardsRow"] {
+  html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="cardsRow"] {
     min-height: 340px !important;
     justify-content: center !important;
   }
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="nextSection"] {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="nextSection"] {
   width: 100%;
   padding-top: 0 !important;
   min-height: 78px !important;
@@ -446,7 +446,7 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="nextSection
   justify-content: center !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__back {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__back {
   padding: 8px 14px !important;
   border-radius: var(--pv2-radius-pill) !important;
   background: var(--pv2-white) !important;
@@ -455,12 +455,12 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__back {
   color: var(--pv2-muted) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__back:hover {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__back:hover {
   color: var(--pv2-primary) !important;
   background: var(--pv2-fill-subtle) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__subtitle {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__subtitle {
   display: inline-block;
   max-width: min(100%, 520px);
   padding: 10px 16px !important;
@@ -471,18 +471,18 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__subtitle 
   line-height: 1.45;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__role-card {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__role-card {
   background: var(--pv2-white) !important;
   border: 1px solid rgba(var(--pv2-r-primary), 0.2) !important;
   box-shadow: 0 4px 16px rgba(var(--pv2-r-ink), 0.06) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__role-card:not(.page3-v2__role-card--selected):hover {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__role-card:not(.role-select-v2__role-card--selected):hover {
   border-color: rgba(var(--pv2-r-primary), 0.35) !important;
   box-shadow: 0 8px 24px rgba(var(--pv2-r-primary), 0.14) !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__role-card--selected {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__role-card--selected {
   border-color: rgba(var(--pv2-r-primary), 0.48) !important;
   box-shadow:
     0 10px 28px rgba(var(--pv2-r-primary), 0.2),
@@ -492,29 +492,29 @@ html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__role-card
   animation: none !important;
 }
 
-html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab .page3-v2__next {
+html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab .role-select-v2__next {
   border-radius: var(--pv2-radius-pill) !important;
   box-shadow: 0 8px 24px rgba(var(--pv2-r-primary), 0.28) !important;
 }
 
 @media (max-width: 900px) {
-  html[data-portal-design="v2"] body.route-page3 .page3-v2[class*="pageRoot"] {
+  html[data-portal-design="v2"] body.route-page3 .role-select-v2[class*="pageRoot"] {
     height: auto !important;
     min-height: 100svh !important;
   }
 
-  html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab {
-    --page3-v2-panel-h: auto;
+  html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab {
+    --role-select-v2-panel-h: auto;
     min-height: 0 !important;
   }
 
-  html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentRolePick"],
-  html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="contentAuthStep"] {
+  html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="contentRolePick"],
+  html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="contentAuthStep"] {
     min-height: 0;
     max-height: none;
   }
 
-  html[data-portal-design="v2"] .page3-v2 .page3-v2__role-tab [class*="cardsRow"] {
+  html[data-portal-design="v2"] .role-select-v2 .role-select-v2__role-tab [class*="cardsRow"] {
     min-height: 0 !important;
   }
 }

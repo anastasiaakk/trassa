@@ -20,8 +20,8 @@ export default function RoleSelectRolePicker({
   return (
     <div className={styles.rolePickMain}>
       <div className={styles.titleBlock}>
-        <h1 className={cx(styles.title, isV2 && "page3-v2__title")}>Выберите Роль</h1>
-        <p className={cx(styles.subtitle, isV2 && "page3-v2__subtitle")}>
+        <h1 className={cx(styles.title, isV2 && "role-select-v2__title")}>Выберите Роль</h1>
+        <p className={cx(styles.subtitle, isV2 && "role-select-v2__subtitle")}>
           Выберите категорию, соответствующую вашей деятельности
         </p>
       </div>
@@ -33,7 +33,7 @@ export default function RoleSelectRolePicker({
         {selectedRole !== null && (
           <button
             type="button"
-            className={cx(styles.nextArrow, isV2 && "page3-v2__next")}
+            className={cx(styles.nextArrow, isV2 && "role-select-v2__next")}
             onClick={onNext}
             aria-label="Далее"
           >

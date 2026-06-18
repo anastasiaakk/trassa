@@ -8,8 +8,8 @@ type RoleSelectRoadBackgroundProps = {
 
 const RoleSelectRoadBackground = memo(({ isV2 = false }: RoleSelectRoadBackgroundProps) => (
   <div className={styles.roadIndustryBg} aria-hidden>
-    <div className={cx(styles.neoAmbientWash, isV2 && "page3-v2__wash")} />
-    <div className={cx(styles.neoAtmosphereGlow, isV2 && "page3-v2__glow")} />
+    <div className={cx(styles.neoAmbientWash, isV2 && "role-select-v2__wash")} />
+    <div className={cx(styles.neoAtmosphereGlow, isV2 && "role-select-v2__glow")} />
   </div>
 ));
 
