@@ -120,7 +120,10 @@ export default function RadorFormsHub({ layoutStyles }: Props) {
     [portalUsers]
   );
 
-  const monitoring = useMemo(() => listAllMonitoring(), [store]);
+  const monitoring = useMemo(() => {
+    void store;
+    return listAllMonitoring();
+  }, [store]);
 
   const syncStoreToServer = useCallback(async (): Promise<boolean> => {
     if (!canUseRemote) return true;

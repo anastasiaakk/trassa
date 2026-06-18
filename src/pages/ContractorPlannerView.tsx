@@ -85,17 +85,20 @@ const ContractorPlannerView = memo(function ContractorPlannerView({ cn, isV2 = t
     };
   }, [reload]);
 
-  const countsByDate = useMemo(() => countPlannerEntriesByDate(emailNorm), [emailNorm, entries]);
+  const countsByDate = useMemo(() => {
+    void entries;
+    return countPlannerEntriesByDate(emailNorm);
+  }, [emailNorm, entries]);
 
   const monthCells = useMemo(
     () => buildMonthCells(viewYear, viewMonth),
     [viewYear, viewMonth]
   );
 
-  const dayEntries = useMemo(
-    () => listPlannerEntriesForDate(emailNorm, selectedDate),
-    [emailNorm, selectedDate, entries]
-  );
+  const dayEntries = useMemo(() => {
+    void entries;
+    return listPlannerEntriesForDate(emailNorm, selectedDate);
+  }, [emailNorm, selectedDate, entries]);
 
   const selectDay = (dateKey: string) => {
     setSelectedDate(dateKey);

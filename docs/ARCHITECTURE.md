@@ -123,7 +123,7 @@ flowchart TB
 - Legacy-имена **маршрутов** `page3`–`page6` (URL и QR не трогаем); файлы страниц переименованы в осмысленные (`RoleSelectPage`, `AssociationCabinetPage`, …)
 - `AssociationCabinetPage` legacy (не v2) — `AssociationCabinetLegacy.tsx`; v2 → `CabinetChromeLayout` + `pages/association/*`
 - Два пути auth: серверный JWT + `localAuth.ts` (offline)
-- `exhaustive-deps` в ESLint — часть предупреждений, цель — снизить до 0
+- `exhaustive-deps` в ESLint — **0 предупреждений** (цель достигнута)
 
 Приоритет рефакторинга: разбивать по доменам (messenger, admin tables, map), не «всё сразу».
 

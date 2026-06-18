@@ -1,8 +1,9 @@
-import { memo } from "react";
+import { lazy, memo, Suspense } from "react";
 import { useAssociationCabinetState } from "../hooks/useAssociationCabinetState";
-import AssociationCabinetLegacy from "./association/AssociationCabinetLegacy";
-import AssociationCabinetV2Shell from "./association/AssociationCabinetV2Shell";
 import type { AssociationVariant } from "./association/associationTypes";
+
+const AssociationCabinetLegacy = lazy(() => import("./association/AssociationCabinetLegacy"));
+const AssociationCabinetV2Shell = lazy(() => import("./association/AssociationCabinetV2Shell"));
 
 export type { AssociationVariant } from "./association/associationTypes";
 
@@ -11,21 +12,27 @@ export function AssociationPage({ variant }: { variant: AssociationVariant }) {
 
   if (state.isV2) {
     return (
-      <AssociationCabinetV2Shell
-        variant={variant}
-        basePath={state.basePath}
-        associationRoleLabel={state.associationRoleLabel}
-        associationCopy={state.associationCopy}
-        filteredCards={state.filteredCards}
-        upcomingPanelEvents={state.upcomingPanelEvents}
-        calendarEvents={state.calendarEvents}
-        onCalendarEventsChange={state.setCalendarEvents}
-        leaveProforientationPath={state.leaveProforientationPath}
-      />
+      <Suspense fallback={null}>
+        <AssociationCabinetV2Shell
+          variant={variant}
+          basePath={state.basePath}
+          associationRoleLabel={state.associationRoleLabel}
+          associationCopy={state.associationCopy}
+          filteredCards={state.filteredCards}
+          upcomingPanelEvents={state.upcomingPanelEvents}
+          calendarEvents={state.calendarEvents}
+          onCalendarEventsChange={state.setCalendarEvents}
+          leaveProforientationPath={state.leaveProforientationPath}
+        />
+      </Suspense>
     );
   }
 
-  return <AssociationCabinetLegacy {...state} />;
+  return (
+    <Suspense fallback={null}>
+      <AssociationCabinetLegacy {...state} />
+    </Suspense>
+  );
 }
 
 function AssociationCabinetPage() {

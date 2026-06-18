@@ -70,7 +70,7 @@ export default function FormSubmissionViewer({
   layoutStyles,
 }: Props) {
   const hasTabs = templateHasSheetTabs(template);
-  const sheets = template.importSheets ?? [];
+  const sheets = useMemo(() => template.importSheets ?? [], [template.importSheets]);
   const [selectedSheetId, setSelectedSheetId] = useState<string | null>(sheets[0]?.id ?? null);
 
   const activeSheet = useMemo(() => {

@@ -135,7 +135,10 @@ export function useAdminTablesPanel() {
     return true;
   }, [authApi]);
 
-  const monitoring = useMemo(() => listAllMonitoring(), [store]);
+  const monitoring = useMemo(() => {
+    void store;
+    return listAllMonitoring();
+  }, [store]);
   const avgFill = useMemo(() => {
     if (monitoring.length === 0) return 0;
     return Math.round(monitoring.reduce((s, r) => s + r.fillPercent, 0) / monitoring.length);

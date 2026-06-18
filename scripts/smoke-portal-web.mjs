@@ -16,7 +16,11 @@ const BASE = (process.env.TRASSA_SMOKE_WEB_BASE || "https://trassa.duckdns.org")
 const PAGES = [
   { name: "home", hash: "#/" },
   { name: "map", hash: "#/services" },
+  { name: "role-select", hash: "#/page3" },
   { name: "role-select-alias", hash: "#/role-select" },
+  { name: "contractor-cabinet", hash: "#/page4" },
+  { name: "association-rador", hash: "#/page5" },
+  { name: "association-ado", hash: "#/page6" },
   { name: "privacy", hash: "#/privacy" },
 ];
 

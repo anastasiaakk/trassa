@@ -60,7 +60,7 @@ export function useMessengerState(cabinetPath?: string) {
     const path = cabinetPath ?? "/page5";
     const payload = getInvitePayloadFromProfile();
     return buildMessengerInviteUrl(path, encodeMessengerInvite(payload));
-  }, [cabinetPath, peerSettingsOpen]);
+  }, [cabinetPath]);
 
   useEffect(() => {
     persistMessengerPeers(peers);

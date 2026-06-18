@@ -671,7 +671,7 @@ function CabinetChromeLayout({ cabinetPath, children, renderEvents, sidebarRoleL
         letterSpacing: "-0.01em",
       },
     }),
-    [styles, isDark, cabinetPath, isV2]
+    [styles, isDark]
   );
 
   const ctx = useMemo<CabinetChromeContext>(

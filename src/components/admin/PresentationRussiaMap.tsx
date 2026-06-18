@@ -108,11 +108,6 @@ function PresentationRussiaMapInner({
     [activeSubjectNames]
   );
 
-  const markerKey = useMemo(
-    () => markers.map((m) => `${m.subject.id}:${m.orgCount}`).join("|"),
-    [markers]
-  );
-
   useEffect(() => {
     const el = hostRef.current;
     if (!el) return;
@@ -161,7 +156,7 @@ function PresentationRussiaMapInner({
       if (readyTimer) window.clearTimeout(readyTimer);
       map.remove();
     };
-  }, [markerKey, size]);
+  }, [markers, size]);
 
   return (
     <div

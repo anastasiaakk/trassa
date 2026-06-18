@@ -80,7 +80,7 @@ export function useAdminPresentation() {
   const mapSubjects = useMemo(() => {
     const entries = loadMapSubjectOrganizations();
     return Array.from(new Set(entries.map((e) => e.subjectName.trim()).filter(Boolean)));
-  }, [stats]);
+  }, []);
 
   const updatedLabel = useMemo(
     () =>
