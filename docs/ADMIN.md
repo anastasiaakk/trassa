@@ -11,7 +11,7 @@
 | `src/api/adminMonitoringApi.ts` | API статистики и инцидентов |
 | `src/pages/AdminDashboard.tsx` | Главный shell админки (~500 строк, навигация + layout) |
 | `src/pages/AdminLoginPanel.tsx` | Вход |
-| `src/pages/AdminTablesPanel.tsx` | Таблицы |
+| `src/pages/AdminTablesPanel.tsx` | Shell таблиц (~90 строк, KPI + навигация) |
 | `src/pages/AdminSpecializationsPanel.tsx` | Специализации |
 | `src/pages/AdminDesignSystemPanel.tsx` | Настройки дизайна |
 | `src/components/admin/AdminDevicesPanel.tsx` | Устройства, бан |
@@ -37,11 +37,28 @@
 | `src/utils/messengerThreadStore.ts` | localStorage peers/threads |
 | `src/types/messenger.ts` | Типы сообщений |
 
+### Т-бот (кабинеты, `AiChatBubble`)
+
+| Файл | Назначение |
+|------|------------|
+| `src/components/AiChatBubble.tsx` | Shell: FAB + панель чата |
+| `src/hooks/useTbotChat.ts` | Состояние, drag, отправка, уведомления |
+| `src/components/tbot/TbotChatPanel.tsx` | Панель диалога |
+| `src/components/tbot/TbotFab.tsx` | Плавающая кнопка |
+| `src/components/tbot/tbotConstants.ts` | Размеры, storage позиций |
+| `src/utils/messengerTbotNotify.ts` | Красная точка, звук, OS push |
+
 ### Таблицы админки
 
 | Файл | Назначение |
 |------|------------|
-| `src/pages/AdminTablesPanel.tsx` | Конструктор форм (lazy из админки) |
+| `src/pages/AdminTablesPanel.tsx` | Shell: KPI, навигация workspace/monitor/ai |
+| `src/hooks/useAdminTablesPanel.ts` | Состояние, синхронизация с API, шаблоны |
+| `src/components/admin/AdminTablesWorkspaceSection.tsx` | Список шаблонов + редактор |
+| `src/components/admin/AdminTablesEditorBody.tsx` | Вкладки редактора (основное, столбцы, подсказки, назначение) |
+| `src/components/admin/AdminTablesMonitorSection.tsx` | Мониторинг заполнения, срезы |
+| `src/components/admin/AdminTablesAiSection.tsx` | ИИ-запросы и база промптов |
+| `src/components/admin/AdminTablesImportModal.tsx` | Импорт Excel/CSV |
 | `src/components/admin/AdminTablesPanelIcons.tsx` | Иконки навигации |
 | `src/utils/adminTablesTemplateUtils.ts` | Нормализация шаблонов импорта |
 

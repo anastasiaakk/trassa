@@ -119,11 +119,11 @@ flowchart TB
 
 ## Известный технический долг
 
-- Крупные файлы: `Page5MessengerView.tsx`, `AdminTablesPanel.tsx`, `Page3.tsx`, `AiChatBubble.tsx`
+- Крупные файлы: `Page3AuthForm.tsx`, `AdminPresentationPanel.tsx`, `ContractorFormsView.tsx`
 - Legacy-имена маршрутов `page3`–`page6`
 - Два пути auth: серверный JWT + `localAuth.ts` (offline)
 - `exhaustive-deps` в ESLint — часть предупреждений, цель — снизить до 0
 
 Приоритет рефакторинга: разбивать по доменам (messenger, admin tables, map), не «всё сразу».
 
-**Сделано:** `AdminDashboard.tsx` — чистый TSX-shell; панели в `components/admin/` с lazy-load; smoke + lint + server tests в CI.
+**Сделано:** `AdminDashboard.tsx` — чистый TSX-shell; панели в `components/admin/` с lazy-load; smoke + lint + server tests в CI. Мессенджер → `useMessengerState` + `components/messenger/*`. Таблицы → `useAdminTablesPanel` + секции в `components/admin/AdminTables*`. Page3 → shell ~185 строк; `usePage3Auth` + `components/page3/*`. Т-бот → `useTbotChat` + `components/tbot/*`, shell `AiChatBubble.tsx` ~86 строк.
